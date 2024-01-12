@@ -139,6 +139,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 KAFKA_CONFIG = {
     'bootstrap.servers': 'localhost:9092',
-    'group.id': 'notification_service_consumer',
+    'group.id': 'notification_service_consumers',
     'auto.offset.reset': 'earliest',
 }
