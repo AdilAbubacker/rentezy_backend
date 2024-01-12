@@ -17,7 +17,7 @@ class SearchPropertyView(APIView, LimitOffsetPagination):
 
     def get(self, request, query):
         # try:
-            q = Q('multi_match',query=query,fields=['name','image',])
+            q = Q('multi_match',query=query,fields=['name','address','city'])
             search = self.search_document.search().query(q)
             response = search.execute()
             for r in response:
@@ -27,7 +27,7 @@ class SearchPropertyView(APIView, LimitOffsetPagination):
         # except Exception as e:
         #     return HttpResponse(e, status=500)
 
-class GetPropertyView(APIView):
+class GetAllPropertiesView(APIView):
     search_document = PropertyDocument
     property_doc_serializer = PropertyDocumentSerializer
 
@@ -36,4 +36,17 @@ class GetPropertyView(APIView):
         search_response = self.search_document.search().execute()
 
         serializer = self.property_doc_serializer(search_response, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class GetPropertyView(APIView):
+    search_document = PropertyDocument
+    property_doc_serializer = PropertyDocumentSerializer
+
+    def get(self, request, pk):
+
+        property_document = self.search_document.get(id=pk)
+
+        # Serialize the retrieved document
+        serializer = self.property_doc_serializer(property_document)
         return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,7 +1,7 @@
-from celery import shared_task
+from booking_service.celery import app
 from .models import Booking, AvailableRooms
 
-@shared_task
+@app.task
 def release_reserved_rooms(booking_id):
     # Release the reserved rooms after 10 minutes if payment hasn't taken place
     print('__________1______')

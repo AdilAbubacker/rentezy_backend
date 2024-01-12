@@ -19,14 +19,15 @@ class LoginView(APIView):
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
-
+        print(email)
+        print(password)
         user = User.objects.filter(email=email).first()
 
         if user is None:
-            return Response({'message': 'User not found'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'message': 'User not found'}, status=status.HTTP_400_BAD_REQUEST)
         
         if not user.check_password(password):
-            return Response({'message': 'Incorrect password'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'message': 'Incorrect password'}, status=status.HTTP_400_BAD_REQUEST)
 
         payload = {
             'id': user.id,

@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'main_app',
     'django_celery_results',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -140,4 +142,14 @@ CELERY_RESULT_BACKEND = 'django-db'
 STRIPE_PUBLIC_KEY = 'pk_test_51OMuzPSEWXt1qBzUbZWHi1nsF5Uu70RG63gGdAFsRmspCsmNXJMidHtGvUNs5gysCcRULLJNJfC2pLaWsAPb0XL000tL3T3ztZ'
 STRIPE_SECRET_KEY = 'sk_test_51OMuzPSEWXt1qBzUe8GemSmja3ZQrgNX1B07yN8pSLud6WiLiycbz2s9YFa6IjCe47Z6gHfBTW3T5V3EM6e4vaLW00DFymDtiK'
 
-SITE_URL='http://127.0.0.1:5173/'
+STRIPE_WEBHOOK_SECRET = 'whsec_cea4a1cf7f527bda2ef2a9b787664059ba399fe240895ea2d04db1dfad516822'
+
+
+SITE_URL='http://127.0.0.1:5173'
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    'http://127.0.0.1:5173'  
+    # "https://your.production.domain",
+    # Add other allowed origins as needed
+]
