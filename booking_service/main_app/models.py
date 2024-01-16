@@ -8,7 +8,6 @@ class AvailableRooms(models.Model):
     initial_quantity = models.IntegerField()
     available_quantity = models.IntegerField(validators=[MinValueValidator(0)])
     
-    
 class Booking(models.Model):
     STATUS = [
         ('reserved', 'Reserved'),

@@ -1,5 +1,6 @@
 import datetime
 from decimal import Decimal
+import json
 from rent_service.celery import app
 from celery import shared_task
 from datetime import timezone, datetime
@@ -45,38 +46,69 @@ def send_rent_reminders():
     unpaid_payments = MonthlyPayment.objects.filter(is_paid=False)
     today = datetime.now(timezone.utc).date()
     three_days_after = today + timedelta(days=3)
-    three_days_before = today - timedelta(days=3)
-    print(today, three_days_after, three_days_before)
+    seven_days_after = today + timedelta(days=7)
 
     for payment in unpaid_payments:
-        print(today, three_days_after, three_days_before)
-        print(payment.rental_agreement.user,'userid')
-        
-        if payment.payment_date < three_days_before:
-            # calculate late fee of 2% of rent for each day for nonpayment after due date
-            late_fee_percentage = 0.02
+        user_id = payment.rental_agreement.user
+        # Extracting the month from the payment date
+        month_name = payment.payment_date.strftime("%B")
 
-            # Assuming late_fee_percentage is a float, convert it to Decimal
-            late_fee_percentage_decimal = Decimal(str(late_fee_percentage))
-
-            # Calculate late fee using Decimal multiplication
-            late_fee = payment.amount * late_fee_percentage_decimal   
-                         
-            # Update payment amount with late fees
-            payment.fine += late_fee
+        if payment.payment_date < today:
+            payment.fine += 100
             payment.save()
-            
-            user_id = payment.rental_agreement.user
-            print(user_id)
-            message_content = 'helllooooo'
+
+            subject = 'Overdue Rent Payment with Daily Late Fee'
+            message_content =  f'🚨🚨🚨 Alert!!: Your monthly rent for PropertyId:{payment.rental_agreement.property} for {month_name} is overdue and remains unpaid. Daily late fee of 100 Rupees is being incurred. Please settle immediately to avoid additional charges.'
 
             # Send a reminder to the user
-            message_template = '{"user_id":"{}","message":"{}"}'
-            message = message_template.format(user_id, message_content)      
-            print(f'{message:{message}}')
-            kafka_producer.produce_message(message=message, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+            message_data = {"user_id": user_id, "message": message_content}
+
+            # Convert dictionary to JSON string for sending through kafka
+            message_json = json.dumps(message_data)
+            print(message_json)    
+
+            # Send data to notification service through kafka
+            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+
+        elif payment.payment_date == today:
+            subject = 'Overdue Rent Payment with Daily Late Fee'
+            print(user_id)
+            message_content = f"🚨 Reminder: Last date for your rent payment for PropertyId:{payment.rental_agreement.property} for the month {month_name} is today. Please ensure to make the payment by the end of the day to avoid late fees of 100 per day. 🏡💸"
+           
+            # Send a reminder to the user
+            message_data = {"user_id": user_id, "message": message_content}
+
+            # Convert dictionary to JSON string for sending through kafka
+            message_json = json.dumps(message_data)
+            print(message_json)    
+
+            # Send data to notification service through kafka
+            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+
         elif payment.payment_date == three_days_after:
-            print('kkkkkkkkkkkkkkkkkkk')
+            message_content = f"🚨 Reminder: Your rent payment for PropertyId:{payment.rental_agreement.property} is due in 3 days, {three_days_after.strftime('%B %d')}. Please ensure to make the payment on time to avoid any late fees. 🏡💸"
+
+            # Send a reminder to the user
+            message_data = {"user_id": user_id, "message": message_content}
+            message_json = json.dumps(message_data)
+            print(message_json)    
+
+            # Send data to notification service through kafka
+            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+
+        elif payment.payment_date == seven_days_after:
+            message_content = f"🚨 Reminder: Your rent payment for PropertyId:{payment.rental_agreement.property} is due in 7 days on {seven_days_after.strftime('%B %d')}. Please plan accordingly. 🏡💸"
+
+            # Send a reminder to the user
+            message_data = {"user_id": user_id, "message": message_content}
+
+            # Convert dictionary to JSON string for sending through kafka
+            message_json = json.dumps(message_data)
+            print(message_json)    
+
+            # Send data to notification service through kafka
+            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+
                 
 
 @app.task

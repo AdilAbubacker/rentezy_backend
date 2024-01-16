@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import timedelta
 
 class RentPayment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -17,11 +18,17 @@ class RentalAgreement(models.Model):
     is_on_rent = models.BooleanField(default=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
+    def save(self, *args, **kwargs):
+            # If last_payment_date is not provided, set it to three days after start_date
+            if not self.last_payment_date:
+                self.last_payment_date = self.start_date + timedelta(days=3)
+            super().save(*args, **kwargs)
+
 
 class MonthlyPayment(models.Model):
     rental_agreement = models.ForeignKey(RentalAgreement, on_delete=models.CASCADE)
     payment_date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    is_paid = models.BooleanField(default=False)
     fine = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    is_paid = models.BooleanField(default=False)
     

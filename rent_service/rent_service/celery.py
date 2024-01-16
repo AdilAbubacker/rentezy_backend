@@ -24,7 +24,7 @@ app.conf.beat_schedule = {
     },
     'send-rend-reminders': {
         'task':'main_app.tasks.send_rent_reminders',
-        'schedule': crontab(minute=38, hour=21),  # Run the task on the 1st day of every month at midnight
+        'schedule': crontab(minute=38, hour=21),  # Run the task on every day at midnight
     },
 }
 
