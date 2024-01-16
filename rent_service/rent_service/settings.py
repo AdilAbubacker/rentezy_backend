@@ -136,3 +136,12 @@ CELERY_RESULT_BACKEND = 'django-db'
 
 # CELERY BEAT
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+# KAFKA SETTINGS
+KAFKA_CONFIG = {
+    'bootstrap.servers': 'localhost:9092',
+    'client.id': 'rent_service_kafka_producer',
+}
+
+KAFKA_NOTIFICATIONS_TOPIC = 'notifications'

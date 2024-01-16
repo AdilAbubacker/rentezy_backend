@@ -1,10 +1,13 @@
 import datetime
+from decimal import Decimal
 from rent_service.celery import app
 from celery import shared_task
-from datetime import timedelta, timezone
-from datetime import datetime
+from datetime import timezone, datetime
 from .models import MonthlyPayment, RentPayment, RentalAgreement
 from dateutil.relativedelta import relativedelta
+from .kafka_producers import kafka_producer
+from django.conf import settings
+from datetime import datetime, timezone, timedelta
 
 
 @app.task
@@ -40,35 +43,45 @@ def generate_recurring_payments():
 @app.task
 def send_rent_reminders():
     unpaid_payments = MonthlyPayment.objects.filter(is_paid=False)
-    
-    for payment in unpaid_payments:
-        today = timezone.now().date()
-        three_days_after = today + timezone.timedelta(days=3)
-        three_days_before = today - timezone.timedelta(days=3)
-        print(today, three_days_after, three_days_before)
+    today = datetime.now(timezone.utc).date()
+    three_days_after = today + timedelta(days=3)
+    three_days_before = today - timedelta(days=3)
+    print(today, three_days_after, three_days_before)
 
+    for payment in unpaid_payments:
+        print(today, three_days_after, three_days_before)
+        print(payment.rental_agreement.user,'userid')
+        
         if payment.payment_date < three_days_before:
             # calculate late fee of 2% of rent for each day for nonpayment after due date
             late_fee_percentage = 0.02
 
-            late_fee = payment.amount * late_fee_percentage
-                
-            # Update payment amount with late fees
-            payment.amount_payable += late_fee
-            payment.save()
-                
-            # Send a reminder to the user
-            # send_overdue_payment_reminder(payment.user, payment.due_date, late_fee)
+            # Assuming late_fee_percentage is a float, convert it to Decimal
+            late_fee_percentage_decimal = Decimal(str(late_fee_percentage))
 
-        elif payment.payment_date == three_days_before:
-            pass
+            # Calculate late fee using Decimal multiplication
+            late_fee = payment.amount * late_fee_percentage_decimal   
+                         
+            # Update payment amount with late fees
+            payment.fine += late_fee
+            payment.save()
+            
+            user_id = payment.rental_agreement.user
+            print(user_id)
+            message_content = 'helllooooo'
+
+            # Send a reminder to the user
+            message_template = '{"user_id":"{}","message":"{}"}'
+            message = message_template.format(user_id, message_content)      
+            print(f'{message:{message}}')
+            kafka_producer.produce_message(message=message, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+        elif payment.payment_date == three_days_after:
+            print('kkkkkkkkkkkkkkkkkkk')
                 
 
 @app.task
 def task_one():
-    for i in range(10):
-        print(i)
-    print(" task one called and worker is running good")
+    message = '{"user_id":"3","message":"hello kkkkk"}'
     return "success"
 
 @app.task

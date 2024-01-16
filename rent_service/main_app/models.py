@@ -22,11 +22,6 @@ class MonthlyPayment(models.Model):
     rental_agreement = models.ForeignKey(RentalAgreement, on_delete=models.CASCADE)
     payment_date = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    amount_payable = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     is_paid = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        # If amount_payable is null, set it to the value of the amount field
-        if self.amount_payable is None:
-            self.amount_payable = self.amount
-        super().save(*args, **kwargs)
+    fine = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    

@@ -28,8 +28,28 @@ class NotificationConsumer(AsyncWebsocketConsumer):
     #     )
 
     # Receive message from room group
+    # async def send_notification(self, event):
+    #     message = event["message"]
+    #     # user_id = event["user_id"]
+    #     print('message send')
+    #     # Send message to WebSocket
+    #     await self.send(text_data=json.dumps({
+    #         "message": message
+    #         # "user_id": user_id
+    #     }))
+
     async def send_notification(self, event):
+        id = event['id']
         message = event["message"]
-        print('message send')
+        user_id=event['user_id']
+        read=event['read']
+
         # Send message to WebSocket
-        await self.send(text_data=json.dumps({"message": message}))
+        # timestamp = datetime.now().isoformat()
+        await self.send(text_data=json.dumps({
+            'id':id,
+            'message': message,
+            'user_id':user_id,
+            'read':read,
+            # 'timestamp': timestamp 
+        }))

@@ -20,12 +20,11 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'generate-recurring-paments': {
         'task':'main_app.tasks.generate_recurring_payments',
-        # 'schedule': crontab(hour=23, minute=11),  # Run the task on the 1st day of every month at midnight
         'schedule': crontab(minute=0, hour=0, day_of_month=1),  # Run the task on the 1st day of every month at midnight
     },
     'send-rend-reminders': {
         'task':'main_app.tasks.send_rent_reminders',
-        'schedule': crontab(minute=0, hour=0, day_of_month=1),  # Run the task on the 1st day of every month at midnight
+        'schedule': crontab(minute=38, hour=21),  # Run the task on the 1st day of every month at midnight
     },
 }
 
