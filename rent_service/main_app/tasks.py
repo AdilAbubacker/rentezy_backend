@@ -17,8 +17,6 @@ def generate_recurring_payments():
     today = datetime.now().date()
 
     for rental_agreement in rental_agreements:
-        print(rental_agreement.id)
-
         # Check if the rental agreement is active
         if rental_agreement.start_date > today:
             continue
@@ -58,58 +56,39 @@ def send_rent_reminders():
             payment.save()
 
             subject = 'Overdue Rent Payment with Daily Late Fee'
-            message_content =  f'🚨🚨🚨 Alert!!: Your monthly rent for PropertyId:{payment.rental_agreement.property} for {month_name} is overdue and remains unpaid. Daily late fee of 100 Rupees is being incurred. Please settle immediately to avoid additional charges.'
+            message_content =  f'🚨🚨🚨 Alert!!: Your monthly rent for PropertyId:{payment.rental_agreement.property} for {month_name} is overdue and remains unpaid. Daily late fee of 100 Rupees is being incurred. Please settle immediately to avoid additional charges.' 
 
-            # Send a reminder to the user
-            message_data = {"user_id": user_id, "message": message_content}
-
-            # Convert dictionary to JSON string for sending through kafka
-            message_json = json.dumps(message_data)
-            print(message_json)    
-
-            # Send data to notification service through kafka
-            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+            send_notification_through_kafka(user_id, message_content)
 
         elif payment.payment_date == today:
-            subject = 'Overdue Rent Payment with Daily Late Fee'
-            print(user_id)
             message_content = f"🚨 Reminder: Last date for your rent payment for PropertyId:{payment.rental_agreement.property} for the month {month_name} is today. Please ensure to make the payment by the end of the day to avoid late fees of 100 per day. 🏡💸"
-           
-            # Send a reminder to the user
-            message_data = {"user_id": user_id, "message": message_content}
-
-            # Convert dictionary to JSON string for sending through kafka
-            message_json = json.dumps(message_data)
-            print(message_json)    
-
+    
             # Send data to notification service through kafka
-            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+            send_notification_through_kafka(user_id, message_content)
 
         elif payment.payment_date == three_days_after:
             message_content = f"🚨 Reminder: Your rent payment for PropertyId:{payment.rental_agreement.property} is due in 3 days, {three_days_after.strftime('%B %d')}. Please ensure to make the payment on time to avoid any late fees. 🏡💸"
 
-            # Send a reminder to the user
-            message_data = {"user_id": user_id, "message": message_content}
-            message_json = json.dumps(message_data)
-            print(message_json)    
-
             # Send data to notification service through kafka
-            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+            send_notification_through_kafka(user_id, message_content)
 
         elif payment.payment_date == seven_days_after:
             message_content = f"🚨 Reminder: Your rent payment for PropertyId:{payment.rental_agreement.property} is due in 7 days on {seven_days_after.strftime('%B %d')}. Please plan accordingly. 🏡💸"
 
-            # Send a reminder to the user
-            message_data = {"user_id": user_id, "message": message_content}
-
-            # Convert dictionary to JSON string for sending through kafka
-            message_json = json.dumps(message_data)
-            print(message_json)    
-
             # Send data to notification service through kafka
-            kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+            send_notification_through_kafka(user_id, message_content)
 
-                
+
+def send_notification_through_kafka(user_id, message_content):
+    # Create dictionary for kafka
+    message_data = {"user_id": user_id, "message": message_content}
+
+    # Convert dictionary to JSON string for sending through kafka
+    message_json = json.dumps(message_data)
+
+    # send content to the notifications kafka topic
+    kafka_producer.produce_message(message=message_json, topic=settings.KAFKA_NOTIFICATIONS_TOPIC)
+
 
 @app.task
 def task_one():

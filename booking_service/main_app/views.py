@@ -164,3 +164,10 @@ def stripe_webhook(request):
                 process_refund(booking)
 
     return HttpResponse(status=200)
+
+
+class BookingListView(APIView):
+    def get(self, request):
+        bookings = Booking.objects.all()
+        serializer = BookingSerializer(bookings, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -79,10 +79,15 @@ WSGI_APPLICATION = 'booking_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'RentEzy_bookings',
+        'USER': 'postgres',
+        'PASSWORD': '00745747',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation

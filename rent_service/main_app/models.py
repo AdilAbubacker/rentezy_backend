@@ -24,6 +24,11 @@ class RentalAgreement(models.Model):
                 self.last_payment_date = self.start_date + timedelta(days=3)
             super().save(*args, **kwargs)
 
+    def get_latest_monthly_payment(self):
+            # Retrieve the latest MonthlyPayment associated with this RentalAgreement
+            latest_payment = self.monthlypayment_set.order_by('-payment_date').first()
+            return latest_payment
+
 
 class MonthlyPayment(models.Model):
     rental_agreement = models.ForeignKey(RentalAgreement, on_delete=models.CASCADE)
