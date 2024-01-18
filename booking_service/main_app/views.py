@@ -8,11 +8,11 @@ from .tasks import release_reserved_rooms
 from rest_framework.response import Response
 from rest_framework import status 
 import stripe
-from datetime import datetime  # Add this import
-from django.conf import settings
+from datetime import datetime 
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.shortcuts import redirect
+from django.conf import settings
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY 
