@@ -7,8 +7,8 @@ class AvailableRooms(models.Model):
     property_name = models.CharField(max_length=255)
     image = models.CharField(max_length=255)
     price = models.IntegerField()
-    initial_quantity = models.IntegerField()
-    available_quantity = models.IntegerField(validators=[MinValueValidator(0)])
+    initial_quantity = models.IntegerField(default=1)
+    available_quantity = models.IntegerField(validators=[MinValueValidator(0)],default=1)
 
     class Meta:
         app_label = 'main_app'

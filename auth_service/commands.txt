@@ -1,0 +1,3 @@
+docker build --tag auth_service .
+
+docker run --publish 8000:8000 auth_service

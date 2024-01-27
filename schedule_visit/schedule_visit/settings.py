@@ -135,3 +135,9 @@ CORS_ORIGIN_WHITELIST = (
     'http://127.0.0.1:5173', 
     'http://localhost:3000'
 )
+
+KAFKA_CONFIG = {
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'schedule_visit_service_consumers',
+    'auto.offset.reset': 'earliest',
+}

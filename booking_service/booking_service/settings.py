@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'main_app',
+    'landlord_app',
     'django_celery_results',
 ]
 
@@ -158,3 +159,9 @@ CORS_ALLOWED_ORIGINS = [
     # "https://your.production.domain",
     # Add other allowed origins as needed
 ]
+
+KAFKA_CONFIG = {
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'booking_service_consumers',
+    'auto.offset.reset': 'earliest',
+}

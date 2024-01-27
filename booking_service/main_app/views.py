@@ -167,7 +167,7 @@ def stripe_webhook(request):
 
 
 class BookingListView(APIView):
-    def get(self, request):
-        bookings = Booking.objects.all()
+    def get(self, request, tenant_id):
+        bookings = Booking.objects.filter(tenant_id=tenant_id)
         serializer = BookingSerializer(bookings, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

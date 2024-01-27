@@ -12,7 +12,7 @@ class PropertyGatewayView(APIView):
     def get(self, request):
         payload, err = validate(request)
             
-        if payload and payload["is_landlord"]:
+        if payload:
             user_id = payload.get('id')
 
             params = {'owner_id': user_id}

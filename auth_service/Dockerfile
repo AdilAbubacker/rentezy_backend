@@ -1,11 +1,23 @@
-FROM python:3.8-slim
+FROM python:3.11-slim-bullseye
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
+    build-essential \
+    && pip install --no-cache-dir --upgrade pip
+    
+# Define environment variable
 ENV PYTHONUNBUFFERED 1
-ENV PIP_NO_CACHE_DIR 1
 
 WORKDIR /app
-COPY ./requirements.txt /app/
-RUN pip install --upgrade pip --no-cache-dir --use-feature=fast-deps
-RUN pip install -r requirements.txt
-COPY . /app/
 
-CMD python manage.py runserver 0.0.0.0:8000
+COPY ./requirements.txt /app
+
+RUN pip install --no-cache-dir --requirement /app/requirements.txt
+
+COPY . /app
+
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
+
+# # Run manage.py when the container launches
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

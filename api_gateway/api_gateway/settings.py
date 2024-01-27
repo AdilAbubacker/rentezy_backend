@@ -138,6 +138,11 @@ CORS_ALLOWED_ORIGINS = [
 
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://127.0.0.1:3000',
+    'http://localhost:3000'
+)
 # CORS_ALLOW_CREDENTIALS = True  
 # CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE']  # Specify allowed HTTP methods
 
@@ -149,8 +154,3 @@ CORS_ALLOWED_ORIGINS = [
 # # Set CSRF_COOKIE_SAMESITE and SESSION_COOKIE_SAMESITE to 'None' to allow cookies from different domains
 # CSRF_COOKIE_SAMESITE = 'None'
 # SESSION_COOKIE_SAMESITE = 'None'
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:3000',
-    'http://localhost:3000'
-)

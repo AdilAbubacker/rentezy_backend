@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: service
+metadata: 
+  name: gateway
+spec:
+  selector:
+    app: gateway
+  type: ClusterIP
+  ports:
+    - port: 8001
+      targetPort: TCP

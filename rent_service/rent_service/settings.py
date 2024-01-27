@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main_app',
+    'landlord_app',
     'django_celery_results',
     'django_celery_beat',
     'corsheaders',
@@ -169,3 +170,10 @@ STRIPE_SECRET_KEY = 'sk_test_51OMuzPSEWXt1qBzUe8GemSmja3ZQrgNX1B07yN8pSLud6WiLiy
 STRIPE_WEBHOOK_SECRET = 'whsec_cea4a1cf7f527bda2ef2a9b787664059ba399fe240895ea2d04db1dfad516822'
 
 SITE_URL='http://127.0.0.1:5173'
+
+
+KAFKA_CONFIG = {
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'rent_service_consumers',
+    'auto.offset.reset': 'earliest',
+}

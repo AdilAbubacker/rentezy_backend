@@ -95,3 +95,19 @@ class LogoutView(APIView):
         response.delete_cookie('jwt')
         response.data = {'message': 'success'}
         return response
+    
+
+class GetUsernamesAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        user_ids = request.query_params.getlist('user_ids', [])
+
+        if not user_ids:
+            return Response({"error": "No user IDs provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            users = User.objects.filter(id__in=user_ids)
+            user_data = [{"id": user.id, "username": user.name} for user in users]
+            return Response(user_data, status=status.HTTP_200_OK)
+        
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
