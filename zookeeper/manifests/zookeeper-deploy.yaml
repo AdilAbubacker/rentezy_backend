@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: zookeeper
+  name: zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - image: wurstmeister/zookeeper
+          imagePullPolicy: IfNotPresent
+          name: zookeeper
+          ports:
+            - containerPort: 2181
+# apiVersion: apps/v1
+# kind: StatefulSet
+# metadata:
+#   name: zookeeper
+#   namespace: kafka
+# spec:
+#   serviceName: zookeeper
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: zookeeper
+#   template:
+#     metadata:
+#       labels:
+#         app: zookeeper
+#     spec:
+#       containers:
+#       - name: zookeeper
+#         image: wurstmeister/zookeeper
+#         ports:
+#         - containerPort: 2181

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: searchconsumer
+spec:
+  selector:
+    app: searchconsumer
+  type: ClusterIP
+  ports:
+    - port: 8003
+      targetPort: 8003
+      protocol: TCP

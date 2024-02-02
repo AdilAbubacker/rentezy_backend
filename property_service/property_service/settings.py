@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-44&9av@!(k@!lx=$&u8*-q0)1n5o^w5kerubv+3l6+jjl9460!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'property']
 
 
 # Application definition
@@ -134,7 +134,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
-KAFKA_SERVER = 'localhost:9092'
+KAFKA_SERVER = 'kafka-broker:9092'
 KAFKA_PROPERTY_TOPIC = 'property_topic'
 
 

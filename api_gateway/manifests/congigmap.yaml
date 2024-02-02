@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfiMap
-metadata: 
-  name: gateway-configmap
-data:
-  AUTH_SVC_ADDRESS: "auth:8000"

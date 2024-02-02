@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 
 ELASTICSEARCH_DSL = {
     'default':{
-        "hosts": "http://localhost:9200"
+        "hosts": 'elasticsearch-service:9200'
     }
 }
 
@@ -132,6 +132,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
+# KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
+KAFKA_BOOTSTRAP_SERVERS = 'kafka-service:9092'
 KAFKA_GROUP_ID = 'property_consumer'
 KAFKA_TOPIC = 'property_topic'

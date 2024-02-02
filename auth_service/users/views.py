@@ -84,7 +84,7 @@ class ValidateView(APIView):
         try:
             payload = jwt.decode(token, 'secret', algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            return Response({'error': 'not authorized'}, 403)
+            return Response({'error': 'not authorized'}, status=status.HTTP_401_UNAUTHORIZED)
         
         return Response(payload)
     

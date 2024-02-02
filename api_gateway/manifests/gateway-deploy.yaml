@@ -1,18 +1,19 @@
 apiVersion: apps/v1
-kind: deployment
+kind: Deployment
 metadata:
   name: gateway
   labels: 
     app: gateway
+
 spec: 
   replicas: 2
   selector:
-    matchlabels:
+    matchLabels:
       app: gateway
   strategy: 
     type: RollingUpdate
     rollingUpdate:
-      maxsurge: 3
+      maxSurge: 3
   template:
     metadata: 
       labels: 

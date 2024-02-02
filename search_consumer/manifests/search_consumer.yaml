@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: searchconsumer
+  labels:
+    app: searchconsumer
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: searchconsumer
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: searchconsumer
+    spec: 
+      containers:
+        - name: searchconsumer
+          image: adhil28/search_consumer
+          ports:
+            - containerPort: 8003
+          envFrom:
+            - configMapRef:
+                name: searchconsumer-configmap
+            - secretRef:
+                name: searchconsumer-secret 
+        

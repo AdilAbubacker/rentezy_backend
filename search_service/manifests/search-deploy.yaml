@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search
+  labels:
+    app: search
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: search
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: search
+    spec: 
+      containers:
+        - name: search
+          image: adhil28/search
+          ports:
+            - containerPort: 8004
+          envFrom:
+            - configMapRef:
+                name: search-configmap
+            - secretRef:
+                name: search-secret 
+        

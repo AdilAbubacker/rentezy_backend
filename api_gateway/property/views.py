@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 import requests
 from utils.authorization import validate
+import os
 
 
 class PropertyGatewayView(APIView):
-    property_service_url = "http://127.0.0.1:8002/api/properties/"
+    # property_service_url = f"http://{os.environ.get('PROPERTY_SVC_ADDRESS')}/api/properties/"
+    property_service_url = "http://127.0.0.1:8002//api/properties/"
 
     def get(self, request):
         payload, err = validate(request)
@@ -45,6 +47,8 @@ class PropertyGatewayView(APIView):
 
 
 class PropertyGatewayPKView(APIView):
+    property_svc_address = os.environ.get('PROPERTY_SVC_ADDRESS')
+    # property_service_url = "http://{property_svc_address}/api/properties/{pk}"
     property_service_url = "http://127.0.0.1:8002/api/properties/{pk}"
 
     def get(self, request, pk):

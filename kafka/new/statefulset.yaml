@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Statefulset
+metadata:
+  name: kafka
+spec:
+  serviceName: "not-applicable"
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+
+    spec:
+      containers:
+        - name: kafka
+          image: wurstmeister/kafka
+          ports:
+            - name: amqp
+              protocol: TCP
+              containerPort: 9092
+          envFrom:
+            - configMapRef:
+                name: kafka-configmap
+            - secretRef:
+                name: kafka-secret
+          volumeMounts:
+            - mountPath: "/var/lib/kafka"
+              name: kafka-volume
+      volumes:
+        - name: kafka-volume
+          persistentVolumeClaim:
+            claimName: kafka-pvc

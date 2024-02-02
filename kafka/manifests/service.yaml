@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kafka-broker
+  name: kafka-service
+spec:
+  ports:
+  - port: 9092
+  selector:
+    app: kafka-broker
