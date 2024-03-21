@@ -30,7 +30,7 @@ class BookingView(APIView):
 
         available_rooms = AvailableRooms.objects.get(room_id=room_id)
 
-        if available_rooms.available_quantity < no_of_rooms:
+        if int(available_rooms.available_quantity) < int(no_of_rooms):
             return Response({'error': 'Not enough rooms available'}, status=status.HTTP_400_BAD_REQUEST)
           
         # Reserve the rooms
@@ -48,11 +48,11 @@ class BookingView(APIView):
             with transaction.atomic():
                 booking = booking_serializer.save()
 
-                available_rooms.available_quantity -= no_of_rooms
+                available_rooms.available_quantity -= int(no_of_rooms)
                 available_rooms.save()
 
             # Schedule the task to release reserved rooms after 10 minutes
-            release_reserved_rooms.apply_async((booking.id,), countdown=300)
+            # release_reserved_rooms.apply_async((booking.id,), countdown=300)
             
             # initiating Stripe payment
             try:

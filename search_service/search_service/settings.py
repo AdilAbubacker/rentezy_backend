@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-q_4z1k_+1*@g_gocuh&7nsw)30t8p@^_(jl4%tuduch8+65v@v
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['search', '127.0.0.1']
 
 
 # Application definition
@@ -141,7 +141,10 @@ REST_FRAMEWORK = {
 }
 
 ELASTICSEARCH_DSL = {
-    'default':{
-        "hosts": "elasticsearch-service:9200"
-    }
+    'default': {
+        'hosts': 'http://localhost:9200',  
+        # 'hosts': 'https://elasticsearch-master:9200',  
+        # 'verify_certs': False,
+        # 'http_auth': ('elastic', 'randompassword'),
+    },
 }

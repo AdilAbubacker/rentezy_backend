@@ -9,7 +9,16 @@ from .docserializers import PropertyDocumentSerializer
 from rest_framework import status
 from elasticsearch_dsl import Search
 
-connections.create_connection(alias='default', hosts=['http://localhost:9200'])
+# Define the connection parameters
+connection_params = {
+    'hosts': ['http://localhost:9200'],
+    # 'hosts': ['https://elasticsearch-master:9200'],
+    # 'verify_certs': False,  # Disable SSL verification
+    # 'http_auth': ('elastic', 'randompassword')  # Add HTTP Basic Auth credentials
+}
+
+# Create the connection
+connections.create_connection(alias='default', **connection_params)
 
 class SearchPropertyView(APIView, LimitOffsetPagination):
     search_document = PropertyDocument

@@ -21,7 +21,8 @@ class Booking(models.Model):
         ('cancelled', 'Cancelled'),
         ('completed', 'Completed'),
     ]
-    room = models.ForeignKey(AvailableRooms, on_delete=models.SET_NULL, null=True, related_name='bookings')
+    room_id = models.IntegerField()
+    # room = models.ForeignKey(AvailableRooms, on_delete=models.SET_NULL, null=True, related_name='bookings')
     tenant_id = models.IntegerField()
     status = models.CharField(max_length=50, choices=STATUS, default='reserved')
     move_in_date = models.DateField()

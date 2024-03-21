@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rent
+  labels:
+    app: rent
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rent
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: rent
+    spec: 
+      containers:
+        - name: rent
+          image: adhil28/rent
+          ports:
+            - containerPort: 8008
+          envFrom:
+            - configMapRef:
+                name: rent-configmap
+            - secretRef:
+                name: rent-secret 
+        

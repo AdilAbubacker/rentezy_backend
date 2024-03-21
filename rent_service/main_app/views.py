@@ -13,7 +13,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.utils import timezone
 
-
 stripe.api_key = settings.STRIPE_SECRET_KEY 
 
 # Create your views here.
@@ -29,8 +28,8 @@ class RentedPropertiesListView(APIView):
     def get(self, request):
         bookings = RentalAgreement.objects.all()
         serializer = RentalAgreementSerializer(bookings, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+        return Response(serializer.data, status=status.HTTP_200_OK)    
+
 class RentPaymentDeatailsView(APIView):
     def get(self, request, rent_id):
         agreement = RentalAgreement.objects.get(id=rent_id)
@@ -45,7 +44,6 @@ class RentPaymentDeatailsView(APIView):
             'rental_agreement': agreement_serializer.data,
             'monthly_payments': payments_serializer.data
         }
-
         return Response(data, status=status.HTTP_200_OK)
     
 
@@ -81,7 +79,6 @@ class RentPaymentView(APIView):
                 cancel_url=settings.SITE_URL + '/?canceled=true',
             )
             return Response({'checkout_url': checkout_session.url},status=status.HTTP_200_OK)
-
         except Exception as e:
             print(f"Error initiating Stripe payment: {e}")
             return Response({'error': 'Error initiating Stripe payment'}, status=500)

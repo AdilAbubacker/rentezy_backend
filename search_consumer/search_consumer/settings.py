@@ -43,11 +43,6 @@ INSTALLED_APPS = [
     'django_elasticsearch_dsl_drf',
 ]
 
-ELASTICSEARCH_DSL = {
-    'default':{
-        "hosts": 'elasticsearch-service:9200'
-    }
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -108,6 +103,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'https://elasticsearch-master:9200',  
+        'verify_certs': False,
+        'http_auth': ('elastic', 'randompassword'),
+    },
+}
 
 
 # Internationalization

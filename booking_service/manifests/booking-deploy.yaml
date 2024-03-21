@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booking
+  labels: 
+    app: booking
+
+spec: 
+  replicas: 2
+  selector:
+    matchLabels:
+      app: booking
+  strategy: 
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata: 
+      labels: 
+        app: booking
+    spec:
+      containers:
+        - name: booking
+          image: adhil28/booking
+          envFrom:
+            - configMapRef:
+                name: booking-configmap
+            - secretRef:
+                name: booking-secret

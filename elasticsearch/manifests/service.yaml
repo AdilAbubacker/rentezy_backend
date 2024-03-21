@@ -3,10 +3,9 @@ kind: Service
 metadata:
   name: elasticsearch-service
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - port: 9200
       targetPort: 9200
-      nodePort: 30200  # Elige un puerto que esté libre en tu máquina
   selector:
     app: elasticsearch

@@ -22,4 +22,10 @@ urlpatterns = [
     path('api/', include('gateway.urls')),
     path('api/', include('property.urls')),
     path('api/admin/', include('admin_app.urls')),
+    path('api/search/', include('search.urls')),
+    path('api/', include('booking.urls')),
+    path('api/', include('rent.urls')),
+    path('api/', include('schedulevisit.urls')),
+    path('api/', include('notification.urls')),
+    path('chat/', include('chat.urls')),
 ]

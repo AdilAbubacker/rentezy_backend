@@ -30,7 +30,15 @@ from rest_framework import status
 #         'content':'content'
 #     }
 
+# Define the connection parameters
+connection_params = {
+    'hosts': ['https://elasticsearch-master:9200'],
+    'verify_certs': False,  # Disable SSL verification
+    'http_auth': ('elastic', 'randompassword')  # Add HTTP Basic Auth credentials
+}
 
+# Create the connection
+connections.create_connection(alias='default', **connection_params)
 
 # connections.create_connection(alias='default', hosts=['http://localhost:9200'])
 

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'gateway',
     'property',
     'admin_app',
+    'notification',
 ]
 
 MIDDLEWARE = [
@@ -132,18 +133,38 @@ AUTH_SERVICE_BASE_URL = 'http://127.0.0.1:8000/api'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
-    "http://rentezy.com",
-]
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rentezy.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'rentezy.com', '*']
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    'http://127.0.0.1:3000',
-    'http://localhost:3000'
-)
+CORS_ORIGIN_WHITELIST = [
+    "http://rentezy.com",
+    "http://*",
+    "https://*"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://*",
+    "https://*",]
+
+CORS_ORIGIN_WHITELIST = [
+    "http://*",
+    "https://*",]
+
+CSRF_TRUSTED_ORIGINS = [
+        "http://*",
+        "https://*",
+]
+CORS_ORIGIN_ALLOW_ALL = True  # For development only, not recommended for production
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+SESSION_COOKIE_SECURE = True 
+
+# For session cookies
+SESSION_COOKIE_SAMESITE = 'None'  # or 'Lax' or 'Strict'
+
+# For CSRF cookies
+CSRF_COOKIE_SAMESITE = 'None'  # or 'Lax' or 'Strict'
 # CORS_ALLOW_CREDENTIALS = True  
 # CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'DELETE']  # Specify allowed HTTP methods
 

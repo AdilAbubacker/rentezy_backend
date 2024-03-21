@@ -8,8 +8,8 @@ import os
 
 
 class PropertyGatewayView(APIView):
-    # property_service_url = f"http://{os.environ.get('PROPERTY_SVC_ADDRESS')}/api/properties/"
-    property_service_url = "http://127.0.0.1:8002//api/properties/"
+    property_service_url = f"http://{os.environ.get('PROPERTY_SVC_ADDRESS')}/api/properties/"
+    # property_service_url = "http://127.0.0.1:8002//api/properties/"
 
     def get(self, request):
         payload, err = validate(request)

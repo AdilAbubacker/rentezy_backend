@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat
+  labels:
+    app: chat
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: chat
+    spec: 
+      containers:
+        - name: chat
+          image: adhil28/chat
+          ports:
+            - containerPort: 8006
+          envFrom:
+            - configMapRef:
+                name: chat-configmap
+            - secretRef:
+                name: chat-secret 
+        

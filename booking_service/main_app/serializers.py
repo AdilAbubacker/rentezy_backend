@@ -7,7 +7,7 @@ class AvailableRoomsSerializer(serializers.ModelSerializer):
         fields = ['room_id', 'property_name', 'image']
 
 class BookingSerializer(serializers.ModelSerializer):
-    room = AvailableRoomsSerializer()
+    # room = AvailableRoomsSerializer()
 
     class Meta:
         model = Booking

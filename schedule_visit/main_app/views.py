@@ -16,7 +16,6 @@ MONTH_ABBR_TO_NUM = {
     'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
 }
 
-
 class AvailableTimesAndDatesView(APIView):
     def get(self, request, room_id):
 
@@ -36,7 +35,7 @@ class AvailableTimesAndDatesView(APIView):
                 }
                 for date in next_seven_days
             ]
-        
+
         data = {
             'times':list(times),
             'dates':formatted_dates

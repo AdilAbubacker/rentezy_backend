@@ -3,12 +3,14 @@ kind: Ingress
 metadata: 
   name: gateway-ingress
   annotations:
-    nginx.ingress.kubernetes.ip/proxy-body-size: "0"
-    nginx.ingress.kubernetes.ip/proxy-read-timeout: "600"
-    nginx.ingress.kubernetes.ip/proxy-send-timeout: "600"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTP": 8001}, {"HTTP": 443}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
 spec:
+  ingressClassName: alb
   rules:
-    - host: rentezy.com
+    - host: rentezy.homes
       http: 
         paths:
           - path: /
@@ -18,3 +20,46 @@ spec:
                 name: gateway
                 port: 
                   number: 8001
+          - path: /ws/chat   # WebSocket path for chat service
+            pathType: Prefix
+            backend:
+              service:
+                name: chat
+                port: 
+                  number: 8006
+          - path: /ws/notification   # WebSocket path for notification service
+            pathType: Prefix
+            backend:
+              service:
+                name: notification
+                port: 
+                  number: 8009
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata: 
+#   name: gateway-ingress
+#   annotations:
+#     alb.ingress.kubernetes.io/scheme: internet-facing
+#     alb.ingress.kubernetes.io/target-type: ip
+#     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTP": 8001}, {"HTTP": 443}, {"HTTPS": 443}]'
+#     alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+# spec:
+#   ingressClassName: alb
+#   rules:
+#     - host: rentezy.homes
+#       http: 
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: gateway
+#                 port: 
+#                   number: 8001
+#           - path: /ws   # WebSocket path
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: chat
+#                 port: 
+#                   number: 8006

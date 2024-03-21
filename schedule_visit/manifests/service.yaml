@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: schedulevisit
+spec:
+  selector:
+    app: schedulevisit
+  type: ClusterIP
+  ports:
+    - port: 8007
+      targetPort: 8007
+      protocol: TCP

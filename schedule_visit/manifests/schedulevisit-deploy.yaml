@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schedulevisit
+  labels:
+    app: schedulevisit
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schedulevisit
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 3
+  template:
+    metadata:
+      labels:
+        app: schedulevisit
+    spec: 
+      containers:
+        - name: schedulevisit
+          image: adhil28/schedulevisit
+          ports:
+            - containerPort: 8007
+          envFrom:
+            - configMapRef:
+                name: schedulevisit-configmap
+            - secretRef:
+                name: schedulevisit-secret 
+        

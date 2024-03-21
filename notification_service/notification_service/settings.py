@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-c7#ltlb6x#i0iuf2$yk)33qpc7_v1jb6z1(3oloqq3)q%*2b=l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['notification',"*"]
 
 
 # Application definition
@@ -75,16 +75,16 @@ TEMPLATES = [
 WSGI_APPLICATION = 'notification_service.wsgi.application'
 ASGI_APPLICATION = 'notification_service.asgi.application'
 
+
 # Channels
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [("my-redis-master", 6379)],
         },
     },
 }
-
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

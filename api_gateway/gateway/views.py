@@ -18,8 +18,8 @@ class RegisterUserView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        auth_service_url = f"http://127.0.0.1:8000/api/login/"
-        # auth_service_url = f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/api/login/"
+        # auth_service_url = f"http://127.0.0.1:8000/api/login/"
+        auth_service_url = f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/api/login/"
 
         response = requests.post(auth_service_url, data=request.data)
 

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-xuwg!c&&5o2az@f1f)+b+dh#@0&c9$e(uq2de2*gz5yt0za!#m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['schedulevisit',"*"]
 
 
 # Application definition

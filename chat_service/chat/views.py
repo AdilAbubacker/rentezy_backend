@@ -6,6 +6,9 @@ from rest_framework import status
 from django.db import models
 from .models import Message
 import requests  
+import os
+
+# Create your views here.
 
 class MessageCreateView(APIView):
     def post(self, request, *args, **kwargs):
@@ -30,7 +33,8 @@ class ChatMessagesView(APIView):
 
 
 class UsersChattedWithView(APIView):
-    AUTH_SERVICES_API_URL = "http://127.0.0.1:8000/api/get_usernames/" 
+    # AUTH_SERVICES_API_URL = "http://127.0.0.1:8000/api/get_usernames/" 
+    AUTH_SERVICES_API_URL = f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/api/get_usernames/" 
 
     def get(self, request, user_id, *args, **kwargs):
 

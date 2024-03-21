@@ -8,8 +8,8 @@ def validate(request):
     if not token:
         return None, ('missing credentials', 401)
     
-    # url = f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/api/validate/"
-    url = "http://127.0.0.1:8000/api/validate/"
+    url = f"http://{os.environ.get('AUTH_SVC_ADDRESS')}/api/validate/"
+    # url = "http://127.0.0.1:8000/api/validate/"
 
     response = requests.post(url=url, data={'jwt':token})
 

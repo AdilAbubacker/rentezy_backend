@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-3m*4ywfz+b-%+u5ac+x^-64(+%k4l$bu*z=j&+^^p$92*)bi&!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['booking',"*"]
                                              
 # Application definition
 
@@ -78,18 +78,23 @@ WSGI_APPLICATION = 'booking_service.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'RentEzy_bookings',
+#         'USER': 'postgres',
+#         'PASSWORD': '00745747',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'RentEzy_bookings',
-        'USER': 'postgres',
-        'PASSWORD': '00745747',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -151,7 +156,7 @@ STRIPE_SECRET_KEY = 'sk_test_51OMuzPSEWXt1qBzUe8GemSmja3ZQrgNX1B07yN8pSLud6WiLiy
 STRIPE_WEBHOOK_SECRET = 'whsec_cea4a1cf7f527bda2ef2a9b787664059ba399fe240895ea2d04db1dfad516822'
 
 
-SITE_URL='http://127.0.0.1:5173'
+SITE_URL='https://www.rentezy.homes'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
