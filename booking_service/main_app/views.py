@@ -50,12 +50,12 @@ class BookingView(APIView):
                     # Re-fetch within transaction to get the most up-to-date data
                     available_rooms = AvailableRooms.objects.get(room_id=room_id)
 
-                    booking = booking_serializer.save()
 
                     # Deduct the rooms and save; this should trigger the constraint if it goes negative
                     available_rooms.available_quantity -= no_of_rooms
                     available_rooms.save()
                     
+                    booking = booking_serializer.save()
 
             except IntegrityError:
                 return Response({'error': 'Not enough rooms available'}, status=status.HTTP_400_BAD_REQUEST)
