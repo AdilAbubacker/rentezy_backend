@@ -17,7 +17,6 @@ class Booking(models.Model):
     STATUS = [
         ('reserved', 'Reserved'),
         ('booked', 'Booked'),
-        ('rented', 'Rented'),
         ('cancelled', 'Cancelled'),
         ('completed', 'Completed'),
     ]
@@ -35,3 +34,4 @@ class Booking(models.Model):
 
     class Meta:
         app_label = 'main_app'
+        # ('rented', 'Rented'),
