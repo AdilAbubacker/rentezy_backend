@@ -47,9 +47,7 @@ class BookingView(APIView):
         if booking_serializer.is_valid():
             try:
                 with transaction.atomic():
-                    # Re-fetch within transaction to get the most up-to-date data
                     available_rooms = AvailableRooms.objects.get(room_id=room_id)
-
 
                     # Deduct the rooms and save; this should trigger the constraint if it goes negative
                     available_rooms.available_quantity -= no_of_rooms
