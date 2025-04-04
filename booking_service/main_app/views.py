@@ -45,14 +45,22 @@ class BookingView(APIView):
         booking_serializer = BookingSerializer(data=booking_data)
 
         if booking_serializer.is_valid():
-            with transaction.atomic():
-                booking = booking_serializer.save()
+            try:
+                with transaction.atomic():
+                    # Re-fetch within transaction to get the most up-to-date data
+                    available_rooms = AvailableRooms.objects.get(room_id=room_id)
 
-                available_rooms.available_quantity -= int(no_of_rooms)
-                available_rooms.save()
+                    # Deduct the rooms and save; this should trigger the constraint if it goes negative
+                    available_rooms.available_quantity -= no_of_rooms
+                    available_rooms.save()
+                    
+                    booking = booking_serializer.save()
 
+            except IntegrityError:
+                return Response({'error': 'Not enough rooms available'}, status=status.HTTP_400_BAD_REQUEST)
+            
             # Schedule the task to release reserved rooms after 10 minutes
-            # release_reserved_rooms.apply_async((booking.id,), countdown=300)
+            release_reserved_rooms.apply_async((booking.id,), countdown=300)
             
             # initiating Stripe payment
             try:
