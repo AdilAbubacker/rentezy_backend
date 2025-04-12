@@ -39,7 +39,7 @@
 
 ![Architecture Diagram](https://via.placeholder.com/800x400.png?text=RentEzy+System+Architecture)
 
-> Replace the placeholder link with a real architecture diagram hosted in your repo or wiki.
+> .
 
 ---
 
