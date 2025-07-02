@@ -27,6 +27,8 @@
 
 ## 🏗️ System Architecture
 
+> **Inspired by industry leaders like Airbnb's microservices architecture, adapted for the property rental domain with specialized services for recurring payments and visit scheduling.**
+
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   API Gateway   │    │   Load Balancer │
@@ -41,15 +43,30 @@
                 │               │               │
         ┌───────▼──────────────────────────────▼───────┐
         │           Apache Kafka Event Bus             │
+        │         (Event-Driven Communication)         │
         └─────────────────┬────────────────────────────┘
                           │
     ┌─────────────────────┼─────────────────────────────┐
     │                     │                             │
 ┌───▼────┐    ┌──────▼──────┐    ┌──────▼──────┐    ┌──▼─────┐
-│Chat Svc│    │Notification │    │Search Engine│    │Payment │
+│Chat Svc│    │Notification │    │Search Engine│    │Rent Mgmt│
 │        │    │Service      │    │(Elasticsearch)│   │Service │
 └────────┘    └─────────────┘    └─────────────┘    └────────┘
 ```
+
+### 🎯 Architectural Decisions
+
+**Why Microservices?**
+- **Independent scaling**: Each service scales based on demand
+- **Technology diversity**: Best tool for each job
+- **Team autonomy**: Different teams can own different services
+- **Fault isolation**: Service failures don't cascade
+
+**Event-Driven Design Benefits:**
+- **Loose coupling**: Services communicate via events, not direct calls
+- **Resilience**: Message persistence ensures no data loss
+- **Scalability**: Async processing handles traffic spikes
+- **Auditability**: Complete event history for debugging
 
 ## 🛠️ Tech Stack
 
