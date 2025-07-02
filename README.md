@@ -26,9 +26,6 @@
 - **High-performance search** with Elasticsearch clustering
 
 ## 🏗️ System Architecture
-
-> **Inspired by industry leaders like Airbnb's microservices architecture, adapted for the property rental domain with specialized services for recurring payments and visit scheduling.**
-
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   API Gateway   │    │   Load Balancer │
@@ -184,7 +181,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/rentezy
+git clone https://github.com/AdilAbubacker/rentezy
 cd rentezy
 
 # Start infrastructure services
@@ -222,48 +219,6 @@ kubectl get pods -n rentezy
 kubectl port-forward svc/api-gateway 8000:8000
 ```
 
-## 📊 System Metrics & Performance
-
-- **Response Time**: < 200ms average API response
-- **Throughput**: 1000+ concurrent users supported
-- **Availability**: 99.9% uptime with health monitoring
-- **Search Performance**: Sub-second property search results
-- **Message Delivery**: < 100ms real-time chat latency
-
-## 🔧 Configuration
-
-### Environment Variables
-```bash
-# Database
-DATABASE_URL=postgresql://user:pass@host:port/db
-
-# Kafka
-KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-
-# Redis
-REDIS_URL=redis://localhost:6379
-
-# Elasticsearch
-ELASTICSEARCH_URL=http://localhost:9200
-
-# AWS
-AWS_ACCESS_KEY_ID=your_key
-AWS_SECRET_ACCESS_KEY=your_secret
-AWS_S3_BUCKET=your_bucket
-
-# Stripe
-STRIPE_PUBLIC_KEY=pk_test_...
-STRIPE_SECRET_KEY=sk_test_...
-```
-
-## 🧪 Testing Strategy
-
-- **Unit Tests**: Individual service testing with pytest
-- **Integration Tests**: Service-to-service communication
-- **End-to-End Tests**: Full user journey automation
-- **Load Testing**: Concurrent user simulation
-- **Contract Testing**: API contract validation between services
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
@@ -274,36 +229,6 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📈 Roadmap
-
-- [ ] **Mobile App**: React Native mobile application
-- [ ] **AI Integration**: Smart property recommendations
-- [ ] **IoT Integration**: Smart home device connectivity
-- [ ] **Blockchain**: Smart contracts for rent agreements
-- [ ] **Analytics Dashboard**: Advanced property insights
-- [ ] **Multi-language Support**: Internationalization
-
-## 👤 Author
-
-**Adil Abubacker**
-- 🌐 Portfolio: [Your Portfolio](your-portfolio-link)
-- 💼 LinkedIn: [Adil Abubacker](your-linkedin)
-- 📧 Email: adhilkv313@gmail.com
-- 📱 Phone: +91 8281084824
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **Apache Kafka** for reliable event streaming
-- **Elasticsearch** for powerful search capabilities
-- **Django REST Framework** for rapid API development
-- **React Community** for excellent frontend tools
-- **AWS** for robust cloud infrastructure
-
----
 
 <div align="center">
 
