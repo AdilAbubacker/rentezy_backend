@@ -19,7 +19,7 @@
 - **Instant notifications** for bookings, payments, and updates
 
 ### For Developers
-- **18+ microservices** architecture with independent scaling
+- **10+ microservices** architecture with independent scaling
 - **Event-driven design** using Apache Kafka for reliable communication
 - **Concurrency-safe booking** system preventing race conditions
 - **Auto-scaling Kubernetes** deployment on AWS EKS
