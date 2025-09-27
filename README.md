@@ -1,4 +1,4 @@
-# 🏠 RentEzy - A Scalable Property Management Platform 🏡
+# � RentEzy - A Scalable Property Management Platform 
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](your-github-link)
