@@ -150,6 +150,7 @@ graph TB
     class K8s,Docker,Redis,Celery,CeleryBeat infrastructure
     class Stripe,AWS external
     class Kafka,Zookeeper messaging
+```
 
 
 ### 🎯 Architectural Decisions
