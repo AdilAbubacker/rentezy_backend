@@ -25,6 +25,7 @@ RentEzy is a comprehensive, microservices-based web application designed to stre
 - **High-performance search** with Elasticsearch clustering
 
 ## 🏗️ System Architecture
+
 ```mermaid
 graph TB
     %% User Layer
