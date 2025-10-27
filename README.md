@@ -150,6 +150,28 @@ graph TB
     class Kafka,Zookeeper messaging
 ```
 
+### 🎪 19+ Independent Microservices
+
+Each service is a self-contained, independently deployable unit with its own database, business logic, and scaling policy:
+
+| Service | Purpose | Why It Exists |
+|---------|---------|---------------|
+| 🚪 **API Gateway** | Authentication, routing, rate limiting | Single entry point, security enforcement |
+| 🔐 **Auth Service** | User management, JWT tokens | Centralized identity management |
+| 📅 **Booking Service** | Property reservations, availability | Handles complex booking logic with transactional locking |
+| 🏢 **Property Service** | Property listings, details | Core business domain |
+| 💰 **Rent Service** | Recurring payments, late fees | Automated monthly billing with Celery Beat |
+| 💬 **Chat Service** | Real-time messaging | WebSocket-based instant communication |
+| 🔔 **Notification Service** | Event-driven alerts | Decoupled notification delivery |
+| 🔍 **Search Service** | Property search API | High-performance search interface |
+| 📊 **Search Consumer** | Index updates via Kafka | Async Elasticsearch indexing |
+| 🗄️ **Elasticsearch** | Full-text search engine | Lightning-fast property discovery |
+| ⚡ **Redis** | Caching, sessions, queues | Sub-millisecond data access |
+| 📋 **Schedule Visit** | Appointment booking | Separate concern for visit management |
+| 🎫 **EFS Role** | Storage orchestration | Persistent volume management |
+| 🐳 **Kafka + Zookeeper** | Message broker + coordination | Event streaming backbone |
+
+---
 
 ### 🎯 Architectural Decisions
 
