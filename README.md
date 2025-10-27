@@ -10,7 +10,7 @@
 ## 🖥️ Application Preview
 
 <div align="center">
-  <img src="./assets/hero-section.png" alt="RentEzy - Find your next home" width="900">
+  <img src="[./assets/hero-section.png](https://github.com/AdilAbubacker/rentezy_backend/blob/main/rentezylanding.png)" alt="RentEzy - Find your next home" width="900">
   <p><em>RentEzy's intuitive search interface</em></p>
 </div>
 
