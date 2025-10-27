@@ -22,22 +22,6 @@ RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven mi
 
 ---
 
-## 🚀 What Makes RentEzy Special
-
-### For Users
-- **Lightning-fast property search** powered by Elasticsearch
-- **Real-time chat** with landlords and property managers
-- **Smart scheduling** for property visits with automated confirmations
-- **Secure payments** with automated rent collection and late fee management
-- **Instant notifications** for bookings, payments, and updates
-
-### For Developers
-- **10+ microservices** architecture with independent scaling
-- **Event-driven design** using Apache Kafka for reliable communication
-- **Concurrency-safe booking** system preventing race conditions
-- **Auto-scaling Kubernetes** deployment on AWS EKS
-- **High-performance search** with Elasticsearch clustering
-
 ## 🏗️ System Architecture
 
 ```mermaid
