@@ -24,6 +24,7 @@ RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven mi
 
 ## 🏗️ System Architecture - The Beast Under The Hood
 
+
 ```mermaid
 graph TB
     %% User Layer
@@ -301,6 +302,7 @@ AWS EKS Cluster
 - Zero-downtime deployments with rolling updates
 - Resource isolation and efficient utilization
 
+---
 
 ## 🤝 Want to Collaborate?
 
@@ -314,7 +316,5 @@ This project represents hundreds of hours of architecting, coding, debugging, an
 <div align="center">
 
 **⭐ Star this repository if you found it helpful!**
-
-[![Made with ❤️ by Adil](https://img.shields.io/badge/Made%20with%20❤️%20by-Adil-red)](https://github.com/your-username)
 
 </div>
