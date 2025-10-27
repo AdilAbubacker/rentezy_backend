@@ -150,6 +150,7 @@ graph TB
     class Stripe,AWS external
     class Kafka,Zookeeper messaging
 ```
+```
 
 ### 🎪 19+ Independent Microservices
 
@@ -229,9 +230,10 @@ Traditional database searches die at scale. RentEzy uses **Elasticsearch** with:
 - **Django REST Framework** - Robust API development
 - **Apache Kafka** - Distributed event streaming (the nervous system)
 - **Celery + Celery Beat** - Async task processing & scheduling
-- **Redis** - Lightning-fast caching and message broker
 - **PostgreSQL** - ACID-compliant primary database
 - **Elasticsearch** - Full-text search engine
+- **Redis** - Lightning-fast caching and message broker
+
 
 ### **Frontend Excellence**
 - **React.js** - Component-based UI
@@ -293,7 +295,7 @@ AWS EKS Cluster
 ├── AWS EFS CSI for persistent storage
 ├── Ingress Controller (Nginx)
 ├── Service Mesh for inter-service communication
-└── Monitoring with Prometheus & Grafana
+└── AWS ALB for load balancibg
 ```
 
 **Why Kubernetes?**
