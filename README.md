@@ -24,7 +24,7 @@ RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven mi
 
 ## 🏗️ System Architecture - The Beast Under The Hood
 
-
+```
 ```mermaid
 graph TB
     %% User Layer
@@ -150,7 +150,7 @@ graph TB
     class Stripe,AWS external
     class Kafka,Zookeeper messaging
 ```
-```
+---
 
 ### 🎪 19+ Independent Microservices
 
