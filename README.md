@@ -10,9 +10,11 @@
 ## 🖥️ Application Preview
 
 <div align="center">
-  <img src="[./assets/hero-section.png](https://github.com/AdilAbubacker/rentezy_backend/blob/main/rentezylanding.png)" alt="RentEzy - Find your next home" width="900">
-  <p><em>RentEzy's intuitive search interface</em></p>
+  <img src="./rentezylanding.png" alt="RentEzy - Property search interface" width="900">
+  <p><em>Intuitive location-based search powered by React + Django microservices</em></p>
 </div>
+
+---
 
 ## 🎯 The Challenge
 
