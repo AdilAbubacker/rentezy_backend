@@ -26,8 +26,22 @@ RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven mi
 
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#e3f2fd','primaryTextColor':'#000','primaryBorderColor':'#1976d2','lineColor':'#1976d2','secondaryColor':'#bbdefb','tertiaryColor':'#f5f5f5'}}}%%
-graph TB
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'primaryColor': '#e1f5fe',
+    'primaryTextColor': '#01579b',
+    'primaryBorderColor': '#0288d1',
+    'lineColor': '#0288d1',
+    'secondaryColor': '#b3e5fc',
+    'tertiaryColor': '#fff',
+    'background': '#f5f5f5',
+    'mainBkg': '#e1f5fe',
+    'secondBkg': '#b3e5fc',
+    'tertiaryBkg': '#ffffff'
+  }
+}}%%
+
 graph TB
     %% User Layer
     User[👤 User Interface<br/>React + Redux]
