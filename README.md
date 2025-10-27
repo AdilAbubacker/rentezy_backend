@@ -7,6 +7,12 @@
 
 > *A comprehensive, microservices-based web application designed to streamline the entire property rental lifecycle. It connects property owners, managers, and tenants through a seamless, real-time platform, automating everything from property listings and visit scheduling to rent collection and communication.*
 ---
+## 🖥️ Application Preview
+
+<div align="center">
+  <img src="./assets/hero-section.png" alt="RentEzy - Find your next home" width="900">
+  <p><em>RentEzy's intuitive search interface</em></p>
+</div>
 
 ## 🎯 The Challenge
 
