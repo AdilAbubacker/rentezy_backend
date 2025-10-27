@@ -30,7 +30,6 @@ RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven mi
   "theme": "base",
   "themeVariables": {
     "diagramBackground": "#e1f5fe",  // light blue
-    "background": "transparent"      // optional: makes surrounding background transparent
   }
 }}%%
 graph TB
