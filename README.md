@@ -1,3 +1,14 @@
+# 🏠 RentEzy - Enterprise-Grade Property Management Platform
+
+> *A comprehensive, microservices-based web application designed to streamline the entire property rental lifecycle. It connects property owners, managers, and tenants through a seamless, real-time platform, automating everything from property listings and visit scheduling to rent collection and communication.
+*
+
+[![Live Demo](https://img.shields.io/badge/Demo-Live-success?style=for-the-badge)](your-live-link)
+[![Microservices](https://img.shields.io/badge/Services-19+-blue?style=for-the-badge)]()
+[![Architecture](https://img.shields.io/badge/Architecture-Event--Driven-orange?style=for-the-badge)]()
+[![Kubernetes](https://img.shields.io/badge/Deployed%20on-AWS%20EKS-yellow?style=for-the-badge)]()
+
+---
 # 🏡 RentEzy - A Scalable Property Management Platform 
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
