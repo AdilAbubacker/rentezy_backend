@@ -24,23 +24,14 @@ RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven mi
 
 ## 🏗️ System Architecture - The Beast Under The Hood
 
+<div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://via.placeholder.com/1200x800/1a1a1a/ffffff?text=Dark+Mode+Diagram">
+    <img alt="RentEzy Architecture" src="https://via.placeholder.com/1200x800/e3f2fd/000000?text=Light+Mode+Diagram">
+  </picture>
+</div>
 
 ```mermaid
-%%{init: {
-  'theme': 'base',
-  'themeVariables': {
-    'primaryColor': '#e1f5fe',
-    'primaryTextColor': '#01579b',
-    'primaryBorderColor': '#0288d1',
-    'lineColor': '#0288d1',
-    'secondaryColor': '#b3e5fc',
-    'tertiaryColor': '#fff',
-    'background': '#f5f5f5',
-    'mainBkg': '#e1f5fe',
-    'secondBkg': '#b3e5fc',
-    'tertiaryBkg': '#ffffff'
-  }
-}}%%
 
 graph TB
     %% User Layer
