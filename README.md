@@ -7,11 +7,9 @@
 
 > *A comprehensive, microservices-based web application designed to streamline the entire property rental lifecycle. It connects property owners, managers, and tenants through a seamless, real-time platform, automating everything from property listings and visit scheduling to rent collection and communication.*
 ---
-## 🖥️ Application Preview
-
 <div align="center">
   <img src="./rentezylanding.png" alt="RentEzy - Property search interface" width="900">
-  <p><em>Intuitive location-based search powered by React + Django microservices</em></p>
+  <!-- <p><em>Intuitive location-based search powered by React + Django microservices</em></p> -->
 </div>
 
 ---
