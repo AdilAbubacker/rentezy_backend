@@ -8,10 +8,17 @@ class AvailableRooms(models.Model):
     image = models.CharField(max_length=255)
     price = models.IntegerField()
     initial_quantity = models.IntegerField(default=1)
-    available_quantity = models.IntegerField(validators=[MinValueValidator(0)],default=1)
-
+    available_quantity = models.IntegerField()
+    
     class Meta:
         app_label = 'main_app'
+        constraints = [
+            models.CheckConstraint(
+                check=Q(available_quantity__gte=0),
+                name="available_quantity_non_negative"
+            )
+        ]
+        
     
 class Booking(models.Model):
     STATUS = [
