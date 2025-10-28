@@ -179,20 +179,54 @@ Each service is a self-contained, independently deployable unit with its own dat
 
 ## 🚀 What Makes This Architecture Special
 
-### 1️⃣ **Race Condition Mastery** 🏁
-```python
-# The Problem: Two users booking the same room simultaneously
-# The Solution: Transactional database locking
 
-with transaction.atomic():
-    room = Room.objects.select_for_update().get(id=room_id)
-    if room.is_available:
-        create_booking()
-        room.mark_unavailable()
-    else:
-        raise AlreadyBooked()
+### 1️⃣ **Race Condition Mastery** 🏁
+
+```python
+# The Problem: Two users booking the same property simultaneously
+# The Solution: Database-level constraints + Atomic operations
+
+# Database Model with Constraint
+class AvailableRooms(models.Model):
+    available_quantity = models.IntegerField()
+    
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=Q(available_quantity__gte=0),
+                name="available_quantity_non_negative"
+            )
+        ]
+
+# Booking Logic - Optimistic Concurrency Control
+try:
+    with transaction.atomic():
+        # Create booking first
+        booking = Booking.objects.create(
+            room_id=room_id,
+            client_name=client_name,
+            client_email=client_email
+        )
+        
+        # Atomic decrement - evaluated in database, not Python
+        AvailableRooms.objects.filter(id=room_id).update(
+            available_quantity=F("available_quantity") - 1
+        )
+        
+except IntegrityError as e:
+    if "available_quantity_non_negative" in str(e):
+        return {"error": "Property is fully booked"}
+    return {"error": "Booking failed"}
 ```
-**Impact:** Zero double-bookings across thousands of concurrent requests.
+
+**Why This is Superior:**
+- ✅ Database enforces the constraint **atomically** (no race condition possible)
+- ✅ `F()` expressions avoid read-modify-write races - operation happens in SQL
+- ✅ **Optimistic concurrency** = better performance than pessimistic locking
+- ✅ Constraint violation automatically rolls back the entire transaction
+- ✅ Cleaner code with graceful error handling
+
+**Impact:** Zero double-bookings across thousands of concurrent requests, with better throughput than traditional row-locking.
 
 ### 2️⃣ **Event-Driven Intelligence** 🧠
 ```
