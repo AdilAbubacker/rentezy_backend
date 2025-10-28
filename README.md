@@ -188,6 +188,8 @@ Each service is a self-contained, independently deployable unit with its own dat
 
 # Database Model with Constraint
 class AvailableRooms(models.Model):
+    room_id = models.IntegerField()
+    initial_quantity = models.IntegerField(default=1)
     available_quantity = models.IntegerField()
     
     class Meta:
