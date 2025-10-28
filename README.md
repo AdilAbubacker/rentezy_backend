@@ -206,8 +206,7 @@ try:
         # Create booking first
         booking = Booking.objects.create(
             room_id=room_id,
-            client_name=client_name,
-            client_email=client_email
+            tenant_id=tenant_id,
         )
         
         # Atomic decrement - evaluated in database, not Python
