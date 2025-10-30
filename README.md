@@ -229,7 +229,14 @@ except IntegrityError as e:
 
 **Impact:** Zero double-bookings across thousands of concurrent requests, with better throughput than traditional row-locking.
 
-### 2️⃣ **Event-Driven Intelligence** 🧠
+### 2️⃣. **Event-Driven Architecture with Apache Kafka**
+**The Problem:** Service coupling and synchronous dependencies creating bottlenecks  
+**The Solution:** Async event streaming with guaranteed delivery
+
+- **19 services communicating via events** - zero tight coupling
+- **Fault tolerance**: Services can go down without cascading failures
+- **Scalability**: Each service scales independently based on load
+
 ```
 User Books Property → Kafka Event → Payment Service Charges
                                   ↓
@@ -247,6 +254,7 @@ User Books Property → Kafka Event → Payment Service Charges
 - **Payment Reminders:** Real-time notifications before due dates
 - **Stripe Integration:** Secure, PCI-compliant payment processing
 
+  
 ### 4️⃣ **Search That Actually Scales** 🔎
 Traditional database searches die at scale. RentEzy uses **Elasticsearch** with:
 - Fuzzy matching for typo-tolerant searches
