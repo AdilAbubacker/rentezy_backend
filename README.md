@@ -248,48 +248,9 @@ User Books Property → Kafka Event → Payment Service Charges
 ```
 **Impact:** Fully automated workflows without tight coupling.
 
-### 🔒 Problem 5: Centralized Authentication Across 19+ Services
+### 3️⃣ Centralized Authentication Across 19+ Services
 **The Problem:** How do you secure 19+ microservices without duplicating auth logic everywhere?  
 **The Solution: Zero-Trust Architecture with Centralized Auth**
-
-```
-┌─────────────┐
-│   Client    │
-└──────┬──────┘
-       │ JWT Token
-       ▼
-┌─────────────────────────────────────────┐
-│         Ingress Controller              │
-└──────────────┬──────────────────────────┘
-               │
-               ▼
-    ┌──────────────────────┐
-    │    API Gateway        │◄──────────┐
-    │  - Rate Limiting      │           │
-    │  - Request Routing    │      ┌────┴─────┐
-    └──────┬───────────────┬┘      │   Auth   │
-           │               │       │ Service  │
-           │ Auth Check?   ├──────►│(JWT Auth)│
-           │               │       └──────────┘
-           ▼               │         ▲
-    ✅ Authorized          │         │ Secret Key
-           │               │         │ (Only here!)
-    ┌──────▼───────────────▼────┐   │
-    │  Internal Services (19+)  │   │
-    │  - No auth logic needed   │   │
-    │  - K8s internal network   │   │
-    │  - Not exposed externally │   │
-    └───────────────────────────┘   │
-                                    │
-    All auth decisions flow through Auth Service
-```
-
-**Architecture Highlights:**
-- ✅ **Single Entry Point**: Only API Gateway exposed via Ingress Controller
-- ✅ **Centralized Auth Service**: JWT secret key isolated in ONE service only
-- ✅ **Zero-Trust Gateway**: Every request validated before routing
-- ✅ **Service Isolation**: 19+ internal services never touch auth logic
-- ✅ **Rate Limiting**: Redis-backed throttling at gateway level (100 req/min per user)
 
 **Authentication Flow:**
 ```mermaid
@@ -312,6 +273,14 @@ sequenceDiagram
     Note over Gateway,Auth: Auth owns secret key for JWT<br>Gateway just verifies via Auth API
 ```
 
+**Architecture Highlights:**
+- ✅ **Single Entry Point**: Only API Gateway exposed via Ingress Controller
+- ✅ **Centralized Auth Service**: JWT secret key isolated in ONE service only
+- ✅ **Zero-Trust Gateway**: Every request validated before routing
+- ✅ **Service Isolation**: 19+ internal services never touch auth logic
+- ✅ **Rate Limiting**: Redis-backed throttling at gateway level (100 req/min per user)
+
+
 **Why This Architecture is Superior:**
 - 🔐 **Security**: Secret key never leaves Auth Service
 - 🚀 **Performance**: Internal K8s networking is blazing fast
@@ -321,7 +290,6 @@ sequenceDiagram
 
 **Result:** Military-grade security with zero auth code duplication across 19+ services
 
----
 
 ### 3️⃣ **Automated Financial Operations** 💸
 - **Recurring Rent Payments:** Celery Beat schedules monthly charges automatically
