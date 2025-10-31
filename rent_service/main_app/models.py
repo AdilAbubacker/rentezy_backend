@@ -1,14 +1,6 @@
 from django.db import models
 from datetime import timedelta
 
-class RentPayment(models.Model):
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    user = models.IntegerField()
-    property = models.IntegerField() 
-    payment_date = models.DateField()
-    is_recurring = models.BooleanField(default=True)
-    is_paid = models.BooleanField(default=False)
-
 
 class RentalAgreement(models.Model):
     property_name = models.CharField(max_length=255)
@@ -23,7 +15,7 @@ class RentalAgreement(models.Model):
     def save(self, *args, **kwargs):
             # If last_payment_date is not provided, set it to three days after start_date
             if not self.last_payment_date:
-                self.last_payment_date = self.start_date + timedelta(days=3)
+                self.last_payment_date = self.start_date
             super().save(*args, **kwargs)
 
     def get_latest_monthly_payment(self):
@@ -40,3 +32,5 @@ class MonthlyPayment(models.Model):
     is_paid = models.BooleanField(default=False)
     paid_on = models.DateField(null=True, blank=True)
     
+    class Meta:
+        unique_together = ['rental_agreement', 'due_date']

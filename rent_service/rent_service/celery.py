@@ -18,9 +18,9 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 #Celery Beat Settings
 app.conf.beat_schedule = {
-    'generate-recurring-paments': {
-        'task':'main_app.tasks.generate_recurring_payments',
-        'schedule': crontab(minute=0, hour=0, day_of_month=1),  # Run the task on the 1st day of every month at midnight
+    'generate-recurring-payments': {
+        'task': 'main_app.tasks.generate_recurring_payments',
+        'schedule': crontab(minute=0, hour=0),  # Run daily at midnight
     },
     'send-rend-reminders': {
         'task':'main_app.tasks.send_rent_reminders',
