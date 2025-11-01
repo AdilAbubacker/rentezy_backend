@@ -154,9 +154,9 @@ graph TB
 ```
 ---
 
-### 🎪 19+ Independent Microservices
+### 🎪 10+ Independent Microservices
 
-Each service is a self-contained, independently deployable unit with its own database, business logic, and scaling policy:
+Each service is a self-contained, independently horizontally scalabe unit with its own database, business logic, and scaling policy:
 
 | Service | Purpose | Why It Exists |
 |---------|---------|---------------|
