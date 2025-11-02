@@ -229,6 +229,8 @@ except IntegrityError as e:
 
 **Impact:** Zero double-bookings across thousands of concurrent requests, with better throughput than traditional row-locking.
 
+---
+
 ### 2️⃣. **Event-Driven Architecture with Apache Kafka**
 **The Problem:** Service coupling and synchronous dependencies creating bottlenecks  
 **The Solution:** Async event streaming with guaranteed delivery
@@ -247,6 +249,8 @@ User Books Property → Kafka Event → Payment Service Charges
                           Notification Sent to User
 ```
 **Impact:** Fully automated workflows without tight coupling.
+
+---
 
 ### 3️⃣ Centralized Authentication Across the Services
 **The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere?  
@@ -290,6 +294,7 @@ sequenceDiagram
 
 **Result:** Military-grade security with zero auth code duplication across 19+ services
 
+---
 
 ### 3️⃣ **Automated Financial Operations** 💸
 - **Recurring Rent Payments:** Celery Beat schedules monthly charges automatically
@@ -304,6 +309,8 @@ Traditional database searches die at scale. RentEzy uses **Elasticsearch** with:
 - Geospatial queries for location-based filtering
 - Faceted search with category aggregations
 - **Async indexing** via Kafka consumers for zero write-time penalty
+- 
+---
 
 ### 5️⃣ **Real-Time Everything** ⚡
 - **WebSocket Chat:** Instant messaging between tenants and landlords
