@@ -248,8 +248,8 @@ User Books Property → Kafka Event → Payment Service Charges
 ```
 **Impact:** Fully automated workflows without tight coupling.
 
-### 3️⃣ Centralized Authentication Across 19+ Services
-**The Problem:** How do you secure 19+ microservices without duplicating auth logic everywhere?  
+### 3️⃣ Centralized Authentication Across the Services
+**The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere?  
 **The Solution: Zero-Trust Architecture with Centralized Auth**
 
 **Authentication Flow:**
@@ -362,17 +362,6 @@ Traditional database searches die at scale. RentEzy uses **Elasticsearch** with:
 **Problem:** What if payment fails after booking is confirmed?  
 **Solution:** Automated rollback via Celery tasks with configurable retry logic.
 
----
-
-## 📊 Performance Metrics
-
-- **Concurrent Users:** Handles 10,000+ simultaneous connections
-- **API Response Time:** < 100ms average (with Redis caching)
-- **Search Latency:** < 50ms for complex queries (Elasticsearch)
-- **Uptime:** 99.9% availability with Kubernetes auto-healing
-- **Message Throughput:** 100,000+ Kafka events/second capacity
-
----
 
 ## 🚀 Deployment Architecture
 
@@ -396,15 +385,13 @@ AWS EKS Cluster
 
 ## 🤝 Want to Collaborate?
 
-This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on distributed systems, microservices, or just want to discuss scalable architecture patterns - **let's connect!**
-
-**Built with ❤️ and a lot of ☕ by [Adil Abubacker](https://github.com/AdilAbubacker)**
+This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on distributed systems, microservices, or just want to discuss - **let's connect!**
 
 ---
 
 
 <div align="center">
 
-**⭐ Star this repository if you found it helpful!**
+**Built with ❤️ and a lot of ☕ by [Adil Abubacker](https://github.com/AdilAbubacker)**
 
 </div>
