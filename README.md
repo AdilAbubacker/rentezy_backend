@@ -387,7 +387,6 @@ AWS EKS Cluster
 
 This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on distributed systems, microservices, or just want to discuss - **let's connect!**
 
----
 
 
 <div align="center">
