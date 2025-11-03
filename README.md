@@ -308,8 +308,6 @@ sequenceDiagram
 **The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
 **The Solution: CQRS with Event-Driven Indexing**
 
-### 🔍 Search Service Architecture
-
 To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
 
 - **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
@@ -317,22 +315,10 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 - **Search Consumer** listens to property events and updates **Elasticsearch**, ensuring eventual consistency.
 - **Search Service** focuses solely on read queries, scaling horizontally to handle high traffic.
 
-This separation ensures:
-- Independent scaling for read-heavy and write-light workloads.
-- Search uptime independent of data ingestion.
-- Replayable Kafka streams for reindexing or schema migrations.
-
-**Architecture:**
-- **Property Service**: Handles CRUD with PostgreSQL (structured, low-frequency writes)
-- **Kafka**: Async event bridge between property DB and search index
-- **Search Consumer**: Listens to property events, updates Elasticsearch (eventual consistency)
-- **Search Service**: Read-only query layer, scales horizontally for high traffic
-
-**Why This Separation Wins:**
-- ✅ Independent scaling (reads vs writes have different load patterns)
-- ✅ Fault isolation (search downtime doesn't block property updates)
-- ✅ Replayable Kafka streams (reindex without downtime or code changes)
-- ✅ Performance tuning (each DB optimized for its workload)
+**This separation ensures**:
+- ✅ Independent scaling for read-heavy and write-light workloads.
+- ✅ Search uptime independent of data ingestion.
+- ✅ Replayable Kafka streams for reindexing or schema migrations.
 
 **Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
   
