@@ -182,8 +182,8 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 
 ### 1️⃣ **Race Condition Mastery** 🏁
 
-# The Problem: Two users booking the same property simultaneously
-# The Solution: Database-level constraints + Atomic operations
+**The Problem:** Two users booking the same property simultaneously
+**The Solution: Database-level constraints + Atomic operations**
 ```python
 
 # Database Model with Constraint
@@ -251,28 +251,6 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
   
 ---
-
-### 2️⃣. **Event-Driven Architecture with Apache Kafka**
-**The Problem:** Service coupling and synchronous dependencies creating bottlenecks  
-**The Solution:** Async event streaming with guaranteed delivery
-
-- **19 services communicating via events** - zero tight coupling
-- **Fault tolerance**: Services can go down without cascading failures
-- **Scalability**: Each service scales independently based on load
-
-```
-User Books Property → Kafka Event → Payment Service Charges
-                                  ↓
-                          Payment Fails?
-                                  ↓
-                    Celery Task → Release Room Automatically
-                                  ↓
-                          Notification Sent to User
-```
-**Impact:** Fully automated workflows without tight coupling.
-
----
-
 ### 3️⃣ Centralized Authentication Across the Services
 **The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere?  
 **The Solution: Zero-Trust Architecture with Centralized Auth**
@@ -314,6 +292,27 @@ sequenceDiagram
 - 🔄 **Scalability**: Auth Service scales independently of business services
 
 **Result:** Military-grade security with zero auth code duplication across 19+ services
+
+---
+
+### 2️⃣. **Event-Driven Architecture with Apache Kafka**
+**The Problem:** Service coupling and synchronous dependencies creating bottlenecks  
+**The Solution:** Async event streaming with guaranteed delivery
+
+- **19 services communicating via events** - zero tight coupling
+- **Fault tolerance**: Services can go down without cascading failures
+- **Scalability**: Each service scales independently based on load
+
+```
+User Books Property → Kafka Event → Payment Service Charges
+                                  ↓
+                          Payment Fails?
+                                  ↓
+                    Celery Task → Release Room Automatically
+                                  ↓
+                          Notification Sent to User
+```
+**Result:** Fully automated workflows without tight coupling.
 
 ---
 
