@@ -182,9 +182,9 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 
 ### 1️⃣ **Race Condition Mastery** 🏁
 
-```python
 # The Problem: Two users booking the same property simultaneously
 # The Solution: Database-level constraints + Atomic operations
+```python
 
 # Database Model with Constraint
 class AvailableRooms(models.Model):
@@ -227,13 +227,13 @@ except IntegrityError as e:
 - ✅ Constraint violation automatically rolls back the entire transaction
 - ✅ Cleaner code with graceful error handling
 
-**Impact:** Zero double-bookings across thousands of concurrent requests, with better throughput than traditional row-locking.
+**Result:** Zero double-bookings across thousands of concurrent requests, with better throughput than traditional row-locking.
 
 ---
 
-### 2️⃣: Advanced Search Architicture: CQRS in action
+### 2️⃣ Advanced Search Architicture: CQRS in action
 **The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
-**The Solution: CQRS with Event-Driven Indexing**
+**The Solution: CQRS with Event-Driven Indexing and ElasticSearch**
 
 To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
 ![Architecture Diagram](./assets/search_design.png)
