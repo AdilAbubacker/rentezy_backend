@@ -309,7 +309,7 @@ sequenceDiagram
 **The Solution: CQRS with Event-Driven Indexing**
 
 To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
-![Architecture Diagram](./assets/Untitled Diagram.drawio (2).png)
+![Architecture Diagram](./assets/Untitled%20Diagram.drawio%20%282%29.png)
 
 - **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
 - **Kafka** acts as the async event bridge between the property DB and search index.
