@@ -231,6 +231,27 @@ except IntegrityError as e:
 
 ---
 
+### 2️⃣: Advanced Search Architicture: CQRS in action
+**The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
+**The Solution: CQRS with Event-Driven Indexing**
+
+To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
+![Architecture Diagram](./assets/search_design.png)
+
+- **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
+- **Kafka** acts as the async event bridge between the property DB and search index.
+- **Search Consumer** listens to property events and updates **Elasticsearch**, ensuring eventual consistency.
+- **Search Service** focuses solely on read queries, scaling horizontally to handle high traffic.
+
+**This separation ensures**:
+- ✅ Independent scaling for read-heavy and write-light workloads.
+- ✅ Search uptime independent of data ingestion.
+- ✅ Replayable Kafka streams for reindexing or schema migrations.
+
+**Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
+  
+---
+
 ### 2️⃣. **Event-Driven Architecture with Apache Kafka**
 **The Problem:** Service coupling and synchronous dependencies creating bottlenecks  
 **The Solution:** Async event streaming with guaranteed delivery
@@ -302,27 +323,6 @@ sequenceDiagram
 - **Payment Reminders:** Real-time notifications before due dates
 - **Stripe Integration:** Secure, PCI-compliant payment processing
 
----
-
-### 🚀 Problem 4: Advanced Search Architicture: CQRS in action
-**The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
-**The Solution: CQRS with Event-Driven Indexing**
-
-To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
-![Architecture Diagram](./assets/Untitled%20Diagram.drawio%20%282%29.png)
-
-- **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
-- **Kafka** acts as the async event bridge between the property DB and search index.
-- **Search Consumer** listens to property events and updates **Elasticsearch**, ensuring eventual consistency.
-- **Search Service** focuses solely on read queries, scaling horizontally to handle high traffic.
-
-**This separation ensures**:
-- ✅ Independent scaling for read-heavy and write-light workloads.
-- ✅ Search uptime independent of data ingestion.
-- ✅ Replayable Kafka streams for reindexing or schema migrations.
-
-**Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
-  
 ---
 
 ### 5️⃣ **Real-Time Everything** ⚡
