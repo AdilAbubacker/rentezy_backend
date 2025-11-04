@@ -316,11 +316,23 @@ User Books Property → Kafka Event → Payment Service Charges
 
 ---
 
-### 3️⃣ **Automated Financial Operations** 💸
-- **Recurring Rent Payments:** Celery Beat schedules monthly charges automatically
-- **Late Fee Calculation:** Smart penalty system based on payment delays  
-- **Payment Reminders:** Real-time notifications before due dates
-- **Stripe Integration:** Secure, PCI-compliant payment processing
+### 3️⃣  **Automated Payment Orchestration with Event-Driven Notifications**
+**The Problem:** Managing recurring rent payments across hundreds of properties with proactive reminders and automatic penalty enforcement  
+**The Solution:** Daily scheduled job + Kafka event streaming for decoupled notification delivery
+
+- **Single daily execution**: Efficient resource usage - one job handles all rent operations
+- **Event-driven notifications**: Rent service doesn't need to know about email/push - just publishes events
+- **Kafka decoupling**: Notification service can be down during processing without blocking rent generation
+- **Audit trail**: Every rent event is captured in Kafka for compliance and analytics
+- **Scalability**: Notification service scales independently based on event volume
+
+**Features:**
+- ✅ Automatic rent record generation for all active leases
+- ✅ Proactive 3-day advance reminders
+- ✅ Automated late fee calculation and application
+- ✅ Multi-channel notifications via event streaming (email, in-app)
+- ✅ Payment processing with Stripe integration
+
 
 ---
 
