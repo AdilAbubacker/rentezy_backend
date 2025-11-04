@@ -334,7 +334,7 @@ User Books Property → Kafka Event → Payment Service Charges
 ### 🚢 Problem 6: Production Deployment at Scale
 **The Problem:** Deploying and managing 10+ microservices in production  
 **The Solution:** Built a **serverless Kubernetes infrastructure** on AWS
-```
+
 ### **Deployment Stack Breakdown**
 
 #### **Container Orchestration**
