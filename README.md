@@ -403,49 +403,6 @@ User Books Property → Kafka Event → Payment Service Charges
 
 ---
 
-## 🎯 Technical Challenges Solved
-
-### **Challenge 1: Distributed Transactions**
-**Problem:** Booking a property involves multiple services (booking, payment, notification).  
-**Solution:** Event-driven saga pattern with Kafka for eventual consistency.
-
-### **Challenge 2: Data Consistency Across Services**
-**Problem:** Each service has its own database. How to maintain consistency?  
-**Solution:** Event sourcing + CQRS patterns with Kafka as the source of truth.
-
-### **Challenge 3: Real-Time at Scale**
-**Problem:** WebSockets are stateful and hard to scale horizontally.  
-**Solution:** Redis-backed channel layers in Django Channels for distributed WebSocket support.
-
-### **Challenge 4: Search Performance**
-**Problem:** SQL searches slow down with millions of properties.  
-**Solution:** Dedicated Elasticsearch cluster with async indexing via Kafka consumers.
-
-### **Challenge 5: Payment Reliability**
-**Problem:** What if payment fails after booking is confirmed?  
-**Solution:** Automated rollback via Celery tasks with configurable retry logic.
-
-
-## 🚀 Deployment Architecture
-
-```yaml
-AWS EKS Cluster
-├── 19+ Kubernetes Deployments (one per service)
-├── Horizontal Pod Autoscaling (scale on CPU/memory)
-├── AWS EFS CSI for persistent storage
-├── Ingress Controller (Nginx)
-├── Service Mesh for inter-service communication
-└── AWS ALB for load balancibg
-```
-
-**Why Kubernetes?**
-- Auto-scaling based on traffic
-- Self-healing (automatic pod restarts)
-- Zero-downtime deployments with rolling updates
-- Resource isolation and efficient utilization
-
----
-
 ## 🤝 Want to Collaborate?
 
 This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on distributed systems, microservices, or just want to discuss - **let's connect!**
