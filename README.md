@@ -331,6 +331,38 @@ User Books Property → Kafka Event → Payment Service Charges
 
 ---
 
+### 🚢 Problem 6: Production Deployment at Scale
+**The Problem:** Deploying and managing 10+ microservices in production  
+**The Solution:** Built a **serverless Kubernetes infrastructure** on AWS
+```
+### **Deployment Stack Breakdown**
+
+#### **Container Orchestration**
+- ☸️ **AWS EKS with Fargate** - Serverless Kubernetes (zero node management overhead)
+- 🐳 **Docker** - All 19+ services containerized with multi-stage builds
+- 📦 **Helm Charts** - Deployed Elasticsearch, Kafka, and Redis clusters via Helm
+- 🔄 **Auto-scaling** - Horizontal Pod Autoscaler for dynamic scaling
+
+#### **Load Balancing & Traffic Management**
+- 🌐 **AWS Application Load Balancer** - Layer 7 load balancing with health checks
+- 🔀 **Ingress Controller** - Kubernetes-native routing with SSL/TLS termination
+- ⚡ **Nginx** - Reverse proxy for Django services with connection pooling
+- 🦄 **Gunicorn** - WSGI server with multiple worker processes
+
+#### **Persistent Storage**
+- 💾 **AWS EFS** - Shared file system across all pods (stateful workloads)
+- 🗄️ **Persistent Volume Claims** - Kubernetes-managed storage for databases
+- 📊 **StatefulSets** - Used for Kafka, Elasticsearch, and Redis clusters
+
+#### **Why This Stack?**
+**Why This Architecture?**
+- **Fargate:** No EC2 management, pay-per-pod pricing, automatic scaling
+- **Helm:** Battle-tested configurations, easy upgrades, community support
+- **EFS:** Shared file system for stateful workloads (Kafka, Elasticsearch)
+- **Multi-layer LB:** ALB (AWS) → Ingress (K8s) → Nginx (App)
+
+---
+
 ## 🛠️ Technology Stack - Built With The Best
 
 ### **Backend Powerhouse**
