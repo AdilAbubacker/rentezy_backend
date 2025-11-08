@@ -231,6 +231,140 @@ except IntegrityError as e:
 
 ---
 
+### 2. **Payment Flow & Automatic Inventory Management**
+**The Problem:** Users abandon checkout, payments fail, or arrive late - blocking inventory indefinitely  
+**The Solution:** Temporal booking states with automated reconciliation and edge case handling
+
+#### 🎯 The Complete Booking Lifecycle
+---
+```
+User clicks "Book Now"
+        ↓
+1. Pre-flight Check (Fail Fast)
+   └─→ Check available_quantity in DB
+   └─→ If insufficient: Return "Sold Out" immediately
+        ↓
+2. Temporary Booking (PENDING Status)
+   └─→ Create Booking(status="PENDING")
+   └─→ Decrement available_quantity atomically
+   └─→ Schedule Celery task (10-minute timer)
+        ↓
+3. Payment Processing
+   └─→ Redirect to Stripe
+   └─→ User completes payment
+        ↓
+4a. Payment Success (Happy Path)
+   └─→ Stripe webhook → Update status="COMPLETED"
+   └─→ Celery task sees COMPLETED → Do nothing
+        ↓
+4b. Payment Timeout (Auto-Recovery)
+   └─→ Celery task executes after 10 minutes
+   └─→ Status still PENDING → Auto-cancel booking
+   └─→ Increment available_quantity (room released)
+        ↓
+4c. Edge Case: Late Payment After Timeout
+   └─→ Payment arrives after auto-cancellation
+   └─→ Check if rooms still available
+   ├─→ YES: Complete booking with available room
+   └─→ NO: Process automatic Stripe refund
+```
+
+#### **Code Implementation**
+
+```python
+# Step 1: Fail Fast Pattern (Prevent Wasted Transactions)
+def initiate_booking(room_id, tenant_id, quantity_requested):
+    room = AvailableRooms.objects.get(id=room_id)
+    
+    # Quick check before entering transaction
+    if room.available_quantity < quantity_requested:
+        return {"error": "Property is sold out"}
+    
+    return create_pending_booking(room_id, tenant_id, quantity_requested)
+
+# Step 2: Temporary Hold System
+def create_pending_booking(room_id, tenant_id, quantity):
+    try:
+        with transaction.atomic():
+            # Create PENDING booking (temporary reservation)
+            booking = Booking.objects.create(
+                room_id=room_id,
+                tenant_id=tenant_id,
+                quantity=quantity,
+                status="PENDING"
+            )
+            
+            # Atomic decrement using F() expression
+            AvailableRooms.objects.filter(id=room_id).update(
+                available_quantity=F("available_quantity") - quantity
+            )
+            
+            # Schedule auto-cancellation (10 minutes)
+            release_room_if_pending.apply_async(
+                args=[booking.id],
+                countdown=600
+            )
+            
+            return {"booking_id": booking.id, "payment_url": "..."}
+            
+    except IntegrityError:
+        return {"error": "Property just sold out"}
+
+# Step 4a: Stripe Payment Success Handler
+def stripe_payment_webhook(booking_id):
+    booking = Booking.objects.get(id=booking_id)
+    booking.status = "COMPLETED"
+    booking.save()
+    # Celery task will check status and do nothing
+
+# Step 4b: Automated Recovery Task (Self-Healing)
+@shared_task
+def release_room_if_pending(booking_id):
+    try:
+        with transaction.atomic():
+            booking = Booking.objects.select_for_update().get(id=booking_id)
+            
+            if booking.status == "PENDING":
+                # Payment timeout - release room automatically
+                booking.status = "CANCELLED"
+                booking.save()
+                
+                # Return quantity to available pool
+                AvailableRooms.objects.filter(id=booking.room_id).update(
+                    available_quantity=F("available_quantity") + booking.quantity
+                )
+                
+                send_notification(booking.tenant_id, "Booking expired")
+            
+            # If COMPLETED, payment succeeded - do nothing
+            
+    except Booking.DoesNotExist:
+        pass
+
+# Step 4c: Edge Case Handler (Late Payment)
+def handle_late_payment(booking_id, stripe_payment_id):
+    booking = Booking.objects.get(id=booking_id)
+    
+    if booking.status == "CANCELLED":
+        room = AvailableRooms.objects.get(id=booking.room_id)
+        
+        if room.available_quantity >= booking.quantity:
+            # Room still available - complete booking
+            with transaction.atomic():
+                booking.status = "COMPLETED"
+                booking.save()
+                
+                AvailableRooms.objects.filter(id=booking.room_id).update(
+                    available_quantity=F("available_quantity") - booking.quantity
+                )
+            
+            notify_user(booking.tenant_id, "Payment processed - booking confirmed!")
+        else:
+            # No rooms left - automatic refund
+            stripe.Refund.create(payment_intent=stripe_payment_id)
+            notify_user(booking.tenant_id, "Property sold out - refund processed")
+```
+
 ### 2️⃣ Advanced Search Architicture: CQRS in action
 **The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
 **The Solution: CQRS with Event-Driven Indexing and ElasticSearch**
