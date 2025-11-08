@@ -403,6 +403,66 @@ User Books Property → Kafka Event → Payment Service Charges
 
 ---
 
+## 🚢 Production Deployment Architecture
+
+### **Infrastructure Overview**
+```
+Internet Traffic
+      ↓
+AWS Application Load Balancer (ALB)
+      ↓
+Kubernetes Ingress Controller
+      ↓
+API Gateway Service (Nginx + Gunicorn)
+      ↓
+Internal Microservices (19+ containers)
+      ↓
+Persistent Storage (AWS EFS)
+```
+
+### **Deployment Stack Breakdown**
+
+#### **Container Orchestration**
+- ☸️ **AWS EKS with Fargate** - Serverless Kubernetes (zero node management overhead)
+- 🐳 **Docker** - All 19+ services containerized with multi-stage builds
+- 📦 **Helm Charts** - Deployed Elasticsearch, Kafka, and Redis clusters via Helm
+- 🔄 **Auto-scaling** - Horizontal Pod Autoscaler for dynamic scaling
+
+#### **Load Balancing & Traffic Management**
+- 🌐 **AWS Application Load Balancer** - Layer 7 load balancing with health checks
+- 🔀 **Ingress Controller** - Kubernetes-native routing with SSL/TLS termination
+- ⚡ **Nginx** - Reverse proxy for Django services with connection pooling
+- 🦄 **Gunicorn** - WSGI server with multiple worker processes
+
+#### **Persistent Storage**
+- 💾 **AWS EFS** - Shared file system across all pods (stateful workloads)
+- 🗄️ **Persistent Volume Claims** - Kubernetes-managed storage for databases
+- 📊 **StatefulSets** - Used for Kafka, Elasticsearch, and Redis clusters
+
+#### **Why This Stack?**
+
+**EKS with Fargate:**
+- ✅ No EC2 instance management (AWS handles infrastructure)
+- ✅ Pay only for pods running (cost-efficient)
+- ✅ Automatic scaling without capacity planning
+
+**Helm for Stateful Services:**
+- ✅ Production-ready configurations out of the box
+- ✅ Easy upgrades and rollbacks
+- ✅ Community-tested deployment patterns
+
+**AWS ALB + Ingress:**
+- ✅ Native AWS integration (security groups, IAM)
+- ✅ WebSocket support for chat service
+- ✅ SSL termination at load balancer level
+
+**Nginx + Gunicorn:**
+- ✅ Battle-tested Django deployment stack
+- ✅ Static file serving with caching
+- ✅ Connection pooling and request buffering
+
+---
+
 ## 🤝 Want to Collaborate?
 
 This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on distributed systems, microservices, or just want to discuss - **let's connect!**
