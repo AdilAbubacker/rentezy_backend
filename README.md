@@ -188,7 +188,7 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 #### **Why Traditional Locking Fails at Scale**
 
 ```python
-# ❌ Pessimistic Locking (What Most Developers Do)
+# ❌ Pessimistic Locking 
 with transaction.atomic():
     room = AvailableRooms.objects.select_for_update().get(id=room_id)
     if room.available_quantity > 0:
