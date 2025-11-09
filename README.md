@@ -180,10 +180,10 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 ## 🚀 What Makes This Architecture Special
 
 
-### 🎯 Problem 1: Concurrency Control in High-Traffic Bookings
-**The Problem:** Race conditions when multiple users book the same property simultaneously—the classic "sold twice" nightmare
+### 🎯 Problem 1: **Bullet-proof Concurrency Control & Race Condition Prevention**
+**The Problem:** Multiple users booking the same room simultaneously causes double-bookings and overselling  
+**The Solution:** Optimistic concurrency control with database-level constraints and atomic operations
 
-**The Solution:** Implemented **optimistic concurrency control** with database-level atomicity using F() expressions and check constraints
 
 #### **Why Traditional Locking Fails at Scale**
 
