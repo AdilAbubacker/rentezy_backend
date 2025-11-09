@@ -180,10 +180,28 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 ## 🚀 What Makes This Architecture Special
 
 
-### 1️⃣ **Race Condition Mastery** 🏁
+### 🎯 Problem 1: Concurrency Control in High-Traffic Bookings
+**The Problem:** Race conditions when multiple users book the same property simultaneously—the classic "sold twice" nightmare
 
-**The Problem:** Two users booking the same property simultaneously
-**The Solution: Database-level constraints + Atomic operations**
+**The Solution:** Implemented **optimistic concurrency control** with database-level atomicity using F() expressions and check constraints
+
+#### **Why Traditional Locking Fails at Scale**
+
+```python
+# ❌ Pessimistic Locking (What Most Developers Do)
+with transaction.atomic():
+    room = AvailableRooms.objects.select_for_update().get(id=room_id)
+    if room.available_quantity > 0:
+        room.available_quantity -= 1
+        room.save()
+```
+**Problems:**
+- 🔴 Locks entire row during transaction (blocks all other users)
+- 🔴 Serializes requests (only one booking at a time)
+- 🔴 Creates bottlenecks under high load
+- 🔴 Poor user experience during traffic spikes
+
+#### **My Approach: Database-Level Atomic Operations**
 ```python
 
 # Database Model with Constraint
