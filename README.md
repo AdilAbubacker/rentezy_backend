@@ -22,7 +22,7 @@ RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven mi
 
 ---
 
-## 🏗️ System Architecture - The Beast Under The Hood
+## 🏗️ System Architecture Overview
 
 
 ```mermaid
