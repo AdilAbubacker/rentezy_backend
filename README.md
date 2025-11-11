@@ -393,6 +393,60 @@ sequenceDiagram
 **Result:** Military-grade security with zero auth code duplication across 19+ services
 
 ---
+### 1. Event-Driven Architecture — The Nervous System of RentEzy
+
+**The Problem:** In a distributed system, how do you update the search index, clear caches, and notify landlords *without* creating a slow, tightly-coupled monolith? How do you ensure a property booking can succeed even if the `Notification Service` is down?
+
+**The Solution:** A **fully decoupled, event-driven architecture** with Apache Kafka as its central nervous system.
+
+Instead of services making direct, synchronous API calls, they simply publish events to Kafka topics. Downstream consumers react to these events asynchronously, without the original service even knowing they exist. If a service goes down, Kafka buffers the events, and the service simply catches up when it comes back online.
+
+---
+
+### ⚙️ How the Nervous System Works in Practice
+
+Every core domain action (booking, payment, property update) emits an event to Kafka. Other services then subscribe to these topics and react, enabling independent scaling and evolution.
+
+```mermaid
+graph TD
+    subgraph Producers
+        BookingService[Booking Service]
+        RentService[Rent Service]
+        PropertyService[Property Service]
+        PaymentService[Payment Service]
+    end
+
+    Kafka([Apache Kafka <br> Event Stream])
+
+    subgraph Consumers
+        NotificationService[Notification Service]
+        SearchConsumer[Search Consumer]
+        AnalyticsAudit[Analytics / Audit Consumers]
+    end
+
+    BookingService -- "booking.confirmed" --> Kafka
+    BookingService -- "booking.cancelled" --> Kafka
+    RentService -- "rent.payment_due" --> Kafka
+    PropertyService -- "property.updated" --> Kafka
+    PaymentService -- "payment.failed" --> Kafka
+
+    Kafka -- "Consumes" --> NotificationService
+    Kafka -- "Consumes" --> SearchConsumer
+    Kafka -- "Consumes" --> AnalyticsAudit
+
+    NotificationService -- "Sends in-app/email confirmation/alerts" --> User[User]
+    SearchConsumer -- "Updates Elasticsearch index" --> Elasticsearch[(Elasticsearch)]
+    AnalyticsAudit -- "Persists metrics & logs" --> DataLake[(Data Lake/DB)]
+```
+### 🔗 Architectural Benefits & Real-World Impact
+
+* **Total Decoupling:** No service directly calls another. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
+* **Fault Tolerance:** Temporary service failures (e.g., `Notification Service` is down) don't cascade. Kafka ensures guaranteed delivery, and the service catches up on restart.
+* **Scalability:** Each service (e.g., `Search Consumer`) scales independently based on its *own* event load, not the load of the whole system.
+* **Observability:** Every business action leaves a traceable event in Kafka, forming a perfect, immutable audit log.
+* **Real-Time Experience:** Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
+
+---
 
 ### 2️⃣. **Event-Driven Architecture with Apache Kafka**
 **The Problem:** Service coupling and synchronous dependencies creating bottlenecks  
