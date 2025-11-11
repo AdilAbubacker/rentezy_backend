@@ -407,36 +407,26 @@ Instead of services making direct, synchronous API calls, they simply publish ev
 
 Every core domain action (booking, payment, property update) emits an event to Kafka. Other services then subscribe to these topics and react, enabling independent scaling and evolution.
 
-```mermaid
-graph TD
-    subgraph Producers
-        BookingService[Booking Service]
-        RentService[Rent Service]
-        PropertyService[Property Service]
-        PaymentService[Payment Service]
-    end
+### 1. Event-Driven Architecture — The Nervous System
 
-    Kafka([Apache Kafka <br> Event Stream])
+**The Problem:**
+How do you update search, send notifications, and clear caches *without* creating a slow, tightly-coupled monolith? What happens if the `Notification Service` is down when a booking is made?
 
-    subgraph Consumers
-        NotificationService[Notification Service]
-        SearchConsumer[Search Consumer]
-        AnalyticsAudit[Analytics / Audit Consumers]
-    end
+**The Solution:**
+A **fully decoupled, event-driven architecture** with Apache Kafka. Services never call each other directly. They publish events, and consumers listen. This makes the system resilient, scalable, and easy to extend.
 
-    BookingService -- "booking.confirmed" --> Kafka
-    BookingService -- "booking.cancelled" --> Kafka
-    RentService -- "rent.payment_due" --> Kafka
-    PropertyService -- "property.updated" --> Kafka
-    PaymentService -- "payment.failed" --> Kafka
+---
 
-    Kafka -- "Consumes" --> NotificationService
-    Kafka -- "Consumes" --> SearchConsumer
-    Kafka -- "Consumes" --> AnalyticsAudit
+### ⚙️ How It Works: A Simple Event Flow
 
-    NotificationService -- "Sends in-app/email confirmation/alerts" --> User[User]
-    SearchConsumer -- "Updates Elasticsearch index" --> Elasticsearch[(Elasticsearch)]
-    AnalyticsAudit -- "Persists metrics & logs" --> DataLake[(Data Lake/DB)]
+Instead of direct, brittle API calls, services communicate through Kafka topics.
+
+```text
+[Booking Service] --.
+[Property Service]--+--> [ KAFKA TOPICS ] --+--> [Notification Service] (Sends emails)
+[Payment Service] --'   (Event Stream)   |
+                                             +--> [Search Consumer] (Updates Elasticsearch)
+                                             '--> [Analytics Service] (Logs events)
 ```
 ### 🔗 Architectural Benefits & Real-World Impact
 
