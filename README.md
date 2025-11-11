@@ -393,40 +393,31 @@ sequenceDiagram
 **Result:** Military-grade security with zero auth code duplication across 19+ services
 
 ---
+
+---
+
 ### 1. Event-Driven Architecture — The Nervous System of RentEzy
 
-**The Problem:** In a distributed system, how do you update the search index, clear caches, and notify landlords *without* creating a slow, tightly-coupled monolith? How do you ensure a property booking can succeed even if the `Notification Service` is down?
+**The Problem:** How do you update search, send notifications, and clear caches *without* creating a slow, tightly-coupled monolith? How does a booking succeed if the `Notification Service` is down?
 
-**The Solution:** A **fully decoupled, event-driven architecture** with Apache Kafka as its central nervous system.
+**The Solution:** A **decoupled, event-driven architecture** with Kafka as the central nervous system.
 
-Instead of services making direct, synchronous API calls, they simply publish events to Kafka topics. Downstream consumers react to these events asynchronously, without the original service even knowing they exist. If a service goes down, Kafka buffers the events, and the service simply catches up when it comes back online.
-
----
-
-### ⚙️ How the Nervous System Works in Practice
-
-Every core domain action (booking, payment, property update) emits an event to Kafka. Other services then subscribe to these topics and react, enabling independent scaling and evolution.
-
-### 1. Event-Driven Architecture — The Nervous System
-
-**The Problem:**
-How do you update search, send notifications, and clear caches *without* creating a slow, tightly-coupled monolith? What happens if the `Notification Service` is down when a booking is made?
-
-**The Solution:**
-A **fully decoupled, event-driven architecture** with Apache Kafka. Services never call each other directly. They publish events, and consumers listen. This makes the system resilient, scalable, and easy to extend.
+Services publish events (e.g., `property.created`) instead of making direct, slow API calls. Other services subscribe and react. If a consumer service is down, Kafka buffers the events, and the service catches up on restart. No data is lost. No cascading failures.
 
 ---
 
-### ⚙️ How It Works: A Simple Event Flow
-
-Instead of direct, brittle API calls, services communicate through Kafka topics.
+### ⚙️ How the Nervous System Works: An Example
 
 ```text
-[Booking Service] --.
-[Property Service]--+--> [ KAFKA TOPICS ] --+--> [Notification Service] (Sends emails)
-[Payment Service] --'   (Event Stream)   |
-                                             +--> [Search Consumer] (Updates Elasticsearch)
-                                             '--> [Analytics Service] (Logs events)
+A landlord lists a property...
+
+[Property Service] --(Publishes "PROPERTY_CREATED" event)--> [ KAFKA TOPIC ]
+                                                                   |
+                                                                   +---> [Search Consumer] (Updates Elasticsearch)
+                                                                   |
+                                                                   +---> [Notification Service] (Sends "Your property is live!" email)
+                                                                   |
+                                                                   +---> [Analytics Service] (Logs new listing for metrics)
 ```
 ### 🔗 Architectural Benefits & Real-World Impact
 
