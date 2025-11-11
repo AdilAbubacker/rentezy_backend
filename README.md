@@ -512,7 +512,7 @@ User Books Property → Kafka Event → Payment Service Charges
 
 ### 3️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
 **The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.
-**The Solution:** Fully automated rent lifecycle engine, powered by Celery Beat, Redis, Kafka, and Stripe.
+**The Solution: Fully automated rent lifecycle engine**, powered by Celery Beat, Redis, Kafka, and Stripe.
 
 ### 🧠 How It Works
 
@@ -554,12 +554,11 @@ All communication is **event-driven via Kafka**, ensuring each microservice oper
 
 ### 🧠 **Why It Matters**
 
-- 📅 **100% automated recurring rent cycles** – Rent evaluation runs daily, generating invoices, reminders, and late fees automatically.  
-- ⚡ **Near real-time notifications** – Kafka-driven event flow ensures instant tenant and landlord updates.  
-- 🔁 **Fully asynchronous, event-driven flow** – All processes communicate via Kafka, removing direct dependencies between services.  
-- 💼 **Scalable to thousands of leases without blocking** – Celery + Kafka architecture allows horizontal scaling with zero downtime.  
-- 💪 **Self-healing tasks and retry-safe execution** – Missed or failed jobs automatically re-run on the next evaluation cycle without manual intervention.  
-
+- 📅 100% automated recurring rent cycles
+- ⚡ Near real-time notifications
+- 🔁 Fully asynchronous, event-driven flow
+- 💼 Scalable to thousands of leases without blocking
+- 💪 Self-healing tasks and retry-safe execution
 
 
 ---
