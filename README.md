@@ -517,20 +517,17 @@ User Books Property → Kafka Event → Payment Service Charges
 ### 🧠 How It Works
 
 ```text
-1️⃣  Tenant moves in → Booking Service emits LEASE_STARTED event  
-2️⃣  Rent Service creates a RentContract record  
-3️⃣  Celery Beat triggers monthly invoice generation  
-4️⃣  Rent Service emits RENT_INVOICE_CREATED event  
-5️⃣  Notification Service sends reminders before due date  
-6️⃣  If autopay enabled → Payment Service charges via Stripe  
-7️⃣  Stripe → webhook → Payment Service → emits PAYMENT_SUCCESS  
-8️⃣  Rent Service marks invoice as paid  
-9️⃣  Late fees applied automatically for overdue invoices  
+1️⃣ Tenant moves in → Booking Service emits LEASE_STARTED event  
+2️⃣ Rent Service creates a RentContract record (stores rent, due day, autopay prefs, etc.)  
+3️⃣ Celery Beat runs daily → evaluates every active RentContract  
+4️⃣ If due in 3 days → emit RENT_REMINDER_DUE_SOON → Notification Service sends reminder  
+5️⃣ If due today → generate RentInvoice → emit RENT_INVOICE_CREATED → Notification + Payment triggered  
+6️⃣ Stripe → webhook → Rent Service marks invoice as paid → emits RENT_PAYMENT_SUCCESS  
+7️⃣ If overdue and unpaid → apply late fees → emit RENT_OVERDUE → Notification Service alerts tenant 
 ```
 
 All communication is **event-driven via Kafka**, ensuring each microservice operates independently and scales gracefully.
 
----
 
 ### ⚙️ Core Components
 
@@ -540,37 +537,29 @@ All communication is **event-driven via Kafka**, ensuring each microservice oper
 | 🔔 **Notification Service** | Sends rent reminders and payment confirmations |
 | 🕓 **Celery Beat** | Schedules recurring billing, autopay, and late-fee jobs |
 | 📨 **Kafka Topics** | Orchestrates cross-service communication asynchronously |
-| 💳 **Stripe** | Processes payments |
-| ⚡ **Redis** | Acts as the Celery message broker and result backend for background task processing |
+| 💳 **Stripe** | Handles all payment processing and autopay transactions |
+| ⚡ **Redis** | Acts as the Celery message broker and result backend for background tasks |
 
 
----
+### 🪄 **Key Features**
 
-### 🧩 Event Flow Example
+- 🔁 **Recurring Billing** – Automatically generates rent invoices each month for every active lease.  
+- 💳 **Autopay via Stripe** – Secure off-session payments using saved payment methods.  
+- ⏰ **Smart Reminders & Notifications** – Kafka-driven alerts sent through the Notification Service (3-day reminders, due-day notices, and overdue warnings).  
+- 💸 **Late Fee Enforcement** – Celery automatically applies and updates late fees for unpaid invoices.  
+- 🧾 **Event-Based Transparency** – Every rent action (invoice creation, payment, late fee) is logged as Kafka events for full traceability.  
+- ⚙️ **Idempotent & Resilient Tasks** – All Celery jobs and Kafka consumers are retry-safe; duplicate messages never cause double billing.  
+- 📊 **Audit-Ready Data** – Complete rent history and payment lifecycle stored in RentDB and Kafka topics for compliance and reporting.  
 
-```mermaid
-sequenceDiagram
-    participant Booking
-    participant Rent
-    participant Payment
-    participant Notification
-    participant Stripe
 
-    Booking->>Kafka: LEASE_STARTED
-    Kafka->>Rent: Create RentContract
-    Rent->>Celery: Schedule monthly invoice generation
-    Celery->>Rent: Generate invoice
-    Rent->>Kafka: RENT_INVOICE_CREATED
-    Kafka->>Notification: Send rent due reminder
-    Rent->>Kafka: RENT_AUTOPAY_TRIGGERED (if autopay)
-    Kafka->>Payment: Charge tenant via Stripe
-    Payment->>Stripe: PaymentIntent (off-session)
-    Stripe-->>Payment: Webhook PAYMENT_SUCCESS
-    Payment->>Kafka: RENT_PAYMENT_SUCCESS
-    Kafka->>Rent: Mark invoice paid
-    Rent->>Kafka: RENT_PAYMENT_CONFIRMED
-    Kafka->>Notification: Send “Payment Successful” message
-```
+### 🧠 **Why It Matters**
+
+- 📅 **100% automated recurring rent cycles** – Rent evaluation runs daily, generating invoices, reminders, and late fees automatically.  
+- ⚡ **Near real-time notifications** – Kafka-driven event flow ensures instant tenant and landlord updates.  
+- 🔁 **Fully asynchronous, event-driven flow** – All processes communicate via Kafka, removing direct dependencies between services.  
+- 💼 **Scalable to thousands of leases without blocking** – Celery + Kafka architecture allows horizontal scaling with zero downtime.  
+- 💪 **Self-healing tasks and retry-safe execution** – Missed or failed jobs automatically re-run on the next evaluation cycle without manual intervention.  
+
 
 
 ---
