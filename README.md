@@ -510,22 +510,64 @@ User Books Property → Kafka Event → Payment Service Charges
 
 ---
 
-### 3️⃣  **Automated Payment Orchestration with Event-Driven Notifications**
-**The Problem:** Managing recurring rent payments across hundreds of properties with proactive reminders and automatic penalty enforcement  
-**The Solution:** Daily scheduled job + Kafka event streaming for decoupled notification delivery
+### 3️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
+**The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.
+**The Solution:** Fully automated rent lifecycle engine, powered by Celery Beat, Redis, Kafka, and Stripe.
 
-- **Single daily execution**: Efficient resource usage - one job handles all rent operations
-- **Event-driven notifications**: Rent service doesn't need to know about email/push - just publishes events
-- **Kafka decoupling**: Notification service can be down during processing without blocking rent generation
-- **Audit trail**: Every rent event is captured in Kafka for compliance and analytics
-- **Scalability**: Notification service scales independently based on event volume
+### 🧠 How It Works
 
-**Features:**
-- ✅ Automatic rent record generation for all active leases
-- ✅ Proactive 3-day advance reminders
-- ✅ Automated late fee calculation and application
-- ✅ Multi-channel notifications via event streaming (email, in-app)
-- ✅ Payment processing with Stripe integration
+1️⃣  Tenant moves in → Booking Service emits LEASE_STARTED event
+2️⃣  Rent Service creates a RentContract record
+3️⃣  Celery Beat triggers monthly invoice generation
+4️⃣  Rent Service emits RENT_INVOICE_CREATED event
+5️⃣  Notification Service sends reminders before due date
+6️⃣  If autopay enabled → Payment Service charges via Stripe
+7️⃣  Stripe → webhook → Payment Service → emits PAYMENT_SUCCESS
+8️⃣  Rent Service marks invoice as paid
+9️⃣  Late fees applied automatically for overdue invoices
+
+
+All communication is **event-driven via Kafka**, ensuring each microservice operates independently and scales gracefully.
+
+---
+
+### ⚙️ Core Components
+
+| Component | Responsibility |
+|------------|----------------|
+| 🧾 **Rent Service** | Maintains rent contracts, invoices, and due cycles |
+| 💳 **Payment Service** | Processes Stripe payments (manual and autopay) |
+| 🔔 **Notification Service** | Sends rent reminders and payment confirmations |
+| 🕓 **Celery Beat** | Schedules recurring billing, autopay, and late-fee jobs |
+| 📨 **Kafka Topics** | Orchestrates cross-service communication asynchronously |
+
+---
+
+### 🧩 Event Flow Example
+
+```mermaid
+sequenceDiagram
+    participant Booking
+    participant Rent
+    participant Payment
+    participant Notification
+    participant Stripe
+
+    Booking->>Kafka: LEASE_STARTED
+    Kafka->>Rent: Create RentContract
+    Rent->>Celery: Schedule monthly invoice generation
+    Celery->>Rent: Generate invoice
+    Rent->>Kafka: RENT_INVOICE_CREATED
+    Kafka->>Notification: Send rent due reminder
+    Rent->>Kafka: RENT_AUTOPAY_TRIGGERED (if autopay)
+    Kafka->>Payment: Charge tenant via Stripe
+    Payment->>Stripe: PaymentIntent (off-session)
+    Stripe-->>Payment: Webhook PAYMENT_SUCCESS
+    Payment->>Kafka: RENT_PAYMENT_SUCCESS
+    Kafka->>Rent: Mark invoice paid
+    Rent->>Kafka: RENT_PAYMENT_CONFIRMED
+    Kafka->>Notification: Send “Payment Successful” message
+```
 
 
 ---
