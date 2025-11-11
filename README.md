@@ -537,10 +537,12 @@ All communication is **event-driven via Kafka**, ensuring each microservice oper
 | Component | Responsibility |
 |------------|----------------|
 | 🧾 **Rent Service** | Maintains rent contracts, invoices, and due cycles |
-| 💳 **Payment Service** | Processes Stripe payments (manual and autopay) |
 | 🔔 **Notification Service** | Sends rent reminders and payment confirmations |
 | 🕓 **Celery Beat** | Schedules recurring billing, autopay, and late-fee jobs |
 | 📨 **Kafka Topics** | Orchestrates cross-service communication asynchronously |
+| 💳 **Stripe** | Processes payments |
+| ⚡ **Redis** | Acts as the Celery message broker and result backend for background task processing |
+
 
 ---
 
