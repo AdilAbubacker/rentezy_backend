@@ -543,13 +543,12 @@ All communication is **event-driven via Kafka**, ensuring each microservice oper
 
 ### 🪄 **Key Features**
 
-- 🔁 **Recurring Billing** – Automatically generates rent invoices each month for every active lease.  
-- 💳 **Autopay via Stripe** – Secure off-session payments using saved payment methods.  
-- ⏰ **Smart Reminders & Notifications** – Kafka-driven alerts sent through the Notification Service (3-day reminders, due-day notices, and overdue warnings).  
-- 💸 **Late Fee Enforcement** – Celery automatically applies and updates late fees for unpaid invoices.  
-- 🧾 **Event-Based Transparency** – Every rent action (invoice creation, payment, late fee) is logged as Kafka events for full traceability.  
-- ⚙️ **Idempotent & Resilient Tasks** – All Celery jobs and Kafka consumers are retry-safe; duplicate messages never cause double billing.  
-- 📊 **Audit-Ready Data** – Complete rent history and payment lifecycle stored in RentDB and Kafka topics for compliance and reporting.  
+- **Recurring Billing** – Automatically generates rent invoices each month for every active lease.  
+- **Autopay via Stripe** – Secure off-session payments using saved payment methods.  
+- **Proactive Reminder** – 3-day reminders, due-day notices, and overdue warnings.  
+- **Late Fee Enforcement** – Celery automatically applies and updates late fees for unpaid invoices.  
+- **Idempotent & Resilient Tasks** – All Celery jobs and Kafka consumers are retry-safe; duplicate messages never cause double billing.  
+- **Audit-Ready Data** – Complete rent history and payment lifecycle stored in RentDB and Kafka topics for compliance and reporting.  
 
 
 ### 🧠 **Why It Matters**
