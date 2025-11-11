@@ -516,16 +516,17 @@ User Books Property → Kafka Event → Payment Service Charges
 
 ### 🧠 How It Works
 
-1️⃣  Tenant moves in → Booking Service emits LEASE_STARTED event
-2️⃣  Rent Service creates a RentContract record
-3️⃣  Celery Beat triggers monthly invoice generation
-4️⃣  Rent Service emits RENT_INVOICE_CREATED event
-5️⃣  Notification Service sends reminders before due date
-6️⃣  If autopay enabled → Payment Service charges via Stripe
-7️⃣  Stripe → webhook → Payment Service → emits PAYMENT_SUCCESS
-8️⃣  Rent Service marks invoice as paid
-9️⃣  Late fees applied automatically for overdue invoices
-
+```text
+1️⃣  Tenant moves in → Booking Service emits LEASE_STARTED event  
+2️⃣  Rent Service creates a RentContract record  
+3️⃣  Celery Beat triggers monthly invoice generation  
+4️⃣  Rent Service emits RENT_INVOICE_CREATED event  
+5️⃣  Notification Service sends reminders before due date  
+6️⃣  If autopay enabled → Payment Service charges via Stripe  
+7️⃣  Stripe → webhook → Payment Service → emits PAYMENT_SUCCESS  
+8️⃣  Rent Service marks invoice as paid  
+9️⃣  Late fees applied automatically for overdue invoices  
+```
 
 All communication is **event-driven via Kafka**, ensuring each microservice operates independently and scales gracefully.
 
