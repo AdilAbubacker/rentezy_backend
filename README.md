@@ -395,6 +395,36 @@ sequenceDiagram
 ---
 
 ---
+### 1. Event-Driven Architecture — The Nervous System of RentEzy
+
+**The Problem:** Direct service-to-service API calls create a "house of cards" monolith. If the `Notification Service` is down, a new `Booking` fails. The system isn't fault-tolerant.
+
+**The Solution:** A **decoupled, event-driven architecture** with Kafka as the central nervous system. Services publish events (e.g., `booking.created`) and move on. Other services subscribe and react asynchronously. If a consumer is down, Kafka buffers the events, and the service catches up on restart. No calls are blocked, no events are lost.
+
+```mermaid
+graph TD
+    Producers[Producers <br> Booking, Rent, Property... ]
+    Kafka([Apache Kafka <br> Event Stream])
+    Consumers[Consumers <br> Notifications, Search, Analytics... ]
+
+    Producers -- "Publishes Events" --> Kafka
+    Kafka -- "Delivers Events" --> Consumers
+    Consumers -- "Drives Actions" --> World(( ))
+    style World fill:#fff,stroke:#fff
+
+    subgraph " "
+    direction TB
+    World
+    Action1[Updates Search Index]
+    Action2[Sends Emails]
+    Action3[Persists Logs]
+    end
+    style World-subgraph fill:#fff,stroke:#fff
+
+    Consumers -.-> Action1
+    Consumers -.-> Action2
+    Consumers -.-> Action3
+```
 
 ### 1. Event-Driven Architecture — The Nervous System of RentEzy
 
