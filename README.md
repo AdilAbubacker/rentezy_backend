@@ -394,36 +394,46 @@ sequenceDiagram
 
 ---
 
----
 ### 1. Event-Driven Architecture — The Nervous System of RentEzy
 
-**The Problem:** Direct service-to-service API calls create a "house of cards" monolith. If the `Notification Service` is down, a new `Booking` fails. The system isn't fault-tolerant.
+**The Problem:** In a distributed system, how do you update the search index, clear caches, and notify landlords *without* creating a slow, tightly-coupled monolith? How do you ensure a property booking can succeed even if the `Notification Service` is down?
 
-**The Solution:** A **decoupled, event-driven architecture** with Kafka as the central nervous system. Services publish events (e.g., `booking.created`) and move on. Other services subscribe and react asynchronously. If a consumer is down, Kafka buffers the events, and the service catches up on restart. No calls are blocked, no events are lost.
+**The Solution:** A **fully decoupled, event-driven architecture** with Apache Kafka as its central nervous system.
+
+Instead of services making direct, synchronous API calls, they publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
+
+---
+
+### ⚙️ How the Nervous System Works in Practice
+
+Core services publish events. Consumer services subscribe to those events and react independently.
 
 ```mermaid
-graph TD
-    Producers[Producers <br> Booking, Rent, Property... ]
-    Kafka([Apache Kafka <br> Event Stream])
-    Consumers[Consumers <br> Notifications, Search, Analytics... ]
-
-    Producers -- "Publishes Events" --> Kafka
-    Kafka -- "Delivers Events" --> Consumers
-    Consumers -- "Drives Actions" --> World(( ))
-    style World fill:#fff,stroke:#fff
-
-    subgraph " "
-    direction TB
-    World
-    Action1[Updates Search Index]
-    Action2[Sends Emails]
-    Action3[Persists Logs]
+graph LR
+    subgraph Producers
+        BookingService[Booking Svc]
+        RentService[Rent Svc]
+        PropertyService[Property Svc]
+        PaymentService[Payment Svc]
     end
-    style World-subgraph fill:#fff,stroke:#fff
 
-    Consumers -.-> Action1
-    Consumers -.-> Action2
-    Consumers -.-> Action3
+    Kafka([Kafka<br>Event Stream])
+
+    subgraph Consumers
+        NotificationService[Notification Svc]
+        SearchConsumer[Search Consumer]
+        AnalyticsAudit[Analytics/Audit Svc]
+    end
+
+    Producers -- "Events (booking, rent, etc.)" --> Kafka
+
+    Kafka -- "Consumes" --> NotificationService
+    Kafka -- "Consumes" --> SearchConsumer
+    Kafka -- "Consumes" --> AnalyticsAudit
+
+    NotificationService -- "Sends Alerts" --> User[User]
+    SearchConsumer -- "Updates Index" --> Elasticsearch[(Elasticsearch)]
+    AnalyticsAudit -- "Persists Logs" --> DataLake[(Data Lake/DB)]
 ```
 
 ### 1. Event-Driven Architecture — The Nervous System of RentEzy
