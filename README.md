@@ -429,15 +429,10 @@ graph LR
 **Why this architecture wins:**
 
 * 🔌 **Zero Coupling** - Add new consumers without touching existing code. Property Service doesn't know Search exists.
-
 * 🛡️ **Fault Isolation** - Search crashes? Bookings continue. Kafka retains events, recovery is automatic. Zero data loss.
-
 * ⚡ **Async Performance** - API returns instantly. Heavy operations happen in background. No timeouts, no blocking.
-
 * 📈 **Independent Scaling** - Scale Notification to 10 pods while Property runs on 3. Kafka consumer groups handle distribution.
-
 * 🔄 **Event Replay** - Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
-
 * 🎯 **Choreography** - Services react autonomously. No central orchestrator = no single point of failure.
 
 **Result:** A system where individual service failures don't cascade, new features ship without touching old code, and 6 months of production data can be replayed to fix bugs retroactively. This is how you build systems that survive in production.
