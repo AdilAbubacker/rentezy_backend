@@ -396,7 +396,7 @@ sequenceDiagram
 
 ### 1. Event-Driven Architecture — The Nervous System of RentEzy
 
-**The Problem:**  Coordinating complex workflows across microservices without tight coupling and cascading failures.
+**The Problem:**  Coordinating complex workflows across microservices without becoming a dependency nightmare.
 **The Solution: Event-driven architecture with Apache Kafka as its central nervous system.**
 
 Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
@@ -429,11 +429,11 @@ graph LR
 **Why this architecture wins:**
 
 * 🔌 **Zero Coupling** - Add new consumers without touching existing code. Property Service doesn't know Search exists.
-* 🛡️ **Fault Isolation** - Search crashes? Bookings continue. Kafka retains events, recovery is automatic. Zero data loss.
+* 🛡️ **Fault Isolation** - Search crashes? Bookings continue. Kafka retains events, and the service catches up on restart. No cascading failures, no data loss.
 * ⚡ **Async Performance** - API returns instantly. Heavy operations happen in background. No timeouts, no blocking.
 * 📈 **Independent Scaling** - Scale Notification to 10 pods while Property runs on 3. Kafka consumer groups handle distribution.
 * 🔄 **Event Replay** - Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
-* 🎯 **Choreography** - Services react autonomously. No central orchestrator = no single point of failure.
+* 🎯 **Real-Time Experience** - Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
 
 **Result:** A system where individual service failures don't cascade, new features ship without touching old code, and 6 months of production data can be replayed to fix bugs retroactively. This is how you build systems that survive in production.
 
