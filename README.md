@@ -426,29 +426,22 @@ graph LR
     AnalyticsAudit -- "Persists Logs" --> DataLake[(Data Lake/DB)]
 ```
 
-### 1. Event-Driven Architecture — The Nervous System of RentEzy
+**Why this architecture wins:**
 
-**The Problem:** How do you update search, send notifications, and clear caches *without* creating a slow, tightly-coupled monolith? How does a booking succeed if the `Notification Service` is down?
+🔌 **Zero Coupling** - Add new consumers without touching existing code. Property Service doesn't know Search exists.
 
-**The Solution:** A **decoupled, event-driven architecture** with Kafka as the central nervous system.
+🛡️ **Fault Isolation** - Search crashes? Bookings continue. Kafka retains events, recovery is automatic. Zero data loss.
 
-Services publish events (e.g., `property.created`) instead of making direct, slow API calls. Other services subscribe and react. If a consumer service is down, Kafka buffers the events, and the service catches up on restart. No data is lost. No cascading failures.
+⚡ **Async Performance** - API returns instantly. Heavy operations happen in background. No timeouts, no blocking.
 
----
+📈 **Independent Scaling** - Scale Notification to 10 pods while Property runs on 3. Kafka consumer groups handle distribution.
 
-### ⚙️ How the Nervous System Works: An Example
+🔄 **Event Replay** - Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
 
-```text
-A landlord lists a property...
+🎯 **Choreography** - Services react autonomously. No central orchestrator = no single point of failure.
 
-[Property Service] --(Publishes "PROPERTY_CREATED" event)--> [ KAFKA TOPIC ]
-                                                                   |
-                                                                   +---> [Search Consumer] (Updates Elasticsearch)
-                                                                   |
-                                                                   +---> [Notification Service] (Sends "Your property is live!" email)
-                                                                   |
-                                                                   +---> [Analytics Service] (Logs new listing for metrics)
-```
+**Result:** A system where individual service failures don't cascade, new features ship without touching old code, and 6 months of production data can be replayed to fix bugs retroactively. This is how you build systems that survive in production.
+
 ### 🔗 Architectural Benefits & Real-World Impact
 
 * **Total Decoupling:** No service directly calls another. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
