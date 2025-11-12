@@ -420,11 +420,9 @@ graph LR
     SearchConsumer[Search Consumer]
     AnalyticsAudit[Analytics/Audit Svc]
 
-    Producers -- "Events (booking, rent, etc.)" --> Kafka
-
-    BookingService -- "Produces" --> Kafka
-    PropertyService -- "Produces" --> Kafka
-    RentService -- "Produces" --> Kafka
+    BookingService -- "Booking Events" --> Kafka
+    PropertyService -- "Property Events" --> Kafka
+    RentService -- "Rent Events" --> Kafka
 
     Kafka -- "Consumes" --> NotificationService
     Kafka -- "Consumes" --> SearchConsumer
