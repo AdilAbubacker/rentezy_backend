@@ -410,25 +410,19 @@ Core services publish events. Consumer services subscribe to those events and re
 
 ```mermaid
 graph LR
-    subgraph Producers
-        BookingService[Booking Svc]
-        RentService[Rent Svc]
-        PropertyService[Property Svc]
-        PaymentService[Payment Svc]
-    end
+    BookingService[Booking Svc]
+    RentService[Rent Svc]
+    PropertyService[Property Svc]
 
     Kafka([Kafka<br>Event Stream])
 
-    subgraph Consumers
-        NotificationService[Notification Svc]
-        SearchConsumer[Search Consumer]
-        AnalyticsAudit[Analytics/Audit Svc]
-    end
+    NotificationService[Notification Svc]
+    SearchConsumer[Search Consumer]
+    AnalyticsAudit[Analytics/Audit Svc]
 
     Producers -- "Events (booking, rent, etc.)" --> Kafka
 
     BookingService -- "Produces" --> Kafka
-    PaymentService -- "Produces" --> Kafka
     PropertyService -- "Produces" --> Kafka
     RentService -- "Produces" --> Kafka
 
