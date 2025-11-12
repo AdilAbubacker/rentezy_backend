@@ -425,6 +425,8 @@ graph LR
         AnalyticsAudit[Analytics/Audit Svc]
     end
 
+    Producers -- "Events (booking, rent, etc.)" --> Kafka
+
     BookingService -- "Produces" --> Kafka
     PaymentService -- "Produces" --> Kafka
     PropertyService -- "Produces" --> Kafka
