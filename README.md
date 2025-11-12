@@ -396,17 +396,10 @@ sequenceDiagram
 
 ### 1. Event-Driven Architecture — The Nervous System of RentEzy
 
-**The Problem:** In a distributed system, how do you update the search index, clear caches, and notify landlords *without* creating a slow, tightly-coupled monolith? How do you ensure a property booking can succeed even if the `Notification Service` is down?
+**The Problem:**  Coordinating complex workflows across microservices without tight coupling and cascading failures.
+**The Solution: Event-driven architecture with Apache Kafka as its central nervous system.**
 
-**The Solution:** A **fully decoupled, event-driven architecture** with Apache Kafka as its central nervous system.
-
-Instead of services making direct, synchronous API calls, they publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
-
----
-
-### ⚙️ How the Nervous System Works in Practice
-
-Core services publish events. Consumer services subscribe to those events and react independently.
+Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
 
 ```mermaid
 graph LR
