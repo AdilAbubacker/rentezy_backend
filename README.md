@@ -411,16 +411,23 @@ sequenceDiagram
 
     Note over Gateway,Auth: Auth owns secret key for JWT<br>Gateway just verifies via Auth API
 ```
-### 🔗 Architectural Benefits & Real-World Impact
+**Why This Architecture is Superior:**
 
-- 🔐 **Zero-Trust Security:** The gateway is a shield. It validates *every single request* before it can access the internal Kubernetes network.
-- 📦 **Centralized Logic:** All cross-cutting concerns (Auth, Rate Limiting, Routing) live in one place.
-- 🛡️ **Secret Isolation:** The JWT secret key **never** leaves the `Auth Service`. The gateway and other services don't know it, drastically reducing the attack surface.
-- 🔄 **Developer Velocity:** Service teams (like `Booking` or `Property`) don't write *any* auth code. They just build business logic and trust that incoming requests are already authenticated.
-- 🚀 **Scalability:** The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
+🛡️ **Secret Isolation**
+This is the biggest win. The JWT secret key never leaves the Auth Service. The Gateway and all 10+ business services don't know it, drastically reducing the attack surface.
 
-**Result: Bulletproof security at the front door, zero auth-logic duplication in 10+ services.**
-**Result:** Bulletproof security with zero auth code duplication across 19+ services
+🔐 **Zero-Trust Network**
+Business services (like Booking or Property) don't write any auth code. They are "dumb" and simply trust that any request they receive from the Gateway is already authenticated.
+
+📦 **Centralized Logic** 
+All cross-cutting concerns (Authentication, Authorization, Rate Limiting) live in one place. Want to change the auth logic? You only edit one service.
+
+🔄 **Developer Velocity** 
+Service teams (like `Booking` or `Property`) don't write *any* auth code. They just build business logic and trust that incoming requests are already authenticated.
+
+🚀 **Scalability:** The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
+
+**Result:** Bulletproof security with zero auth code duplication across 10+ services
 
 **Architecture Highlights:**
 - ✅ **Single Entry Point**: Only API Gateway exposed via Ingress Controller
@@ -430,7 +437,6 @@ sequenceDiagram
 - ✅ **Rate Limiting**: Redis-backed throttling at gateway level (100 req/min per user)
 
 
-**Why This Architecture is Superior:**
 -  **Security**: Secret key never leaves Auth Service
 -  **Performance**: Internal K8s networking is blazing fast
 -  **Defense in Depth**: Gateway + Auth Service as security layers
