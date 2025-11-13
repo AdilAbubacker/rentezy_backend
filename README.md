@@ -350,6 +350,36 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
   
 ---
+### 2. API Gateway & Centralized Auth — The Fortress Gate
+
+**The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere? How do you prevent a single user from overwhelming the entire system?
+
+**The Solution:** A **Centralized API Gateway** that acts as a single, secure front door. It's the only part of the backend exposed to the internet, hiding all other services.
+
+---
+
+### ⚙️ The Authentication Flow
+
+The gateway intercepts *every* request. It validates the user's JWT with the `Auth Service` before *any* request is allowed to reach an internal business service (like `Booking`).
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gateway[API Gateway]
+    participant Auth[Auth Service]
+    participant Service[Booking Service]
+
+    Client->>Gateway: Request (with JWT)
+    Gateway->>Auth: Validate Token?
+    Auth-->>Gateway: ✅ Valid (User: 123)
+    
+    Note over Gateway,Service: Gateway forwards request *with user info*
+    
+    Gateway->>Service: Process for User 123
+    Service-->>Gateway: Response
+    Gateway-->>Client: Final Response
+```
+
 ### 3️⃣ Centralized Authentication Across the Services
 **The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere?  
 **The Solution: Zero-Trust Architecture with Centralized Auth**
