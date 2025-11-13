@@ -360,7 +360,6 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **The Solution: Zero-Trust Architecture with Centralized Auth**
 
 The `Auth Service` is the *only* service that holds the JWT secret. The Gateway simply acts as a bouncer, delegating the validation check before routing the request to the correct internal service.
-
 ```mermaid
 sequenceDiagram
     participant Client
@@ -377,8 +376,6 @@ sequenceDiagram
     Service-->>Gateway: Response
     Gateway-->>Ingress: Response
     Ingress-->>Client: Final Response
-
-    Note over Gateway,Auth: Auth owns secret key for JWT<br>Gateway just verifies via Auth API
 ```
 **Why This Architecture is Superior:**
 
