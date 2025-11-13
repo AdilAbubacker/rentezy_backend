@@ -413,19 +413,20 @@ sequenceDiagram
 ```
 **Why This Architecture is Superior:**
 
-🛡️ **Secret Isolation**
+🛡️ **Secret Isolation**  
 This is the biggest win. The JWT secret key never leaves the Auth Service. The Gateway and all 10+ business services don't know it, drastically reducing the attack surface.
 
-🔐 **Zero-Trust Network**
+🔐 **Zero-Trust Network**  
 Business services (like Booking or Property) don't write any auth code. They are "dumb" and simply trust that any request they receive from the Gateway is already authenticated.
 
-📦 **Centralized Logic** 
+📦 **Centralized Logic**  
 All cross-cutting concerns (Authentication, Authorization, Rate Limiting) live in one place. Want to change the auth logic? You only edit one service.
 
-🔄 **Developer Velocity** 
+🔄 **Developer Velocity**  
 Service teams (like `Booking` or `Property`) don't write *any* auth code. They just build business logic and trust that incoming requests are already authenticated.
 
-🚀 **Scalability:** The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
+🚀 **Scalability**  
+The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
 
 **Result:** Bulletproof security with zero auth code duplication across 10+ services
 
@@ -485,41 +486,6 @@ graph LR
     %% Styling to make Kafka pop
     classDef kafkaNode fill:#e0f2f1,stroke:#004d40,stroke-width:2px
     class Kafka kafkaNode
-```
-
----
-
-```mermaid
-graph LR
-    subgraph Producers
-        BookingService[Booking Svc]
-        RentService[Rent Svc]
-        PropertyService[Property Svc]
-        PaymentService[Payment Svc]
-    end
-    
-
-    Kafka([Kafka<br>Event Stream])
-
-    subgraph Consumers
-        NotificationService[Notification Svc]
-        SearchConsumer[Search Consumer]
-        AnalyticsAudit[Analytics/Audit Svc]
-    end
-    
-
-    BookingService -- "booking.confirmed" --> Kafka
-    RentService -- "rent.payment_due" --> Kafka
-    PropertyService -- "property.updated" --> Kafka
-    PaymentService -- "payment.failed" --> Kafka
-
-    Kafka -- "Consumes" --> NotificationService
-    Kafka -- "Consumes" --> SearchConsumer
-    Kafka -- "Consumes" --> AnalyticsAudit
-
-    NotificationService -- "Sends Alerts" --> User[User]
-    SearchConsumer -- "Updates Index" --> Elasticsearch[(Elasticsearch)]
-    AnalyticsAudit -- "Persists Logs" --> DataLake[(Data Lake/DB)]
 ```
 
 **Why this architecture wins:**
