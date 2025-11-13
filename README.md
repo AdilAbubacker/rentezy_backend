@@ -435,7 +435,7 @@ graph LR
 * 🔄 **Event Replay** - Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
 * 🎯 **Real-Time Experience** - Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
 
-**Result:** A system where individual service failures don't cascade, new features ship without touching old code, and 6 months of production data can be replayed to fix bugs retroactively. This is how you build systems that survive in production.
+**Result:**  Services can be deployed, scaled, and fail independently without affecting each other.
 
 ### 🔗 Architectural Benefits & Real-World Impact
 
