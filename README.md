@@ -357,6 +357,37 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **The Solution:** A **Centralized API Gateway** that acts as a single, secure front door. It's the only part of the backend exposed to the internet, hiding all other services.
 
 ---
+### 2. API Gateway & Centralized Auth (The Digital Bouncer)
+
+**The Problem:** How do you secure 10+ microservices? If you put auth logic in every service, you'd have to copy-paste the JWT secret key everywhere—a massive security risk and a maintenance nightmare.
+
+**The Solution:** A **Zero-Trust** architecture. A single API Gateway acts as the "bouncer" at the front door. It's the only service exposed to the internet. Every single request is validated by a dedicated, internal `Auth Service`.
+
+If the request is valid, the Gateway passes it on. If not, it's rejected at the door.
+
+---
+
+### ⚙️ How It Works: The Authentication Flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gateway[API Gateway (Public)]
+    participant Auth[Auth Service (Private)]
+    participant Service[Booking Svc (Private)]
+    
+    Client->>Gateway: Request + JWT
+    Gateway->>Auth: Validate JWT?
+    Auth-->>Gateway: ✅ Valid (UserID: 123)
+    Gateway->>Service: Forward Request + UserID
+    Service-->>Gateway: Response
+    Gateway-->>Client: Final Response
+    
+    Client->>Gateway: Request + (Bad JWT)
+    Gateway->>Auth: Validate JWT?
+    Auth-->>Gateway: ❌ Invalid
+    Gateway-->>Client: 401 Unauthorized
+```
 
 ### ⚙️ The Authentication Flow
 
