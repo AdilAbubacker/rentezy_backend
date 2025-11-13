@@ -401,6 +401,7 @@ sequenceDiagram
 
 Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
 
+```mermaid
 graph LR
     subgraph Producers
         BookingService[Booking Svc]
@@ -432,6 +433,9 @@ graph LR
     classDef kafkaNode fill:#e0f2f1,stroke:#004d40,stroke-width:2px
     class Kafka kafkaNode
 ```
+
+---
+
 ```mermaid
 graph LR
     subgraph Producers
