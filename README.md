@@ -421,7 +421,6 @@ graph LR
     
 
     BookingService -- "booking.confirmed" --> Kafka
-    BookingService -- "booking.cancelled" --> Kafka
     RentService -- "rent.payment_due" --> Kafka
     PropertyService -- "property.updated" --> Kafka
     PaymentService -- "payment.failed" --> Kafka
