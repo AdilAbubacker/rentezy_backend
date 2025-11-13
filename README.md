@@ -403,19 +403,28 @@ Traditional synchronous REST calls between services lead to tight coupling, casc
 
 ```mermaid
 graph LR
-    BookingService[Booking Svc]
-    RentService[Rent Svc]
-    PropertyService[Property Svc]
+    subgraph Producers
+        BookingService[Booking Svc]
+        RentService[Rent Svc]
+        PropertyService[Property Svc]
+        PaymentService[Payment Svc]
+    end
+    
 
     Kafka([Kafka<br>Event Stream])
 
-    NotificationService[Notification Svc]
-    SearchConsumer[Search Consumer]
-    AnalyticsAudit[Analytics/Audit Svc]
+    subgraph Consumers
+        NotificationService[Notification Svc]
+        SearchConsumer[Search Consumer]
+        AnalyticsAudit[Analytics/Audit Svc]
+    end
+    
 
-    BookingService -- "Booking Events" --> Kafka
-    PropertyService -- "Property Events" --> Kafka
-    RentService -- "Rent Events" --> Kafka
+    BookingService -- "booking.confirmed" --> Kafka
+    BookingService -- "booking.cancelled" --> Kafka
+    RentService -- "rent.payment_due" --> Kafka
+    PropertyService -- "property.updated" --> Kafka
+    PaymentService -- "payment.failed" --> Kafka
 
     Kafka -- "Consumes" --> NotificationService
     Kafka -- "Consumes" --> SearchConsumer
