@@ -434,9 +434,9 @@ The gateway intercepts *every* request. It validates the user's JWT with the `Au
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Gateway[API Gateway]
-    participant Auth[Auth Service]
-    participant Service[Booking Service]
+    participant Gateway
+    participant Auth
+    participant Service
 
     Client->>Gateway: Request (with JWT)
     Gateway->>Auth: Validate Token?
