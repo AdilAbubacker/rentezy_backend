@@ -350,38 +350,7 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
   
 ---
-### 2. Centralized Authentication — The Zero-Trust "Front Door"
 
-**The Problem:** How do you secure 10+ microservices, enforce rate limiting, and route traffic without duplicating auth logic in every single service?
-
-**The Solution:** A **centralized API Gateway** that acts as the single, intelligent "front door" for the entire system. It implements a zero-trust model: no request is allowed to enter the internal network until it has been validated by the `Auth Service`.
-
----
-
-### ⚙️ How It Works: The Authentication Flow
-
-The `Auth Service` is the *only* service that holds the JWT secret. The Gateway simply acts as a bouncer, delegating the validation check before routing the request to the correct internal service.
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Gateway[API Gateway]
-    participant AuthSvc[Auth Service (Has Secret)]
-    participant TargetSvc[Target Service (e.g., Booking)]
-
-    Client->>Gateway: HTTP Request (with JWT)
-    Gateway->>AuthSvc: Validate Token? (sends JWT)
-    AuthSvc-->>Gateway: ✅ Valid (200 OK)
-    
-    alt Valid Token
-        Gateway->>TargetSvc: Forward Request
-        TargetSvc-->>Gateway: Response
-    else Invalid Token
-        Gateway-->>Client: 401 Unauthorized
-    end
-
-    Gateway-->>Client: Final Response
-```
 
 
  
@@ -429,22 +398,6 @@ Service teams (like `Booking` or `Property`) don't write *any* auth code. They j
 The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
 
 **Result:** Bulletproof security with zero auth code duplication across 10+ services
-
-**Architecture Highlights:**
-- ✅ **Single Entry Point**: Only API Gateway exposed via Ingress Controller
-- ✅ **Centralized Auth Service**: JWT secret key isolated in ONE service only
-- ✅ **Zero-Trust Gateway**: Every request validated before routing
-- ✅ **Service Isolation**: 19+ internal services never touch auth logic
-- ✅ **Rate Limiting**: Redis-backed throttling at gateway level (100 req/min per user)
-
-
--  **Security**: Secret key never leaves Auth Service
--  **Performance**: Internal K8s networking is blazing fast
--  **Defense in Depth**: Gateway + Auth Service as security layers
--  **Separation of Concerns**: Services focus on business logic, not auth
--  **Scalability**: Auth Service scales independently of business services
-
-**Result:** Military-grade security with zero auth code duplication across 19+ services
 
 ---
 
