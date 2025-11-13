@@ -350,110 +350,48 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
   
 ---
-### 2. The API Gateway — A Single, Secure Front Door
+### 2. Centralized Authentication — The Zero-Trust "Front Door"
 
-**The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere? How do you prevent a single user's script from DDoSing your entire system? How do you route `api.rentezy.com/search` to the `Search Service` and `.../book` to the `Booking Service`?
+**The Problem:** How do you secure 10+ microservices, enforce rate limiting, and route traffic without duplicating auth logic in every single service?
 
-**The Solution:** A **centralized API Gateway** that acts as the single, hardened entry point for all client requests. No request ever reaches an internal service directly.
-
-The gateway is a "bouncer" responsible for three critical jobs:
-1.  **Authentication:** Validating the user's JWT token by checking with the `Auth Service`.
-2.  **Rate Limiting:** Blocking users who make too many requests (e.g., 100/min) *before* they can harm the system.
-3.  **Routing:** Intelligently forwarding the *validated* request to the correct internal microservice.
-
----
-
-### ⚙️ How It Works: The Authentication & Routing Flow
-
-No internal service ever has to worry about auth. The gateway and `Auth Service` handle it all.
-
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Gateway[API Gateway]
-    participant AuthSvc[Auth Service]
-    participant PropertySvc[Property Service]
-    
-    Client->>Gateway: GET /api/properties (with JWT)
-    Gateway->>AuthSvc: Validate Token (Is JWT valid?)
-    AuthSvc-->>Gateway: ✅ Valid (User ID: 123)
-    Gateway->>PropertySvc: GET /properties (Forward request)
-    PropertySvc-->>Gateway: [Property List]
-    Gateway-->>Client: [Property List]
-    
-    %% Failure Case
-    Client->>Gateway: POST /api/book (Bad JWT)
-    Gateway->>AuthSvc: Validate Token
-    AuthSvc-->>Gateway: ❌ Invalid Token
-    Gateway-->>Client: 401 Unauthorized
-```
-
-### 2. API Gateway & Centralized Auth — The Fortress Gate
-
-**The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere? How do you prevent a single user from overwhelming the entire system?
-
-**The Solution:** A **Centralized API Gateway** that acts as a single, secure front door. It's the only part of the backend exposed to the internet, hiding all other services.
-
----
-### 2. API Gateway & Centralized Auth (The Digital Bouncer)
-
-**The Problem:** How do you secure 10+ microservices? If you put auth logic in every service, you'd have to copy-paste the JWT secret key everywhere—a massive security risk and a maintenance nightmare.
-
-**The Solution:** A **Zero-Trust** architecture. A single API Gateway acts as the "bouncer" at the front door. It's the only service exposed to the internet. Every single request is validated by a dedicated, internal `Auth Service`.
-
-If the request is valid, the Gateway passes it on. If not, it's rejected at the door.
+**The Solution:** A **centralized API Gateway** that acts as the single, intelligent "front door" for the entire system. It implements a zero-trust model: no request is allowed to enter the internal network until it has been validated by the `Auth Service`.
 
 ---
 
 ### ⚙️ How It Works: The Authentication Flow
 
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Gateway[API Gateway (Public)]
-    participant Auth[Auth Service (Private)]
-    participant Service[Booking Svc (Private)]
-    
-    Client->>Gateway: Request + JWT
-    Gateway->>Auth: Validate JWT?
-    Auth-->>Gateway: ✅ Valid (UserID: 123)
-    Gateway->>Service: Forward Request + UserID
-    Service-->>Gateway: Response
-    Gateway-->>Client: Final Response
-    
-    Client->>Gateway: Request + (Bad JWT)
-    Gateway->>Auth: Validate JWT?
-    Auth-->>Gateway: ❌ Invalid
-    Gateway-->>Client: 401 Unauthorized
-```
-
-### ⚙️ The Authentication Flow
-
-The gateway intercepts *every* request. It validates the user's JWT with the `Auth Service` before *any* request is allowed to reach an internal business service (like `Booking`).
+The `Auth Service` is the *only* service that holds the JWT secret. The Gateway simply acts as a bouncer, delegating the validation check before routing the request to the correct internal service.
 
 ```mermaid
 sequenceDiagram
     participant Client
-    participant Gateway
-    participant Auth
-    participant Service
+    participant Gateway[API Gateway]
+    participant AuthSvc[Auth Service (Has Secret)]
+    participant TargetSvc[Target Service (e.g., Booking)]
 
-    Client->>Gateway: Request (with JWT)
-    Gateway->>Auth: Validate Token?
-    Auth-->>Gateway: ✅ Valid (User: 123)
+    Client->>Gateway: HTTP Request (with JWT)
+    Gateway->>AuthSvc: Validate Token? (sends JWT)
+    AuthSvc-->>Gateway: ✅ Valid (200 OK)
     
-    Note over Gateway,Service: Gateway forwards request *with user info*
-    
-    Gateway->>Service: Process for User 123
-    Service-->>Gateway: Response
+    alt Valid Token
+        Gateway->>TargetSvc: Forward Request
+        TargetSvc-->>Gateway: Response
+    else Invalid Token
+        Gateway-->>Client: 401 Unauthorized
+    end
+
     Gateway-->>Client: Final Response
 ```
+
+
+ 
 
 ### 3️⃣ Centralized Authentication Across the Services
 **The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere?  
 **The Solution: Zero-Trust Architecture with Centralized Auth**
 
-**Authentication Flow:**
+The `Auth Service` is the *only* service that holds the JWT secret. The Gateway simply acts as a bouncer, delegating the validation check before routing the request to the correct internal service.
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -481,7 +419,9 @@ sequenceDiagram
 - 🔄 **Developer Velocity:** Service teams (like `Booking` or `Property`) don't write *any* auth code. They just build business logic and trust that incoming requests are already authenticated.
 - 🚀 **Scalability:** The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
 
-> **Result: Bulletproof security at the front door, zero auth-logic duplication in 10+ services.**
+**Result: Bulletproof security at the front door, zero auth-logic duplication in 10+ services.**
+**Result:** Bulletproof security with zero auth code duplication across 19+ services
+
 **Architecture Highlights:**
 - ✅ **Single Entry Point**: Only API Gateway exposed via Ingress Controller
 - ✅ **Centralized Auth Service**: JWT secret key isolated in ONE service only
