@@ -401,6 +401,37 @@ sequenceDiagram
 
 Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
 
+graph LR
+    subgraph Producers
+        BookingService[Booking Svc]
+        RentService[Rent Svc]
+        PropertyService[Property Svc]
+        PaymentService[Payment Svc]
+    end
+    Kafka([Kafka<br>Event Stream])
+    subgraph Consumers
+        NotificationService[Notification Svc]
+        SearchConsumer[Search Consumer]
+        AnalyticsAudit[Analytics/Audit Svc]
+    end
+    
+    BookingService -- "booking.confirmed" --> Kafka
+    RentService -- "rent.payment_due" --> Kafka
+    PropertyService -- "property.updated" --> Kafka
+    PaymentService -- "payment.failed" --> Kafka
+
+    Kafka -- "Consumes" --> NotificationService
+    Kafka -- "Consumes" --> SearchConsumer
+    Kafka -- "Consumes" --> AnalyticsAudit
+
+    NotificationService -- "Sends Alerts" --> User[User]
+    SearchConsumer -- "Updates Index" --> Elasticsearch[(Elasticsearch)]
+    AnalyticsAudit -- "Persists Logs" --> DataLake[(Data Lake/DB)]
+
+    %% Styling to make Kafka pop
+    classDef kafkaNode fill:#e0f2f1,stroke:#004d40,stroke-width:2px
+    class Kafka kafkaNode
+```
 ```mermaid
 graph LR
     subgraph Producers
