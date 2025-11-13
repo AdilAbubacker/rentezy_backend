@@ -18,6 +18,9 @@
 
 Building a property rental platform is easy. Building one that **handles thousands of concurrent bookings without race conditions, processes payments automatically while you sleep, and scales infinitely** - that's the real challenge.
 
+**RentEzy** isn’t a property management app — it’s a **distributed systems case study** disguised as one.  
+Every architectural decision — from **Kafka-based communication** to **Celery-driven automation** — is designed for **fault tolerance**, **scalability**, and **resilience** at production scale.
+
 RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven microservices architecture** designed to solve real-world problems that break traditional monolithic applications.
 
 ---
@@ -380,7 +383,7 @@ sequenceDiagram
 **Why This Architecture is Superior:**
 
 🛡️ **Secret Isolation**  
-This is the biggest win. The JWT secret key never leaves the Auth Service. The Gateway and all 10+ business services don't know it, drastically reducing the attack surface.
+The JWT secret key never leaves the Auth Service. The Gateway and all 10+ business services don't know it, drastically reducing the attack surface.
 
 🔐 **Zero-Trust Network**  
 Business services (like Booking or Property) don't write any auth code. They are "dumb" and simply trust that any request they receive from the Gateway is already authenticated.
