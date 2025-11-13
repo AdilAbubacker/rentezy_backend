@@ -350,6 +350,44 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
   
 ---
+### 2. The API Gateway — A Single, Secure Front Door
+
+**The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere? How do you prevent a single user's script from DDoSing your entire system? How do you route `api.rentezy.com/search` to the `Search Service` and `.../book` to the `Booking Service`?
+
+**The Solution:** A **centralized API Gateway** that acts as the single, hardened entry point for all client requests. No request ever reaches an internal service directly.
+
+The gateway is a "bouncer" responsible for three critical jobs:
+1.  **Authentication:** Validating the user's JWT token by checking with the `Auth Service`.
+2.  **Rate Limiting:** Blocking users who make too many requests (e.g., 100/min) *before* they can harm the system.
+3.  **Routing:** Intelligently forwarding the *validated* request to the correct internal microservice.
+
+---
+
+### ⚙️ How It Works: The Authentication & Routing Flow
+
+No internal service ever has to worry about auth. The gateway and `Auth Service` handle it all.
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Gateway[API Gateway]
+    participant AuthSvc[Auth Service]
+    participant PropertySvc[Property Service]
+    
+    Client->>Gateway: GET /api/properties (with JWT)
+    Gateway->>AuthSvc: Validate Token (Is JWT valid?)
+    AuthSvc-->>Gateway: ✅ Valid (User ID: 123)
+    Gateway->>PropertySvc: GET /properties (Forward request)
+    PropertySvc-->>Gateway: [Property List]
+    Gateway-->>Client: [Property List]
+    
+    %% Failure Case
+    Client->>Gateway: POST /api/book (Bad JWT)
+    Gateway->>AuthSvc: Validate Token
+    AuthSvc-->>Gateway: ❌ Invalid Token
+    Gateway-->>Client: 401 Unauthorized
+```
+
 ### 2. API Gateway & Centralized Auth — The Fortress Gate
 
 **The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere? How do you prevent a single user from overwhelming the entire system?
