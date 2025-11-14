@@ -392,7 +392,7 @@ Business services (like Booking or Property) don't write any auth code. They are
 All cross-cutting concerns (Authentication, Authorization, Rate Limiting) live in one place. Want to change the auth logic? You only edit one service.
 
 🔄 **Developer Velocity**  
-Service teams (like `Booking` or `Property`) don't write *any* auth code. They just build business logic and trust that incoming requests are already authenticated.
+You can build 100 new microservices, and they are all instantly secured by default simply by being behind the gateway.
 
 🚀 **Scalability**  
 The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
@@ -443,43 +443,25 @@ graph LR
 
 **Why this architecture wins:**
 
-* 🔌 **Zero Coupling** - Add new consumers without touching existing code. Property Service doesn't know Search exists.
-* 🛡️ **Fault Isolation** - Search crashes? Bookings continue. Kafka retains events, and the service catches up on restart. No cascading failures, no data loss.
-* ⚡ **Async Performance** - API returns instantly. Heavy operations happen in background. No timeouts, no blocking.
-* 📈 **Independent Scaling** - Scale Notification to 10 pods while Property runs on 3. Kafka consumer groups handle distribution.
-* 🔄 **Event Replay** - Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
-* 🎯 **Real-Time Experience** - Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
+🔌 **Zero Coupling**
+Property Service doesn't know Search exists. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
 
-**Result:**  Services can be deployed, scaled, and fail independently without affecting each other.
+🛡️ **Fault Isolation** 
+Search crashes? Bookings continue. Temporary service failures don't cascade. Kafka retains events, and the service catches up on restart. 
 
-### 🔗 Architectural Benefits & Real-World Impact
+⚡ **Async Performance**  
+API returns instantly. Heavy operations happen in background. No timeouts, no blocking.
 
-* **Total Decoupling:** No service directly calls another. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
-* **Fault Tolerance:** Temporary service failures (e.g., `Notification Service` is down) don't cascade. Kafka ensures guaranteed delivery, and the service catches up on restart.
-* **Scalability:** Each service (e.g., `Search Consumer`) scales independently based on its *own* event load, not the load of the whole system.
-* **Observability:** Every business action leaves a traceable event in Kafka, forming a perfect, immutable audit log.
-* **Real-Time Experience:** Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
+📈 **Independent Scaling**  
+Scale Notification to 10 pods while Property runs on 3. Kafka consumer groups handle distribution.
+  
+🔄 **Event Replay**  
+Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
 
----
+🎯 **Real-Time Experience**  
+Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
 
-### 2️⃣. **Event-Driven Architecture with Apache Kafka**
-**The Problem:** Service coupling and synchronous dependencies creating bottlenecks  
-**The Solution:** Async event streaming with guaranteed delivery
-
-- **19 services communicating via events** - zero tight coupling
-- **Fault tolerance**: Services can go down without cascading failures
-- **Scalability**: Each service scales independently based on load
-
-```
-User Books Property → Kafka Event → Payment Service Charges
-                                  ↓
-                          Payment Fails?
-                                  ↓
-                    Celery Task → Release Room Automatically
-                                  ↓
-                          Notification Sent to User
-```
-**Result:** Fully automated workflows without tight coupling.
+**Result:**  Services can be scaled, deployed, and fail independently without affecting each other.
 
 ---
 
