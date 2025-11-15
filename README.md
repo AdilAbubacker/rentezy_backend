@@ -325,7 +325,7 @@ CANCELLED → (late payment + no rooms) → REFUNDED
 Clean state transitions with no ambiguous states. Every booking is always in a known, valid state.
 
 **Real-world impact:**
-- Handles 10,000+ abandoned carts daily with zero manual cleanup
+- Handles abandoned carts daily with zero manual cleanup
 - Processes race conditions gracefully without customer complaints
 - Inventory always accurate - no ghost reservations
 - Automatic refunds maintain customer trust
