@@ -18,8 +18,6 @@
 
 Building a property rental platform is easy. Building one that **handles thousands of concurrent bookings without race conditions, processes payments automatically while you sleep, and scales infinitely** - that's the real challenge.
 
-**RentEzy** isn’t a property management app — it’s a **distributed systems case study** disguised as one.  
-
 RentEzy isn't just another CRUD app. It's a **fully distributed, event-driven microservices architecture** designed to solve real-world problems at scale. Every architectural decision — from **Kafka-based communication** to **Celery-driven automation** — is designed for **fault tolerance**, **scalability**, and **resilience** at production scale.
 
 
