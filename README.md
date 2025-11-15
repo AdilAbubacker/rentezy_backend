@@ -181,7 +181,7 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 ## 🚀 What Makes This Architecture Special
 
 
-### 🎯 Problem 1: **Bullet-proof Concurrency Control & Race Condition Prevention**
+### 1️⃣ **Concurrency Control & Race Condition Prevention**
 **The Problem:** Multiple users booking the same room simultaneously causes double-bookings and overselling  
 **The Solution:** Optimistic concurrency control with database-level constraints and atomic operations
 
@@ -259,8 +259,71 @@ except IntegrityError as e:
 **Result:** Performance of uncontrolled systems with the safety of pessimistic locking.
 
 ---
+### 2️⃣. Event-Driven Architecture — The Nervous System of RentEzy
 
-### 2. **Payment Flow & Automatic Inventory Management**
+**The Problem:**  Coordinating complex workflows across microservices without becoming a dependency nightmare.
+**The Solution: Event-driven architecture with Apache Kafka as its central nervous system.**
+
+Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
+
+```mermaid
+graph LR
+    subgraph Producers
+        BookingService[Booking Svc]
+        RentService[Rent Svc]
+        PropertyService[Property Svc]
+        PaymentService[Payment Svc]
+    end
+    Kafka([Kafka<br>Event Stream])
+    subgraph Consumers
+        NotificationService[Notification Svc]
+        SearchConsumer[Search Consumer]
+        AnalyticsAudit[Analytics/Audit Svc]
+    end
+    
+    BookingService -- "booking.confirmed" --> Kafka
+    RentService -- "rent.payment_due" --> Kafka
+    PropertyService -- "property.updated" --> Kafka
+    PaymentService -- "payment.failed" --> Kafka
+
+    Kafka -- "Consumes" --> NotificationService
+    Kafka -- "Consumes" --> SearchConsumer
+    Kafka -- "Consumes" --> AnalyticsAudit
+
+    NotificationService -- "Sends Alerts" --> User[User]
+    SearchConsumer -- "Updates Index" --> Elasticsearch[(Elasticsearch)]
+    AnalyticsAudit -- "Persists Logs" --> DataLake[(Data Lake/DB)]
+
+    %% Styling to make Kafka pop
+    classDef kafkaNode fill:#e0f2f1,stroke:#004d40,stroke-width:2px
+    class Kafka kafkaNode
+```
+
+**Why this architecture wins:**
+
+🔌 **Zero Coupling**
+Property Service doesn't know Search exists. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
+
+🛡️ **Fault Isolation** 
+Search crashes? Bookings continue. Temporary service failures don't cascade. Kafka retains events, and the service catches up on restart. 
+
+⚡ **Async Performance**  
+API returns instantly. Heavy operations happen in background. No timeouts, no blocking.
+
+📈 **Independent Scaling**  
+Scale Notification to 10 pods while Property runs on 3. Kafka consumer groups handle distribution.
+  
+🔄 **Event Replay**  
+Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
+
+🎯 **Real-Time Experience**  
+Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
+
+**Result:**  Services can be scaled, deployed, and fail independently without affecting each other.
+
+---
+ 
+### 3️⃣. **Payment Flow & Automatic Inventory Management**
 **The Problem:** Users abandon checkout, payments fail, or arrive late - blocking inventory indefinitely  
 **The Solution:** Temporal booking states with automated reconciliation and edge case handling
 
@@ -331,139 +394,7 @@ Clean state transitions with no ambiguous states. Every booking is always in a k
 - Automatic refunds maintain customer trust
 ---
 
-### 2️⃣ Advanced Search Architicture: CQRS in action
-**The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
-**The Solution: CQRS with Event-Driven Indexing and ElasticSearch**
-
-To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
-![Architecture Diagram](./assets/search_design.png)
-
-- **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
-- **Kafka** acts as the async event bridge between the property DB and search index.
-- **Search Consumer** listens to property events and updates **Elasticsearch**, ensuring eventual consistency.
-- **Search Service** focuses solely on read queries, scaling horizontally to handle high traffic.
-
-**This separation ensures**:
-- ✅ Independent scaling for read-heavy and write-light workloads.
-- ✅ Search uptime independent of data ingestion.
-- ✅ Replayable Kafka streams for reindexing or schema migrations.
-
-**Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
-  
----
-
-
-
- 
-
-### 3️⃣ Centralized Authentication Across the Services
-**The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere?  
-**The Solution: Zero-Trust Architecture with Centralized Auth**
-
-The `Auth Service` is the *only* service that holds the JWT secret. The Gateway simply acts as a bouncer, delegating the validation check before routing the request to the correct internal service.
-```mermaid
-sequenceDiagram
-    participant Client
-    participant Ingress
-    participant Gateway
-    participant Auth
-    participant Service
-
-    Client->>Ingress: HTTP Request (with JWT)
-    Ingress->>Gateway: Forward Request
-    Gateway->>Auth: Validate Token
-    Auth-->>Gateway: ✅ Valid / ❌ Invalid
-    Gateway->>Service: Forward Request (if valid)
-    Service-->>Gateway: Response
-    Gateway-->>Ingress: Response
-    Ingress-->>Client: Final Response
-```
-**Why This Architecture is Superior:**
-
-🛡️ **Secret Isolation**  
-The JWT secret key never leaves the Auth Service. The Gateway and all 10+ business services don't know it, drastically reducing the attack surface.
-
-🔐 **Zero-Trust Network**  
-Business services (like Booking or Property) don't write any auth code. They are "dumb" and simply trust that any request they receive from the Gateway is already authenticated.
-
-📦 **Centralized Logic**  
-All cross-cutting concerns (Authentication, Authorization, Rate Limiting) live in one place. Want to change the auth logic? You only edit one service.
-
-🔄 **Developer Velocity**  
-You can build 100 new microservices, and they are all instantly secured by default simply by being behind the gateway.
-
-🚀 **Scalability**  
-The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
-
-**Result:** Bulletproof security with zero auth code duplication across 10+ services
-
----
-
-### 1. Event-Driven Architecture — The Nervous System of RentEzy
-
-**The Problem:**  Coordinating complex workflows across microservices without becoming a dependency nightmare.
-**The Solution: Event-driven architecture with Apache Kafka as its central nervous system.**
-
-Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
-
-```mermaid
-graph LR
-    subgraph Producers
-        BookingService[Booking Svc]
-        RentService[Rent Svc]
-        PropertyService[Property Svc]
-        PaymentService[Payment Svc]
-    end
-    Kafka([Kafka<br>Event Stream])
-    subgraph Consumers
-        NotificationService[Notification Svc]
-        SearchConsumer[Search Consumer]
-        AnalyticsAudit[Analytics/Audit Svc]
-    end
-    
-    BookingService -- "booking.confirmed" --> Kafka
-    RentService -- "rent.payment_due" --> Kafka
-    PropertyService -- "property.updated" --> Kafka
-    PaymentService -- "payment.failed" --> Kafka
-
-    Kafka -- "Consumes" --> NotificationService
-    Kafka -- "Consumes" --> SearchConsumer
-    Kafka -- "Consumes" --> AnalyticsAudit
-
-    NotificationService -- "Sends Alerts" --> User[User]
-    SearchConsumer -- "Updates Index" --> Elasticsearch[(Elasticsearch)]
-    AnalyticsAudit -- "Persists Logs" --> DataLake[(Data Lake/DB)]
-
-    %% Styling to make Kafka pop
-    classDef kafkaNode fill:#e0f2f1,stroke:#004d40,stroke-width:2px
-    class Kafka kafkaNode
-```
-
-**Why this architecture wins:**
-
-🔌 **Zero Coupling**
-Property Service doesn't know Search exists. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
-
-🛡️ **Fault Isolation** 
-Search crashes? Bookings continue. Temporary service failures don't cascade. Kafka retains events, and the service catches up on restart. 
-
-⚡ **Async Performance**  
-API returns instantly. Heavy operations happen in background. No timeouts, no blocking.
-
-📈 **Independent Scaling**  
-Scale Notification to 10 pods while Property runs on 3. Kafka consumer groups handle distribution.
-  
-🔄 **Event Replay**  
-Rebuild indices from scratch. Populate new services with historical data. Time-travel for debugging.
-
-🎯 **Real-Time Experience**  
-Notifications, search updates, and analytics all respond in near real time because they are event-driven, not batched.
-
-**Result:**  Services can be scaled, deployed, and fail independently without affecting each other.
-
----
-
-### 3️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
+### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
 **The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.
 **The Solution: Fully automated rent lifecycle engine**, powered by Celery Beat, Redis, Kafka, and Stripe.
 
@@ -515,7 +446,76 @@ All communication is **event-driven via Kafka**, ensuring each microservice oper
 
 ---
 
-### 5️⃣ **Real-Time Everything** ⚡
+### 5️⃣ Advanced Search Architicture: CQRS in action
+**The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
+**The Solution: CQRS with Event-Driven Indexing and ElasticSearch**
+
+To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
+![Architecture Diagram](./assets/search_design.png)
+
+- **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
+- **Kafka** acts as the async event bridge between the property DB and search index.
+- **Search Consumer** listens to property events and updates **Elasticsearch**, ensuring eventual consistency.
+- **Search Service** focuses solely on read queries, scaling horizontally to handle high traffic.
+
+**This separation ensures**:
+- ✅ Independent scaling for read-heavy and write-light workloads.
+- ✅ Search uptime independent of data ingestion.
+- ✅ Replayable Kafka streams for reindexing or schema migrations.
+
+**Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
+  
+---
+
+
+
+ 
+
+### 6️⃣ Centralized Authentication Across the Services
+**The Problem:** How do you secure 10+ microservices without duplicating auth logic everywhere?  
+**The Solution: Zero-Trust Architecture with Centralized Auth**
+
+The `Auth Service` is the *only* service that holds the JWT secret. The Gateway simply acts as a bouncer, delegating the validation check before routing the request to the correct internal service.
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Ingress
+    participant Gateway
+    participant Auth
+    participant Service
+
+    Client->>Ingress: HTTP Request (with JWT)
+    Ingress->>Gateway: Forward Request
+    Gateway->>Auth: Validate Token
+    Auth-->>Gateway: ✅ Valid / ❌ Invalid
+    Gateway->>Service: Forward Request (if valid)
+    Service-->>Gateway: Response
+    Gateway-->>Ingress: Response
+    Ingress-->>Client: Final Response
+```
+**Why This Architecture is Superior:**
+
+🛡️ **Secret Isolation**  
+The JWT secret key never leaves the Auth Service. The Gateway and all 10+ business services don't know it, drastically reducing the attack surface.
+
+🔐 **Zero-Trust Network**  
+Business services (like Booking or Property) don't write any auth code. They are "dumb" and simply trust that any request they receive from the Gateway is already authenticated.
+
+📦 **Centralized Logic**  
+All cross-cutting concerns (Authentication, Authorization, Rate Limiting) live in one place. Want to change the auth logic? You only edit one service.
+
+🔄 **Developer Velocity**  
+You can build 100 new microservices, and they are all instantly secured by default simply by being behind the gateway.
+
+🚀 **Scalability**  
+The `Auth Service` scales independently. If auth becomes a bottleneck, we scale *only* that service, not the entire gateway.
+
+**Result:** Bulletproof security with zero auth code duplication across 10+ services
+
+---
+
+
+### 7️⃣ **Real-Time Everything** ⚡
 - **WebSocket Chat:** Instant messaging between tenants and landlords
 - **Live Notifications:** Event-driven alerts using Django Channels
 - **Status Updates:** Real-time booking confirmations, payment receipts
