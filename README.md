@@ -1,13 +1,4 @@
-# 🏗️ RentEzy - Enterprise-Grade Property Management Platform
-
-> **A production-ready microservices ecosystem demonstrating advanced distributed systems patterns, event-driven architecture, and cloud-native deployment at scale.**
-
-[![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
-[![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
-[![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
-[![Django](https://img.shields.io/badge/Backend-Django%20REST-092E20.svg?logo=django)](https://www.django-rest-framework.org/)
-
-# 🏡 RentEzy - Enterprise-Grade Property Management Platform 
+# 🏡 RentEzy - Enterprise-Grade Property Management Platform
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)]([your-github-link](https://github.com/AdilAbubacker/rentezy_backend))
