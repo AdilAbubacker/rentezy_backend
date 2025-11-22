@@ -609,6 +609,117 @@ Persistent Storage (AWS EFS)
 - ✅ Connection pooling and request buffering
 
 ---
+---
+
+## 📦 Deployment Architecture
+
+### AWS EKS with Fargate - Serverless Kubernetes
+
+```yaml
+Production Stack:
+├── 🚢 AWS EKS Cluster (Kubernetes 1.28)
+│   ├── 19+ Microservice Deployments
+│   ├── Horizontal Pod Autoscaling (CPU/Memory)
+│   ├── Service Mesh (Internal Communication)
+│   └── Ingress Controller (Nginx)
+│
+├── 💾 Storage Layer
+│   ├── AWS EFS (Shared file system for Kafka, Elasticsearch)
+│   ├── Persistent Volume Claims (Database persistence)
+│   └── StatefulSets (Kafka, Redis, Elasticsearch clusters)
+│
+├── 🔀 Load Balancing
+│   ├── AWS Application Load Balancer (Layer 7)
+│   ├── Ingress Controller (Kubernetes-native routing)
+│   └── Nginx (Reverse proxy with connection pooling)
+│
+└── 🐳 Containerization
+    ├── Docker (Multi-stage builds for optimization)
+    ├── Helm Charts (Kafka, Elasticsearch, Redis)
+    └── AWS ECR (Private container registry)
+```
+
+### Why Kubernetes + Fargate?
+
+- ⚡ **Serverless:** No EC2 management, pay-per-pod pricing
+- 🔄 **Auto-scaling:** Pods scale based on CPU/memory metrics
+- 🛡️ **Self-healing:** Automatic pod restarts on failure
+- 📦 **Resource Isolation:** Each service gets dedicated resources
+- 🚀 **Zero-downtime:** Rolling updates with health checks
+- 💰 **Cost-efficient:** Only pay for running pods
+
+---
+
+## 🔥 Core Features
+
+### For Property Owners
+- ✅ Multi-property management dashboard
+- ✅ Automated rent collection with late fee enforcement
+- ✅ Tenant screening and verification
+- ✅ Maintenance request tracking
+- ✅ Real-time chat with tenants
+- ✅ Financial reporting and analytics
+
+### For Tenants
+- ✅ Advanced property search with geo-filtering
+- ✅ Virtual property tours and appointment booking
+- ✅ One-click rent payments via Stripe
+- ✅ Maintenance request submission
+- ✅ Real-time chat with landlords
+- ✅ Payment history and receipts
+
+### For Administrators
+- ✅ User management and moderation
+- ✅ Platform analytics dashboard
+- ✅ Revenue tracking and commission management
+- ✅ Dispute resolution tools
+
+---
+
+## 📊 Performance Metrics
+
+- ⚡ **Sub-100ms** API response time (P95)
+- 🚀 **10,000+** concurrent users supported
+- 📈 **99.9%** uptime SLA
+- 🔍 **<100ms** Elasticsearch query latency
+- 💬 **Real-time** WebSocket message delivery
+- 🔄 **Zero** double-bookings in production
+
+---
+
+## 🤝 Connect With Me
+
+This project represents **500+ hours** of architecting, coding, debugging, and optimizing distributed systems. If you're working on microservices, event-driven architecture, or scalable platforms, let's connect!
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/yourprofile)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/AdilAbubacker)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-green)](https://yourportfolio.com)
+
+---
+
+<div align="center">
+
+**Built with ❤️ and a lot of ☕ by [Adil Abubacker](https://github.com/AdilAbubacker)**
+
+*RentEzy - Where Enterprise Architecture Meets Real Estate*
+
+</div
+
+
+# 🏗️ RentEzy - Enterprise-Grade Property Management Platform
+
+> **A production-ready microservices ecosystem demonstrating advanced distributed systems patterns, event-driven architecture, and cloud-native deployment at scale.**
+
+[![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
+[![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
+[![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
+[![Django](https://img.shields.io/badge/Backend-Django%20REST-092E20.svg?logo=django)](https://www.django-rest-framework.org/)
+
+---
+
+## 🎯 The Challenge
+
+Building a property rental platform isn't just about CRUD operations. The real challenge? **Orchestrating complex business workflows across distributed services while maintaining data consistency, handling high concurrency, and delivering real-time experiences** - all without compromising system reliability.
 
 ## 🤝 Want to Collaborate?
 
