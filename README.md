@@ -631,29 +631,5 @@ This project represents hundreds of hours of architecting, coding, debugging, an
 
 **Built with ❤️ and a lot of ☕ by [Adil Abubacker](https://github.com/AdilAbubacker)**
 
-*RentEzy - Where Enterprise Architecture Meets Real Estate*
-
-</div
 
 
-
-
----
-
-## 🎯 The Challenge
-
-Building a property rental platform isn't just about CRUD operations. The real challenge? **Orchestrating complex business workflows across distributed services while maintaining data consistency, handling high concurrency, and delivering real-time experiences** - all without compromising system reliability.
-
-## 🤝 Want to Collaborate?
-
-This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on distributed systems, microservices, or just want to discuss - **let's connect!**
-
-
-
-
-
-<div align="center">
-
-**Built with ❤️ and a lot of ☕ by [Adil Abubacker](https://github.com/AdilAbubacker)**
-
-</div>
