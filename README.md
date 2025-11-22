@@ -1,3 +1,12 @@
+# 🏗️ RentEzy - Enterprise-Grade Property Management Platform
+
+> **A production-ready microservices ecosystem demonstrating advanced distributed systems patterns, event-driven architecture, and cloud-native deployment at scale.**
+
+[![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
+[![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
+[![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
+[![Django](https://img.shields.io/badge/Backend-Django%20REST-092E20.svg?logo=django)](https://www.django-rest-framework.org/)
+
 # 🏡 RentEzy - Enterprise-Grade Property Management Platform 
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
@@ -550,67 +559,6 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 
 ---
 
-## 🚢 Production Deployment Architecture
-
-### **Infrastructure Overview**
-```
-Internet Traffic
-      ↓
-AWS Application Load Balancer (ALB)
-      ↓
-Kubernetes Ingress Controller
-      ↓
-API Gateway Service (Nginx + Gunicorn)
-      ↓
-Internal Microservices (19+ containers)
-      ↓
-Persistent Storage (AWS EFS)
-```
-
-### **Deployment Stack Breakdown**
-
-#### **Container Orchestration**
-- ☸️ **AWS EKS with Fargate** - Serverless Kubernetes (zero node management overhead)
-- 🐳 **Docker** - All 19+ services containerized with multi-stage builds
-- 📦 **Helm Charts** - Deployed Elasticsearch, Kafka, and Redis clusters via Helm
-- 🔄 **Auto-scaling** - Horizontal Pod Autoscaler for dynamic scaling
-
-#### **Load Balancing & Traffic Management**
-- 🌐 **AWS Application Load Balancer** - Layer 7 load balancing with health checks
-- 🔀 **Ingress Controller** - Kubernetes-native routing with SSL/TLS termination
-- ⚡ **Nginx** - Reverse proxy for Django services with connection pooling
-- 🦄 **Gunicorn** - WSGI server with multiple worker processes
-
-#### **Persistent Storage**
-- 💾 **AWS EFS** - Shared file system across all pods (stateful workloads)
-- 🗄️ **Persistent Volume Claims** - Kubernetes-managed storage for databases
-- 📊 **StatefulSets** - Used for Kafka, Elasticsearch, and Redis clusters
-
-#### **Why This Stack?**
-
-**EKS with Fargate:**
-- ✅ No EC2 instance management (AWS handles infrastructure)
-- ✅ Pay only for pods running (cost-efficient)
-- ✅ Automatic scaling without capacity planning
-
-**Helm for Stateful Services:**
-- ✅ Production-ready configurations out of the box
-- ✅ Easy upgrades and rollbacks
-- ✅ Community-tested deployment patterns
-
-**AWS ALB + Ingress:**
-- ✅ Native AWS integration (security groups, IAM)
-- ✅ WebSocket support for chat service
-- ✅ SSL termination at load balancer level
-
-**Nginx + Gunicorn:**
-- ✅ Battle-tested Django deployment stack
-- ✅ Static file serving with caching
-- ✅ Connection pooling and request buffering
-
----
----
-
 ## 📦 Deployment Architecture
 
 ### AWS EKS with Fargate - Serverless Kubernetes
@@ -706,14 +654,7 @@ This project represents **500+ hours** of architecting, coding, debugging, and o
 </div
 
 
-# 🏗️ RentEzy - Enterprise-Grade Property Management Platform
 
-> **A production-ready microservices ecosystem demonstrating advanced distributed systems patterns, event-driven architecture, and cloud-native deployment at scale.**
-
-[![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
-[![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
-[![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
-[![Django](https://img.shields.io/badge/Backend-Django%20REST-092E20.svg?logo=django)](https://www.django-rest-framework.org/)
 
 ---
 
