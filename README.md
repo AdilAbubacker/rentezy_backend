@@ -1,9 +1,11 @@
 # 🏡 RentEzy - Enterprise-Grade Property Management Platform
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)]([your-github-link](https://github.com/AdilAbubacker/rentezy_backend))
-[![Tech Stack](https://img.shields.io/badge/Stack-Microservices-orange)](#tech-stack)
-[![Architecture](https://img.shields.io/badge/Architecture-Event--Driven-purple)](#architecture)
+[![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
+[![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
+[![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
+[![Django](https://img.shields.io/badge/Backend-Django%20REST-092E20.svg?logo=django)](https://www.django-rest-framework.org/)
+
 
 > *A comprehensive, microservices-based web application designed to streamline the entire property rental lifecycle. It connects property owners, managers, and tenants through a seamless, real-time platform, automating everything from property listings and visit scheduling to rent collection and communication.*
 ---
@@ -615,20 +617,9 @@ Production Stack:
 
 ---
 
-## 📊 Performance Metrics
-
-- ⚡ **Sub-100ms** API response time (P95)
-- 🚀 **10,000+** concurrent users supported
-- 📈 **99.9%** uptime SLA
-- 🔍 **<100ms** Elasticsearch query latency
-- 💬 **Real-time** WebSocket message delivery
-- 🔄 **Zero** double-bookings in production
-
----
-
 ## 🤝 Connect With Me
 
-This project represents **500+ hours** of architecting, coding, debugging, and optimizing distributed systems. If you're working on microservices, event-driven architecture, or scalable platforms, let's connect!
+This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on microservices, event-driven architecture, or scalable platforms, let's connect!
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/yourprofile)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/AdilAbubacker)
