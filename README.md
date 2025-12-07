@@ -197,11 +197,11 @@ with transaction.atomic():
         room.available_quantity -= 1
         room.save()
 ```
-**Problems:**
-- 🔴 Locks entire row during transaction (blocks all other users)
-- 🔴 Serializes requests (only one booking at a time)
-- 🔴 Creates bottlenecks under high load
-- 🔴 Poor user experience during traffic spikes
+
+Using Pessimistic Locking (`select_for_update`) locks the row as soon as it is read, holding the lock while the application processes logic (network calls, Python code). This creates **unnecessary lock contention**, effectively serializing the *entire application* and killing throughput.
+
+Instead RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of RDBMS to handle concurrency without application-level bottlenecks.
+
 
 #### **My Approach: Database-Level Atomic Operations**
 ```python
