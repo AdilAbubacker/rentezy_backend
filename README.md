@@ -188,6 +188,7 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 
 
 #### **Why Traditional Locking Fails at Scale**
+Traditional approaches use pessimistic locking (SELECT FOR UPDATE) which creates lock contention, forcing requests to wait in line, degrading throughput under high concurrency.
 
 ```python
 # ❌ Pessimistic Locking 
@@ -198,12 +199,8 @@ with transaction.atomic():
         room.save()
 ```
 
-Using Pessimistic Locking (`select_for_update`) locks the row as soon as it is read, holding the lock while the application processes logic (network calls, Python code). This creates **unnecessary lock contention**, effectively serializing the *entire application* and killing throughput.
 
-Instead RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of RDBMS to handle concurrency without application-level bottlenecks.
-
-
-#### **My Approach: Database-Level Atomic Operations**
+#### ** Instead of explicit locks, RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of RDBMS to handle concurrency without application-level bottlenecks.
 ```python
 
 # Database Model with Constraint
