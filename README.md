@@ -1,4 +1,4 @@
-# 🏡 RentEzy - Enterprise-Grade Property Management Platform
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/64350c8a-a701-4dc6-93b9-956949a2fab5" /># 🏡 RentEzy - Enterprise-Grade Property Management Platform
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
 [![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
@@ -187,7 +187,7 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 **The Solution:** Optimistic concurrency control with database-level constraints and atomic operations
 
 
-#### **Why Traditional Locking Fails at Scale:**
+#### **Why Traditional Locking Fails at Scale**
 Traditional approaches use **pessimistic locking** (SELECT FOR UPDATE) which creates **lock contention** , forcing requests to wait in line, **degrading throughput** under high concurrency.
 
 ```python
@@ -199,8 +199,8 @@ with transaction.atomic():
         room.save()
 ```
 
-
-Instead of explicit locks, RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of RDBMS to handle concurrency without application-level bottlenecks.
+#### **Utilizing ACID Guarantees**
+Instead of explicit locks, RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of PostgreSQL to handle concurrency without application-level bottlenecks.
 ```python
 
 # Database Model with Constraint
@@ -237,12 +237,12 @@ except IntegrityError as e:
     return {"error": "Booking failed"}
 ```
 
-**Why This is Superior:**
-- ✅ Database enforces the constraint **atomically** (no race condition possible)
-- ✅ `F()` expressions avoid read-modify-write races - operation happens in SQL
-- ✅ **Optimistic concurrency** = better performance than pessimistic locking
-- ✅ Constraint violation automatically rolls back the entire transaction
-- ✅ Cleaner code with graceful error handling
+**How we are hacking ACID:**
+
+- ✅ **Isolation (I):** Instead of locking rows in Python, we use a single atomic `UPDATE` statement. The database engine **serializes concurrent writes** internally for the microsecond it takes to execute the query. This maximizes throughput by minimizing the time a lock is held.
+- ✅ **Consistency (C):** We rely on **Database Constraints** (`CheckConstraint(qty >= 0)`). The database engine itself enforces the rule that inventory can never be negative, regardless of race conditions.
+- ✅ **Atomicity (A):** We wrap the "Booking Creation" and "Room Decrement" in a single `transaction.atomic()` block. Either both succeed, or both fail—no partial states.
+
 
 #### 📊 Concurrency Performance
 
