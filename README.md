@@ -1,4 +1,4 @@
-<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/64350c8a-a701-4dc6-93b9-956949a2fab5" /># 🏡 RentEzy - Enterprise-Grade Property Management Platform
+# 🏡 RentEzy - Enterprise-Grade Property Management Platform
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
 [![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
