@@ -237,7 +237,7 @@ except IntegrityError as e:
     return {"error": "Booking failed"}
 ```
 
-**How we are hacking ACID:**
+**How we are leveraging ACID:**
 
 - ✅ **Isolation (I):** Instead of locking rows in Python, we use a single atomic `UPDATE` statement. The database engine **serializes concurrent writes** internally for the microsecond it takes to execute the query. This maximizes throughput by minimizing the time a lock is held.
 - ✅ **Consistency (C):** We rely on **Database Constraints** (`CheckConstraint(qty >= 0)`). The database engine itself enforces the rule that inventory can never be negative, regardless of race conditions.
