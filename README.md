@@ -246,17 +246,17 @@ except IntegrityError as e:
 **🤝 The Synergy:**  
 **Isolation** serializes concurrent write requests. The first update after stock depletion violates the **Consistency** constraint, which instantly forces an **Atomic** rollback of the entire transaction, guaranteeing zero overselling.
 
-#### 📊 Concurrency Performance
+#### 📊 Concurrency Performance: Theoretical Projection
 
 **Scenario: 1000 users booking last 10 rooms simultaneously**
 
 | Approach | Throughput | Latency (p99) | Overselling Risk |
 |----------|-----------|---------------|------------------|
-| No Concurrency Control | 1000 req/sec | 50ms | **HIGH** ❌ |
 | Pessimistic Locking (`select_for_update`) | 50 req/sec | 2000ms | Zero |
 | **Optimistic + Constraints (Our Approach)** | **800 req/sec** | **150ms** | **Zero** ✅ |
+| No Concurrency Control | 1000 req/sec | 50ms | **HIGH** ❌ |
 
-**Result:** Performance of uncontrolled systems with the safety of pessimistic locking.
+**Result: Performance of uncontrolled systems with the safety of pessimistic locking.**
 
 ---
 ### 2️⃣. Event-Driven Architecture — The Nervous System of RentEzy
