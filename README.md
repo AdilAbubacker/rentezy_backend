@@ -243,10 +243,10 @@ except IntegrityError as e:
   * ✅ **Consistency (C):** We rely on **Database Constraints** (`CheckConstraint(qty >= 0)`). The database engine itself enforces the rule that inventory can *never* be negative, acting as the final guardrail against race conditions.
   * ✅ **Isolation (I):** Instead of locking rows in Python, we use a single atomic `UPDATE`. The database engine **serializes concurrent writes** internally for the microsecond it takes to execute the query, maximizing throughput.
 
-**🔄 The Synergy: How They Work Together**
-Think of this as a fail-safe chain reaction. **Isolation** ensures that even if 100 requests come in at once, the Database processes the math one by one. If the math results in a negative number (e.g., 0 - 1 = -1), **Consistency** triggers an immediate `IntegrityError`. Finally, **Atomicity** catches that error and rolls back the *entire* transaction, ensuring we never have a "Booked" record without a corresponding room decrement.
+**🔄 The Synergy: How They Work Together**  
+**Isolation** serializes the concurrent update requests into a queue. When the inventory hits zero, the very next decrement attempts to set a negative value, triggering a **Consistency** violation (the Check Constraint). This error instantly forces an **Atomic** rollback, reverting the pending booking and ensuring the system never enters a "partial" or invalid state.
 
-
+Why this is better:
 #### 📊 Concurrency Performance
 
 **Scenario: 1000 users booking last 10 rooms simultaneously**
