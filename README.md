@@ -239,9 +239,12 @@ except IntegrityError as e:
 
 **How we are leveraging ACID:**
 
-- ✅ **Isolation (I):** Instead of locking rows in Python, we use a single atomic `UPDATE` statement. The database engine **serializes concurrent writes** internally for the microsecond it takes to execute the query. This maximizes throughput by minimizing the time a lock is held.
-- ✅ **Consistency (C):** We rely on **Database Constraints** (`CheckConstraint(qty >= 0)`). The database engine itself enforces the rule that inventory can never be negative, regardless of race conditions.
-- ✅ **Atomicity (A):** We wrap the "Booking Creation" and "Room Decrement" in a single `transaction.atomic()` block. Either both succeed, or both fail—no partial states.
+  * ✅ **Atomicity (A):** We wrap the "Booking Creation" and "Room Decrement" in a single transaction. Either both succeed, or both fail.
+  * ✅ **Consistency (C):** We rely on **Database Constraints** (`CheckConstraint(qty >= 0)`). The database engine itself enforces the rule that inventory can *never* be negative, acting as the final guardrail against race conditions.
+  * ✅ **Isolation (I):** Instead of locking rows in Python, we use a single atomic `UPDATE`. The database engine **serializes concurrent writes** internally for the microsecond it takes to execute the query, maximizing throughput.
+
+**🔄 The Synergy: How They Work Together**
+Think of this as a fail-safe chain reaction. **Isolation** ensures that even if 100 requests come in at once, the Database processes the math one by one. If the math results in a negative number (e.g., 0 - 1 = -1), **Consistency** triggers an immediate `IntegrityError`. Finally, **Atomicity** catches that error and rolls back the *entire* transaction, ensuring we never have a "Booked" record without a corresponding room decrement.
 
 
 #### 📊 Concurrency Performance
