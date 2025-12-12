@@ -441,7 +441,7 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 - ✅ Search uptime independent of data ingestion.
 - ✅ Replayable Kafka streams for reindexing or schema migrations.
 
-**Result:** Search that scales independently, fails gracefully, and handles 1000s of concurrent queries at <100ms response time
+**Result:** Search that scales independently, fails gracefully.
   
 ---
 
@@ -536,8 +536,7 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 Production Stack:
 ├── 🚢 AWS EKS Cluster (Kubernetes 1.28)
 │   ├── 19+ Microservice Deployments
-│   ├── Horizontal Pod Autoscaling (CPU/Memory)
-│   ├── Service Mesh (Internal Communication)
+│   ├── Server-less computing with Fargate
 │   └── Ingress Controller (Nginx)
 │
 ├── 💾 Storage Layer
@@ -559,7 +558,6 @@ Production Stack:
 ### Why Kubernetes + Fargate?
 
 - ⚡ **Serverless:** No EC2 management, pay-per-pod pricing
-- 🔄 **Auto-scaling:** Pods scale based on CPU/memory metrics
 - 🛡️ **Self-healing:** Automatic pod restarts on failure
 - 📦 **Resource Isolation:** Each service gets dedicated resources
 - 🚀 **Zero-downtime:** Rolling updates with health checks
