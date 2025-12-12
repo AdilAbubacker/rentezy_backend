@@ -6,7 +6,7 @@
 [![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
 [![Django](https://img.shields.io/badge/Backend-Django%20REST-092E20.svg?logo=django)](https://www.django-rest-framework.org/)
 
-> *A fully distributed, event-driven, microservices-based platform automating entire property rental lifecycle from property listings and visit scheduling to rent collection and communication.*
+> *A fully distributed, event-driven, microservices-based platform automating entire property rental lifecycle from property discovery and visit scheduling to rent collection and communication.*
 ---
 <div align="center">
   <img src="./rentezylanding.png" alt="RentEzy - Property search interface" width="900">
