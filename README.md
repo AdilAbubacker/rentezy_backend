@@ -323,53 +323,47 @@ Notifications, search updates, and analytics all respond in near real time becau
 
 ---
  
-### 3️⃣ Distributed Transactions: The Saga Pattern
+### 3️⃣ Distributed Transactions & The Saga Pattern
 
-**The Problem:** In a microservices architecture, you cannot use a single ACID database transaction to cover both a local database write (booking) and an external API call (Stripe). If the database commits but the payment fails, you have a "ghost booking."
-**The Solution:** An **Orchestration-based Saga** with **Compensating Transactions**.
+**The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
+**The Solution: Choreography-based Saga pattern** with **Compensating Transactions**.
 
-Instead of a distributed lock (2PC), RentEzy uses a **Finite State Machine (FSM)** to manage long-running transactions. If any step fails or times out, a **Compensating Transaction** is triggered to roll back the state and release resources.
-
-#### 🔄 The Saga Workflow
-
-1.  **Local Transaction:** User initiates booking → System creates `PENDING` record & Decrements Inventory (Atomic DB Lock).
-2.  **External Transaction:** System redirects user to Stripe for payment.
-3.  **Completion (Commit):** Stripe Webhook confirms success → State updates to `CONFIRMED`.
-4.  **Compensation (Rollback):** If payment times out (10 min) or fails:
-      * **Compensating Action:** System triggers `release_inventory()` to increment room count.
-      * **State Update:** Booking marked as `CANCELLED`.
-
-#### 🧬 State Machine Architecture
-
-```mermaid
-stateDiagram-v2
-    [*] --> PENDING: User Clicks Book\n(Inventory -1)
-    
-    PENDING --> COMPLETED: Payment Success\n(Saga Complete)
-    
-    PENDING --> CANCELLED: Payment Timeout\n(Trigger Compensation)
-    
-    CANCELLED --> COMPLETED: Late Payment + Inventory Available\n(Recovery)
-    
-    CANCELLED --> REFUNDED: Late Payment + No Inventory\n(Auto-Refund)
-    
-    note right of CANCELLED
-      Compensating Transaction:
-      Inventory Released (+1)
-    end note
-```
-
-**Why this architecture wins:**
-
-🛡️ **Eventual Consistency**
-We trade strict immediate consistency for high availability. The system is always in a known state, even if the "Booking" and "Payment" happen seconds or minutes apart.
-
-⚡ **No Distributed Locks**
-By avoiding 2-Phase Commit (2PC), we avoid locking resources across services, allowing the application to handle high throughput without database bottlenecks.
-
-🤖 **Automated Self-Healing**
-The Celery "deadman switch" ensures that no inventory is ever held indefinitely in a `PENDING` state. The system cleans up after itself automatically.
-
+### 3️⃣. **Payment Flow & Automatic Inventory Management** **The Problem:** Users abandon checkout, payments fail, or arrive late - blocking inventory indefinitely   **The Solution:** Temporal booking states with automated reconciliation and edge case handling #### 🎯 The Complete Booking Lifecycle
+User clicks "Book Now"
+        ↓
+1. Pre-flight Check (Fail Fast)
+   └─→ Check available_quantity in DB
+   └─→ If insufficient: Return "Sold Out" immediately
+        ↓
+2. Temporary Booking (PENDING Status)
+   └─→ Create Booking(status="PENDING")
+   └─→ Decrement available_quantity atomically
+   └─→ Schedule Celery task (10-minute timer)
+        ↓
+3. Payment Processing
+   └─→ Redirect to Stripe
+   └─→ User completes payment
+        ↓
+4a. Payment Success (Happy Path)
+   └─→ Stripe webhook → Update status="COMPLETED"
+   └─→ Celery task sees COMPLETED → Do nothing
+        ↓
+4b. Payment Timeout (Auto-Recovery)
+   └─→ Celery task executes after 10 minutes
+   └─→ Status still PENDING → Auto-cancel booking
+   └─→ Increment available_quantity (room released)
+        ↓
+4c. Edge Case: Late Payment After Timeout
+   └─→ Payment arrives after auto-cancellation
+   └─→ Check if rooms still available
+   ├─→ YES: Complete booking with available room
+   └─→ NO: Process automatic Stripe refund
+**Why this flow is bulletproof:** 🎯 **Fail Fast Optimization**   Pre-flight check prevents unnecessary transactions when rooms are already sold out. Saves database resources and improves response time. 🔒 **Temporary Hold Pattern**   PENDING status creates a soft lock on inventory while user completes payment. Room is removed from availability but booking isn't finalized until payment confirmation. ⏱️ **Automatic Cleanup**   Celery delayed task acts as a "deadman's switch." If payment doesn't complete within 10 minutes, rooms automatically return to inventory. Zero manual intervention needed. 🎪 **Idempotent Operations**   Worker checks current status before acting. If booking was already confirmed or cancelled, no action taken. Handles duplicate webhook calls gracefully. 💰 **Late Payment Edge Case**   Handles the race condition where payment succeeds after timeout. Attempts re-booking first, refunds only if impossible. Customer never loses money. 🔄 **State Machine Design**  
+PENDING → (payment success) → CONFIRMED
+PENDING → (timeout) → CANCELLED
+CANCELLED → (late payment + rooms available) → CONFIRMED  
+CANCELLED → (late payment + no rooms) → REFUNDED
+Clean state transitions with no ambiguous states. Every booking is always in a known, valid state.
 ---
 
 ### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
