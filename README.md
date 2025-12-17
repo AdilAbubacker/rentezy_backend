@@ -328,42 +328,52 @@ Notifications, search updates, and analytics all respond in near real time becau
 **The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
 **The Solution: Choreography-based Saga pattern** with **Compensating Transactions**.
 
-### 3️⃣. **Payment Flow & Automatic Inventory Management** **The Problem:** Users abandon checkout, payments fail, or arrive late - blocking inventory indefinitely   **The Solution:** Temporal booking states with automated reconciliation and edge case handling #### 🎯 The Complete Booking Lifecycle
+
+### 3️⃣ **Payment Flow & Distributed Saga Pattern**
+
+**The Problem:** "Pay-then-Book" creates bad UX; if inventory runs out during payment, you get stuck in a refund loop.
+**The Solution:** A **Distributed Saga Pattern** where we reserve inventory *first* via a local transaction, using Celery as a distributed timeout manager to trigger compensation transactions if payment fails or times out.
+
+#### 🎯 The Booking Saga Lifecycle
+
+```text
 User clicks "Book Now"
-        ↓
-1. Pre-flight Check (Fail Fast)
-   └─→ Check available_quantity in DB
-   └─→ If insufficient: Return "Sold Out" immediately
-        ↓
-2. Temporary Booking (PENDING Status)
-   └─→ Create Booking(status="PENDING")
-   └─→ Decrement available_quantity atomically
-   └─→ Schedule Celery task (10-minute timer)
-        ↓
-3. Payment Processing
-   └─→ Redirect to Stripe
-   └─→ User completes payment
-        ↓
-4a. Payment Success (Happy Path)
-   └─→ Stripe webhook → Update status="COMPLETED"
-   └─→ Celery task sees COMPLETED → Do nothing
-        ↓
-4b. Payment Timeout (Auto-Recovery)
-   └─→ Celery task executes after 10 minutes
-   └─→ Status still PENDING → Auto-cancel booking
-   └─→ Increment available_quantity (room released)
-        ↓
-4c. Edge Case: Late Payment After Timeout
-   └─→ Payment arrives after auto-cancellation
-   └─→ Check if rooms still available
-   ├─→ YES: Complete booking with available room
-   └─→ NO: Process automatic Stripe refund
-**Why this flow is bulletproof:** 🎯 **Fail Fast Optimization**   Pre-flight check prevents unnecessary transactions when rooms are already sold out. Saves database resources and improves response time. 🔒 **Temporary Hold Pattern**   PENDING status creates a soft lock on inventory while user completes payment. Room is removed from availability but booking isn't finalized until payment confirmation. ⏱️ **Automatic Cleanup**   Celery delayed task acts as a "deadman's switch." If payment doesn't complete within 10 minutes, rooms automatically return to inventory. Zero manual intervention needed. 🎪 **Idempotent Operations**   Worker checks current status before acting. If booking was already confirmed or cancelled, no action taken. Handles duplicate webhook calls gracefully. 💰 **Late Payment Edge Case**   Handles the race condition where payment succeeds after timeout. Attempts re-booking first, refunds only if impossible. Customer never loses money. 🔄 **State Machine Design**  
-PENDING → (payment success) → CONFIRMED
-PENDING → (timeout) → CANCELLED
-CANCELLED → (late payment + rooms available) → CONFIRMED  
-CANCELLED → (late payment + no rooms) → REFUNDED
-Clean state transitions with no ambiguous states. Every booking is always in a known, valid state.
+        ↓
+1. Reservation (Local Transaction)
+   └─→ Atomic Decrement: available_quantity - 1
+   └─→ Create Booking: status="PENDING"
+   └─→ Start Celery Timer: 10-minute expiry task
+        ↓
+2. Distributed Payment (Stripe)
+   └─→ User attempts payment on Stripe Gateway
+        ↓
+3a. Success Webhook (Commit)
+   └─→ Update Booking: status="BOOKED"
+   └─→ Celery Timer: Finds status != PENDING, ignores task
+        ↓
+3b. Payment Failure / Timeout (Compensation Transaction)
+   └─→ Webhook Fail OR Celery Timer Explodes
+   └─→ Update Booking: status="CANCELLED"
+   └─→ Atomic Increment: available_quantity + 1 (Release Room)
+        ↓
+3c. Late Webhook Recovery (Edge Case)
+   └─→ Payment succeeds AFTER Celery timeout (Status is CANCELLED)
+   └─→ Check Inventory: Is room still available?
+        ├─→ YES: Create new booking & confirm (Resurrection)
+        └─→ NO: Auto-trigger Stripe Refund (Final Compensation)
+
+```
+
+**Why this flow is bulletproof:**
+
+🎯 **Inventory First (Reservation)**
+We secure the room immediately via a local transaction. This guarantees the user won't pay for a room that doesn't exist.
+
+⏱️ **The Deadman's Switch**
+The Celery delayed task acts as a time-to-live (TTL) on the reservation. If the payment webhook never arrives, the system automatically self-heals by running a **Compensation Transaction** to release the inventory.
+
+💰 **Smart Recovery**
+In the rare race condition where a user pays *after* the timeout: instead of blindly refunding, we check if the room is still free. If it is, we "resurrect" the booking. We only refund if the room was snatched by someone else.
 ---
 
 ### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
