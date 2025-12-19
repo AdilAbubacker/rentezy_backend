@@ -11,20 +11,27 @@
 <div align="center">
 
 
-[🎯 Challenge](#-the-challenge) •
-[🏗️ Architecture](#️-system-architecture-overview) •
-[🎪 Microservices](#-10-independent-microservices) •
-[Concurrency Control](#1️⃣-concurrency-control--race-condition-prevention) •
-[Event-Driven Architecture](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
-[Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
-[Automated Rent System](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
-[CQRS Search](#5️⃣-advanced-search-architicture-cqrs-in-action) •
-[Centralized Auth](#6️⃣-centralized-authentication-across-the-services) •
-[🛠️ Tech Stack](#️-technology-stack) •
-[🔐 Security](#-security-features) •
-[📦 Deployment](#-deployment-architecture) •
-[⚡ TL;DR](#-tldr-why-rentezy-stands-out) •
-[🧠 Takeaway](#-engineering-takeaway)
+<div align="center">
+
+### 📑 Table of Contents
+
+[🎯 The Challenge](#-the-challenge) •
+[🏗️ System Architecture Overview](#️-system-architecture-overview) •
+[🎪 10+ Independent Microservices](#-10-independent-microservices) •
+[1️⃣ Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) •
+[2️⃣ Event-Driven Architecture — The Nervous System of RentEzy](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
+[3️⃣ Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
+[4️⃣ Automated Rent Payment System — Intelligent Billing That Runs Itself](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
+[5️⃣ Advanced Search Architicture: CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action) •
+[6️⃣ Centralized Authentication Across the Services](#6️⃣-centralized-authentication-across-the-services) •
+[🛠️ Technology Stack](#️-technology-stack) •
+[🔐 Security Features](#-security-features) •
+[📦 Deployment Architecture](#-deployment-architecture) •
+[⚡ TL;DR: Why RentEzy Stands Out?](#-tldr-why-rentezy-stands-out) •
+[🧠 Engineering Takeaway](#-engineering-takeaway)
+
+</div>
+
 
 </div>
 
