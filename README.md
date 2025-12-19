@@ -349,44 +349,6 @@ Notifications, search updates, and analytics all respond in near real time becau
 **The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
 **The Solution: Choreography-based Saga pattern** with **Compensating Transactions**.
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant B as Booking Svc
-    participant DB as Booking DB
-    participant C as Celery (Timer)
-    participant S as Stripe
-    
-    U->>B: Click "Book Now"
-    activate B
-    Note right of B: Local Transaction Start
-    B->>DB: Atomic Decrement Stock
-    B->>DB: Create Booking (PENDING)
-    B->>C: Schedule Timeout Task (10m)
-    Note right of B: Local Transaction End
-    B-->>U: Return Checkout URL
-    deactivate B
-    
-    par Payment Process
-        U->>S: Submit Payment
-    and Timeout Countdown
-        C->>C: Wait 10 mins...
-    end
-    
-    alt Payment Success (Happy Path)
-        S->>B: Webhook: Payment Success
-        B->>DB: Update Status: BOOKED
-        C->>B: Timeout Triggered
-        B->>B: Check Status
-        Note right of B: Status is BOOKED. Ignore Task.
-    else Payment Fail/Timeout (Compensation)
-        C->>B: Timeout Triggered
-        B->>B: Check Status
-        Note right of B: Status is PENDING.
-        B->>DB: Update Status: CANCELLED
-        B->>DB: Atomic Increment Stock (Release)
-    end
-```
 
 #### 🎯 The Booking Saga Lifecycle
 
@@ -428,6 +390,7 @@ The Celery delayed task acts as a time-to-live (TTL) on the reservation. If the 
 
 💰 **Smart Recovery**
 In the rare race condition where a user pays *after* the timeout: instead of blindly refunding, we check if the room is still free. If it is, we "resurrect" the booking. We only refund if the room was snatched by someone else.
+
 ---
 
 ### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
@@ -622,19 +585,19 @@ Production Stack:
 
 ## ⚡ TL;DR: Why RentEzy Stands Out?
 
-✅ **Concurrency-Safe Booking System** - Optimistic Concurrency Control with ACID transactions + DB constraints to guarantee zero overbookings
-✅ **Distributed Saga Pattern** - Orchestrates booking-payment workflows with automatic compensation transactions
-✅ **Fully Automated Rent Collection** - Celery Beat-powered recurring billing that runs 24/7 without human intervention
-✅ **Intelligent Late Fee Engine** - Automatic penalty application with configurable grace periods and escalation rules
-✅ **Proactive Rent Reminders** - Event-driven notifications at T-3 days, T-0 days, and T+overdue intervals
-✅ **Real-Time Chat** - WebSocket-based messaging between tenants and landlords  
-✅ **Smart Visit Scheduling** - Tenants book property tours with conflict-free calendar management
+✅ **Concurrency-Safe Booking System** - Optimistic Concurrency Control with ACID transactions + DB constraints to guarantee zero overbookings  
+✅ **Distributed Saga Pattern** - Orchestrates booking-payment workflows with automatic compensation transactions  
+✅ **Fully Automated Rent Collection** - Celery Beat-powered recurring billing that runs 24/7 without human intervention  
+✅ **Intelligent Late Fee Engine** - Automatic penalty application with configurable grace periods and escalation rules  
+✅ **Proactive Rent Reminders** - Event-driven notifications at T-3 days, T-0 days, and T+overdue intervals  
+✅ **Real-Time Chat** - WebSocket-based messaging between tenants and landlords   
+✅ **Smart Visit Scheduling** - Tenants book property tours with conflict-free calendar management  
 ✅ **Event-Driven Notifications** - Kafka-powered alerts across the platform  
-✅ **Live Notifications:** Real-time in-app alerts using Django Channels
-✅ **Status Updates:** Real-time booking confirmations, payment receipts
+✅ **Live Notifications:** Real-time in-app alerts using Django Channels  
+✅ **Status Updates:** Real-time booking confirmations, payment receipts  
 ✅ **High-Performance Search** - Elasticsearch with sub-100ms query times  
 ✅ **API Gateway Pattern** - Centralized auth, routing, and rate limiting  
-✅ **Kubernetes Deployment** - Production-ready orchestration on AWS EKS
+✅ **Kubernetes Deployment** - Production-ready orchestration on AWS EKS  
 
 ---
 
