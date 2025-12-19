@@ -208,7 +208,7 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 **The Solution:** Optimistic concurrency control with database-level constraints and atomic operations
 
 
-#### **Why Traditional Locking Fails at Scale**
+#### 🔴 **Why Traditional Locking Fails at Scale**
 Traditional approaches use **pessimistic locking** (SELECT FOR UPDATE) which creates **lock contention** , forcing requests to wait in line, **degrading throughput** under high concurrency.
 
 ```python
@@ -220,7 +220,7 @@ with transaction.atomic():
         room.save()
 ```
 
-#### **Utilizing ACID Guarantees**
+#### 💪 **Leveraging ACID Guarantees**
 Instead of explicit locks, RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of PostgreSQL to handle concurrency without application-level bottlenecks.
 ```python
 
