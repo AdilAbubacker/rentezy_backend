@@ -226,7 +226,6 @@ Instead of explicit locks, RentEzy pushes the logic down to the **Database Layer
 
 # Database Model with Constraint
 class AvailableRooms(models.Model):
-    room_id = models.IntegerField()
     initial_quantity = models.IntegerField(default=1)
     available_quantity = models.IntegerField()
     
@@ -242,10 +241,7 @@ class AvailableRooms(models.Model):
 try:
     with transaction.atomic():
         # Create booking first
-        booking = Booking.objects.create(
-            room_id=room_id,
-            tenant_id=tenant_id,
-        )
+        booking = Booking.objects.create(room_id=room_id, tenant_id=tenant_id)
         
         # Atomic decrement - evaluated in database, not Python
         AvailableRooms.objects.filter(id=room_id).update(
