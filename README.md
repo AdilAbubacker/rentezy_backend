@@ -22,11 +22,8 @@
 🔍 [CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action)
 <br/>
 💳 [Automated Recurring Rent Billing Engine](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
-🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services)
-<br/>
-🛠️ [Technology Stack](#️-technology-stack) •
-🔐 [Security Features](#-security-features) •
-📦 [Deployment Architecture](#-deployment-architecture)
+🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services) •
+📦 [Kubernetes on AWS EKS](#-deployment-architecture)
 
 </div>
 
