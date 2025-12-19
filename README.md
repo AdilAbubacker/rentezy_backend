@@ -595,7 +595,8 @@ Production Stack:
 ## 🧠 Engineering Takeaway
 
 RentEzy is an experiment in **systems thinking** — It embodies what happens when **backend design, distributed computing, and DevOps** meet in one unified project.  
-This project is actively evolving.If you’re interested in contributing, reviewing architecture decisions, or just want to talk, feel free to reach out or open a discussion. let's connect!
+
+**This project is actively evolving**. If you’re interested in contributing, reviewing architecture decisions, or just want to talk, feel free to reach out or open a discussion. 
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/adil-abubacker-a63598232/) 
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/AdilAbubacker)
