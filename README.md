@@ -497,13 +497,6 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 ---
 
 
-### 7️⃣ **Real-Time Everything** ⚡
-- **WebSocket Chat:** Instant messaging between tenants and landlords
-- **Live Notifications:** Event-driven alerts using Django Channels
-- **Status Updates:** Real-time booking confirmations, payment receipts
-
----
-
 ## 🛠️ Technology Stack - Built With The Best
 
 ### **Backend Powerhouse**
@@ -529,6 +522,18 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 ### **Payment & Communication**
 - **Stripe** - Secure payment processing
 - **Django Channels** - WebSocket support for real-time features
+
+---
+
+## 🔐 Security Features
+
+- **JWT Authentication** - Stateless token-based auth across services
+- **Role-Based Access Control (RBAC)** - Fine-grained permissions for Tenants, Landlords and Admin
+- **Rate Limiting** - Prevent abuse and DDoS attacks
+- **Zero-Trust Architecture** - Centralized JWT validation with secret isolation across all microservices
+- **HTTPS Everywhere** - TLS encryption in transit
+- **SQL Injection Prevention** - Parameterized queries via ORM
+- **CSRF Protection** - Django middleware for form security
 
 ---
 
@@ -569,39 +574,31 @@ Production Stack:
 
 ---
 
-## 🔥 Core Features
+## ⚡ TL;DR: Why RentEzy Stands Out?
 
-### For Property Owners
-- ✅ Multi-property management dashboard
-- ✅ Automated rent collection with late fee enforcement
-- ✅ Tenant screening and verification
-- ✅ Maintenance request tracking
-- ✅ Real-time chat with tenants
-- ✅ Financial reporting and analytics
-
-### For Tenants
-- ✅ Advanced property search with geo-filtering
-- ✅ Virtual property tours and appointment booking
-- ✅ One-click rent payments via Stripe
-- ✅ Maintenance request submission
-- ✅ Real-time chat with landlords
-- ✅ Payment history and receipts
-
-### For Administrators
-- ✅ User management and moderation
-- ✅ Platform analytics dashboard
-- ✅ Revenue tracking and commission management
-- ✅ Dispute resolution tools
+✅ **Concurrency-Safe Booking System** - Optimistic Concurrency Control with ACID transactions + DB constraints to guarantee zero overbookings
+✅ **Distributed Saga Pattern** - Orchestrates booking-payment workflows with automatic compensation transactions
+✅ **Fully Automated Rent Collection** - Celery Beat-powered recurring billing that runs 24/7 without human intervention
+✅ **Intelligent Late Fee Engine** - Automatic penalty application with configurable grace periods and escalation rules
+✅ **Proactive Rent Reminders** - Event-driven notifications at T-3 days, T-0 days, and T+overdue intervals
+✅ **Real-Time Chat** - WebSocket-based messaging between tenants and landlords  
+✅ **Smart Visit Scheduling** - Tenants book property tours with conflict-free calendar management
+✅ **Event-Driven Notifications** - Kafka-powered alerts across the platform  
+✅ **Live Notifications:** Real-time in-app alerts using Django Channels
+✅ **Status Updates:** Real-time booking confirmations, payment receipts
+✅ **High-Performance Search** - Elasticsearch with sub-100ms query times  
+✅ **API Gateway Pattern** - Centralized auth, routing, and rate limiting  
+✅ **Kubernetes Deployment** - Production-ready orchestration on AWS EKS
 
 ---
 
-## 🤝 Connect With Me
+## 🧠 Engineering Takeaway
 
-This project represents hundreds of hours of architecting, coding, debugging, and optimizing. If you're working on microservices, event-driven architecture, or scalable platforms, let's connect!
+RentEzy is an experiment in **systems thinking** — It embodies what happens when **backend design, distributed computing, and DevOps** meet in one unified project.  
+This project is actively evolving.If you’re interested in contributing, reviewing architecture decisions, or just want to talk, feel free to reach out or open a discussion. let's connect!
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/yourprofile)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/adil-abubacker-a63598232/) 
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/AdilAbubacker)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-green)](https://yourportfolio.com)
 
 ---
 
