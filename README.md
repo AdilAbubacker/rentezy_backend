@@ -16,20 +16,14 @@
 
 🎪 [10+ Independent Microservices](#-10-independent-microservices) • 
 🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention)
-
 <br/>
-
 🧠 [Event-Driven Architecture](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
 🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
 🔍 [CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action)
-
 <br/>
-
 💳 [Automated Recurring Rent Billing Engine](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
 🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services)
-
 <br/>
-
 🛠️ [Technology Stack](#️-technology-stack) •
 🔐 [Security Features](#-security-features) •
 📦 [Deployment Architecture](#-deployment-architecture)
