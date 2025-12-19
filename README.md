@@ -14,20 +14,38 @@
 <div align="center">
 
 ---
+<div align="center">
+
+### 📑 Table of Contents
+
 [🎯 The Challenge](#-the-challenge) •
 [🏗️ System Architecture Overview](#️-system-architecture-overview) •
-[🎪 10+ Independent Microservices](#-10-independent-microservices) •
+[🎪 10+ Independent Microservices](#-10-independent-microservices)
+
+<br/>
+
 [1️⃣ Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) •
 [2️⃣ Event-Driven Architecture — The Nervous System of RentEzy](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
-[3️⃣ Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
+[3️⃣ Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern)
+
+<br/>
+
 [4️⃣ Automated Rent Payment System — Intelligent Billing That Runs Itself](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
 [5️⃣ Advanced Search Architicture: CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action) •
-[6️⃣ Centralized Authentication Across the Services](#6️⃣-centralized-authentication-across-the-services) •
+[6️⃣ Centralized Authentication Across the Services](#6️⃣-centralized-authentication-across-the-services)
+
+<br/>
+
 [🛠️ Technology Stack](#️-technology-stack) •
 [🔐 Security Features](#-security-features) •
-[📦 Deployment Architecture](#-deployment-architecture) •
+[📦 Deployment Architecture](#-deployment-architecture)
+
+<br/>
+
 [⚡ TL;DR: Why RentEzy Stands Out?](#-tldr-why-rentezy-stands-out) •
 [🧠 Engineering Takeaway](#-engineering-takeaway)
+
+</div>
 
 </div>
 
