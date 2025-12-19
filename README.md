@@ -7,6 +7,29 @@
 [![Django](https://img.shields.io/badge/Backend-Django%20REST-092E20.svg?logo=django)](https://www.django-rest-framework.org/)
 
 > *A fully distributed, event-driven, microservices-based platform automating entire property rental lifecycle from property discovery and visit scheduling to rent collection and communication.*
+
+<div align="center">
+
+
+[🎯 Challenge](#-the-challenge) •
+[🏗️ Architecture](#️-system-architecture-overview) •
+[🎪 Microservices](#-10-independent-microservices) •
+
+[Concurrency Control](#1️⃣-concurrency-control--race-condition-prevention) •
+[Event-Driven Architecture](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
+[Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
+[Automated Rent System](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
+[CQRS Search](#5️⃣-advanced-search-architicture-cqrs-in-action) •
+[Centralized Auth](#6️⃣-centralized-authentication-across-the-services) •
+
+[🛠️ Tech Stack](#️-technology-stack) •
+[🔐 Security](#-security-features) •
+[📦 Deployment](#-deployment-architecture) •
+[⚡ TL;DR](#-tldr-why-rentezy-stands-out) •
+[🧠 Takeaway](#-engineering-takeaway)
+
+</div>
+
 ---
 <div align="center">
   <img src="./rentezylanding.png" alt="RentEzy - Property search interface" width="900">
