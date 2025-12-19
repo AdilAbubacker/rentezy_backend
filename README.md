@@ -19,17 +19,15 @@
 
 ### 📑 Table of Contents
 
-🎯 [The Challenge](#-the-challenge) •
-🏗️ [System Architecture Overview](#️-system-architecture-overview) •
 🎪 [10+ Independent Microservices](#-10-independent-microservices)
-<br/>
 🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) •
-🧠 [Event-Driven Architecture — The Nervous System of RentEzy](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
+<br/>
+🧠 [Event-Driven Architecture — The Nervous System](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
 🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern)
 <br/>
 💳 [Automated Rent Payment System — Intelligent Billing That Runs Itself](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
 🔍 [Advanced Search Architicture: CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action) •
-🛡️ [Centralized Authentication Across the Services](#6️⃣-centralized-authentication-across-the-services)
+🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services)
 <br/>
 🛠️ [Technology Stack](#️-technology-stack) •
 🔐 [Security Features](#-security-features) •
