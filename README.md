@@ -25,7 +25,9 @@
 🛠️ [Technology Stack](#️-technology-stack) •
 🔐 [Security Features](#-security-features) •
 📦 [Deployment Architecture](#-deployment-architecture)
+
 </div>
+
 ---
 <div align="center">
   <img src="./rentezylanding.png" alt="RentEzy - Property search interface" width="900">
