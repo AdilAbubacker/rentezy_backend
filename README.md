@@ -530,31 +530,23 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 ---
 
 
-## 🛠️ Technology Stack - Built With The Best
+## 🛠️ Technology Stack
 
-### **Backend Powerhouse**
-- **Django REST Framework** - Robust API development
-- **Apache Kafka** - Distributed event streaming (the nervous system)
-- **Celery + Celery Beat** - Async task processing & scheduling
-- **PostgreSQL** - ACID-compliant primary database
-- **Elasticsearch** - Full-text search engine
-- **Redis** - Lightning-fast caching and message broker
-
-
-### **Frontend Excellence**
-- **React.js** - Component-based UI
-- **Redux Toolkit** - Predictable state management
-- **WebSocket Client** - Real-time communication
-
-### **DevOps & Infrastructure**
-- **Docker** - Containerization of all services
-- **Kubernetes (AWS EKS)** - Container orchestration at scale
-- **AWS EFS CSI** - Persistent storage for stateful services
-- **Nginx + Gunicorn** - High-performance web serving
-
-### **Payment & Communication**
-- **Stripe** - Secure payment processing
-- **Django Channels** - WebSocket support for real-time features
+| Layer | Technologies |
+|-------|-------------|
+| **Backend** | Django REST Framework, Python 3.11+ |
+| **Frontend** | React 18, Redux Toolkit, Tailwind CSS |
+| **Message Broker** | Apache Kafka (event streaming) |
+| **Search** | Elasticsearch 8.x |
+| **Caching** | Redis 7.x |
+| **Task Queue** | Celery + Celery Beat |
+| **Real-time** | Django Channels, WebSockets |
+| **Database** | PostgreSQL 15 (normalized schema) |
+| **Payments** | Stripe API |
+| **Containerization** | Docker, Docker Compose |
+| **Orchestration** | Kubernetes (AWS EKS) |
+| **Storage** | AWS EFS CSI (persistent volumes) |
+| **CI/CD** | GitHub Actions |
 
 ---
 
