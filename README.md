@@ -8,16 +8,10 @@
 
 > *A fully distributed, event-driven, microservices-based platform automating entire property rental lifecycle from property discovery and visit scheduling to rent collection and communication.*
 
-<div align="center">
 
-
-<div align="center">
 
 ---
 <div align="center">
-<div align="center">
-
-### 📑 Table of Contents
 
 🎪 [10+ Independent Microservices](#-10-independent-microservices) • 
 🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) 
