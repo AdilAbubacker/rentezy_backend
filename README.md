@@ -13,8 +13,7 @@
 
 <div align="center">
 
-### 📑 Table of Contents
-
+---
 [🎯 The Challenge](#-the-challenge) •
 [🏗️ System Architecture Overview](#️-system-architecture-overview) •
 [🎪 10+ Independent Microservices](#-10-independent-microservices) •
