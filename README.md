@@ -18,7 +18,7 @@
 <br/>
 🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
 🧠 [Event-Driven Architecture](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
-🔍 [CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action) •
+🔍 [CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action) 
 <br/>
 💳 [Automated Recurring Rent Billing Engine](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
 🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services)
