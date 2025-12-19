@@ -11,6 +11,7 @@
 
 
 ---
+
 <div align="center">
 🎪 [10+ Independent Microservices](#-10-independent-microservices) • 
 🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) 
