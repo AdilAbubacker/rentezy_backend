@@ -14,14 +14,12 @@
 [🎯 Challenge](#-the-challenge) •
 [🏗️ Architecture](#️-system-architecture-overview) •
 [🎪 Microservices](#-10-independent-microservices) •
-
 [Concurrency Control](#1️⃣-concurrency-control--race-condition-prevention) •
 [Event-Driven Architecture](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
 [Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
 [Automated Rent System](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
 [CQRS Search](#5️⃣-advanced-search-architicture-cqrs-in-action) •
 [Centralized Auth](#6️⃣-centralized-authentication-across-the-services) •
-
 [🛠️ Tech Stack](#️-technology-stack) •
 [🔐 Security](#-security-features) •
 [📦 Deployment](#-deployment-architecture) •
