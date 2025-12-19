@@ -12,7 +12,6 @@
 
 ---
 <div align="center">
-
 🎪 [10+ Independent Microservices](#-10-independent-microservices) • 
 🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) 
 <br/>
@@ -23,12 +22,10 @@
 💳 [Automated Recurring Rent Billing Engine](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
 🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services)
 <br/>
-
 🛠️ [Technology Stack](#️-technology-stack) •
 🔐 [Security Features](#-security-features) •
 📦 [Deployment Architecture](#-deployment-architecture)
 </div>
-
 ---
 <div align="center">
   <img src="./rentezylanding.png" alt="RentEzy - Property search interface" width="900">
