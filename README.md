@@ -328,11 +328,44 @@ Notifications, search updates, and analytics all respond in near real time becau
 **The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
 **The Solution: Choreography-based Saga pattern** with **Compensating Transactions**.
 
-
-### 3️⃣ **Payment Flow & Distributed Saga Pattern**
-
-**The Problem:** "Pay-then-Book" creates bad UX; if inventory runs out during payment, you get stuck in a refund loop.
-**The Solution:** A **Distributed Saga Pattern** where we reserve inventory *first* via a local transaction, using Celery as a distributed timeout manager to trigger compensation transactions if payment fails or times out.
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant B as Booking Svc
+    participant DB as Booking DB
+    participant C as Celery (Timer)
+    participant S as Stripe
+    
+    U->>B: Click "Book Now"
+    activate B
+    Note right of B: Local Transaction Start
+    B->>DB: Atomic Decrement Stock
+    B->>DB: Create Booking (PENDING)
+    B->>C: Schedule Timeout Task (10m)
+    Note right of B: Local Transaction End
+    B-->>U: Return Checkout URL
+    deactivate B
+    
+    par Payment Process
+        U->>S: Submit Payment
+    and Timeout Countdown
+        C->>C: Wait 10 mins...
+    end
+    
+    alt Payment Success (Happy Path)
+        S->>B: Webhook: Payment Success
+        B->>DB: Update Status: BOOKED
+        C->>B: Timeout Triggered
+        B->>B: Check Status
+        Note right of B: Status is BOOKED. Ignore Task.
+    else Payment Fail/Timeout (Compensation)
+        C->>B: Timeout Triggered
+        B->>B: Check Status
+        Note right of B: Status is PENDING.
+        B->>DB: Update Status: CANCELLED
+        B->>DB: Atomic Increment Stock (Release)
+    end
+```
 
 #### 🎯 The Booking Saga Lifecycle
 
