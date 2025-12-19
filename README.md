@@ -15,27 +15,28 @@
 
 ---
 <div align="center">
-
 <div align="center">
-[🎯 The Challenge](#-the-challenge) •
-[🏗️ System Architecture Overview](#️-system-architecture-overview) •
-[🎪 10+ Independent Microservices](#-10-independent-microservices)
-<br/>
-[⚔️ Concurrency Control & Race Condition Prevention](#concurrency-control--race-condition-prevention) •
-[📨 Event-Driven Architecture — The Nervous System of RentEzy](#event-driven-architecture--the-nervous-system-of-rentezy) •
-[🔄 Distributed Transactions & The Saga Pattern](#distributed-transactions--the-saga-pattern)
-<br/>
-[💰 Automated Rent Payment System — Intelligent Billing That Runs Itself](#automated-rent-payment-system--intelligent-billing-that-runs-itself) •
-[🔍 Advanced Search Architicture: CQRS in action](#advanced-search-architicture-cqrs-in-action) •
-[🔐 Centralized Authentication Across the Services](#centralized-authentication-across-the-services)
-<br/>
-[🛠️ Technology Stack](#️-technology-stack) •
-[🛡️ Security Features](#-security-features) •
-[📦 Deployment Architecture](#-deployment-architecture)
-<br/>
-[⚡ TL;DR: Why RentEzy Stands Out?](#-tldr-why-rentezy-stands-out) •
-[🧠 Engineering Takeaway](#-engineering-takeaway)
 
+### 📑 Table of Contents
+
+🎯 [The Challenge](#-the-challenge) •
+🏗️ [System Architecture Overview](#️-system-architecture-overview) •
+🎪 [10+ Independent Microservices](#-10-independent-microservices)
+<br/>
+🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) •
+🧠 [Event-Driven Architecture — The Nervous System of RentEzy](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
+🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern)
+<br/>
+💳 [Automated Rent Payment System — Intelligent Billing That Runs Itself](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
+🔍 [Advanced Search Architicture: CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action) •
+🛡️ [Centralized Authentication Across the Services](#6️⃣-centralized-authentication-across-the-services)
+<br/>
+🛠️ [Technology Stack](#️-technology-stack) •
+🔐 [Security Features](#-security-features) •
+📦 [Deployment Architecture](#-deployment-architecture)
+<br/>
+⚡ [TL;DR: Why RentEzy Stands Out?](#-tldr-why-rentezy-stands-out) •
+🧠 [Engineering Takeaway](#-engineering-takeaway)
 </div>
 
 ---
