@@ -19,13 +19,14 @@
 
 ### 📑 Table of Contents
 
-🎪 [10+ Independent Microservices](#-10-independent-microservices)
-🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) •
+🎪 [10+ Independent Microservices](#-10-independent-microservices) • 
+🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention) 
 <br/>
 🧠 [Event-Driven Architecture — The Nervous System](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
 🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern)
 <br/>
-💳 [Automated Rent Payment System — Intelligent Billing That Runs Itself](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
+💳 [Automated Rent Payment System — Intelligent Billing That Runs Itself](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) 
+<br/>
 🔍 [Advanced Search Architicture: CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action) •
 🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services)
 <br/>
