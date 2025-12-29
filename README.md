@@ -349,31 +349,55 @@ Notifications, search updates, and analytics all respond in near real time becau
 #### 🎯 The Booking Saga Lifecycle
 
 ```text
-User clicks "Book Now"
-        ↓
-1. Reservation (Local Transaction)
-   └─→ Atomic Decrement: available_quantity - 1
-   └─→ Create Booking: status="PENDING"
-   └─→ Start Celery Timer: 10-minute expiry task
-        ↓
-2. Distributed Payment (Stripe)
-   └─→ User attempts payment on Stripe Gateway
-        ↓
-3a. Success Webhook (Commit)
-   └─→ Update Booking: status="BOOKED"
-   └─→ Celery Timer: Finds status != PENDING, ignores task
-        ↓
-3b. Payment Failure / Timeout (Compensation Transaction)
-   └─→ Webhook Fail OR Celery Timer Explodes
-   └─→ Update Booking: status="CANCELLED"
-   └─→ Atomic Increment: available_quantity + 1 (Release Room)
-        ↓
-3c. Late Webhook Recovery (Edge Case)
-   └─→ Payment succeeds AFTER Celery timeout (Status is CANCELLED)
-   └─→ Check Inventory: Is room still available?
-        ├─→ YES: Create new booking & confirm (Resurrection)
-        └─→ NO: Auto-trigger Stripe Refund (Final Compensation)
+HAPPY PATH (Success Saga):
+┌─────────────────────────────────────────────────────┐
+│ 1. Reserve Room (Local Transaction)                 │
+│    - Decrement qty (F() expression)                 │
+│    - Create Booking (status='pending')              │
+│    - Schedule timeout (Celery delay 15min)          │
+└─────────────────┬───────────────────────────────────┘
+                  │
+┌─────────────────▼───────────────────────────────────┐
+│ 2. Initiate Stripe Payment                          │
+│    - Create payment intent                          │
+│    - Return to user for 3D Secure flow              │
+└─────────────────┬───────────────────────────────────┘
+                  │
+┌─────────────────▼───────────────────────────────────┐
+│ 3. Stripe Webhook: payment_intent.succeeded         │
+│    - Update booking status='confirmed'              │
+│    - Cancel pending Celery task (if not executed)   │
+└─────────────────────────────────────────────────────┘
 
+COMPENSATION FLOW 1 (Payment Failed):
+┌─────────────────────────────────────────────────────┐
+│ Stripe Webhook: payment_intent.failed               │
+│ COMPENSATE:                                         │
+│    - Increment qty back (F() + 1)                   │
+│    - Update booking status='cancelled'              │
+└─────────────────────────────────────────────────────┘
+
+COMPENSATION FLOW 2 (Timeout - No Webhook):
+┌─────────────────────────────────────────────────────┐
+│ Celery Task Fires After 15min                       │
+│ IF booking.status == 'pending':                     │
+│ COMPENSATE:                                         │
+│    - Increment qty back (F() + 1)                   │
+│    - Update booking status='cancelled'              │
+└─────────────────────────────────────────────────────┘
+
+EDGE CASE FLOW (Late Webhook After Timeout):
+┌─────────────────────────────────────────────────────┐
+│ Stripe Webhook arrives AFTER timeout cancelled      │
+│ IF booking.status == 'cancelled':                   │
+│   TRY:                                              │
+│     - Check if qty > 0                              │
+│     - Create NEW booking if available               │
+│   ELSE:                                             │
+│     COMPENSATE:                                     │
+│       - Refund via Stripe API                       │
+│       - Notify user of cancellation                 │
+└─────────────────────────────────────────────────────┘
 ```
 
 **Why this flow is bulletproof:**
