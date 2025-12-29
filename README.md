@@ -343,7 +343,7 @@ Notifications, search updates, and analytics all respond in near real time becau
 ### 3️⃣ Distributed Transactions & The Saga Pattern
 
 **The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
-**The Solution: Choreography-based Saga pattern** with **Compensating Transactions**.
+**The Solution: Choreography-based Saga pattern** with **Compensating Transactions** and semantic locking.
 
 
 #### 🎯 The Booking Saga Lifecycle
@@ -402,14 +402,14 @@ EDGE CASE FLOW (Late Webhook After Timeout):
 
 **Why this flow is bulletproof:**
 
-🎯 **Inventory First (Reservation)**
-We secure the room immediately via a local transaction. This guarantees the user won't pay for a room that doesn't exist.
-
+🎯 **Semantic Lock (Atomic Hold))**
+ We reserve inventory locally before payment. This creates a PENDING booking and decrements stock immediately, while arming a 15-minute background timer to auto-release the hold if payment fails.
+ 
 ⏱️ **The Deadman's Switch**
 The Celery delayed task acts as a time-to-live (TTL) on the reservation. If the payment webhook never arrives, the system automatically self-heals by running a **Compensation Transaction** to release the inventory.
 
-💰 **Smart Recovery**
-In the rare race condition where a user pays *after* the timeout: instead of blindly refunding, we check if the room is still free. If it is, we "resurrect" the booking. We only refund if the room was snatched by someone else.
+💰 **Zombie Resurrection Protocol**
+If a successful payment arrives after the timer releases the room, the system attempts to "resurrect" the booking by re-acquiring stock. If the inventory was lost to another user in that window, we automatically trigger a Compensating Transaction (Refund) to maintain consistency.
 
 ---
 
