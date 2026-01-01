@@ -339,6 +339,7 @@ Notifications, search updates, and analytics all respond in near real time becau
 
 
 **🔴 Why we need Distributed ACID Semantics**  
+  
 We require ACID-like guarantees across this network boundary to prevent the "Dual Write" problem. Naive approaches fail because we cannot "Rollback" a Stripe charge with a SQL command:
 
 * **If we Pay then Book:** A database crash immediately after payment results in the user losing money without receiving a booking (Violation of Atomicity).
