@@ -342,8 +342,8 @@ Notifications, search updates, and analytics all respond in near real time becau
   
 We require ACID-like guarantees across this network boundary to prevent the "Dual Write" problem. Naive approaches fail because we cannot "Rollback" a Stripe charge with a SQL command:
 
-* **If we Pay then Book:** A database crash immediately after payment results in the user losing money without receiving a booking (Violation of Atomicity).
-* **If we Book then Pay:** If the user abandons the checkout, inventory remains locked indefinitely, preventing other sales (Violation of Liveness/Isolation).
+* **Charge First, Book Later?** Risks charging the user when no rooms are left (high refund rate).
+* **Book First, Charge Later?** Risks "ghost bookings" where users reserve rooms but never pay, blocking inventory.
 
 
 #### 🎯 The Booking Saga Lifecycle
