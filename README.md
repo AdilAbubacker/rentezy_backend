@@ -211,14 +211,6 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 #### 🔴 **Why Traditional Locking Fails at Scale**
 Traditional approaches use **pessimistic locking** (SELECT FOR UPDATE) which creates **lock contention** , forcing requests to wait in line, **degrading throughput** under high concurrency.
 
-```python
-# ❌ Pessimistic Locking 
-with transaction.atomic():
-    room = AvailableRooms.objects.select_for_update().get(id=room_id)
-    if room.available_quantity > 0:
-        room.available_quantity -= 1
-        room.save()
-```
 
 #### 💪 **Leveraging ACID Guarantees**
 Instead of explicit locks, RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of PostgreSQL to handle concurrency without application-level bottlenecks.
@@ -409,14 +401,17 @@ EDGE CASE FLOW (Late Webhook After Timeout):
 
 **Why this flow is bulletproof:**
 
-🎯 **Semantic Lock (Atomic Hold))**
+🎯 **Atomic Hold (Semantic Lock)**  
  We reserve inventory locally before payment. This creates a PENDING booking and decrements stock immediately, while arming a 15-minute background timer to auto-release the hold if payment fails.
  
-⏱️ **The Deadman's Switch**
+⏱️ **The Deadman's Switch**  
 The Celery delayed task acts as a time-to-live (TTL) on the reservation. If the payment webhook never arrives, the system automatically self-heals by running a **Compensation Transaction** to release the inventory.
 
-💰 **Zombie Resurrection Protocol**
+💰 **Zombie Resurrection Protocol**  
 If a successful payment arrives after the timer releases the room, the system attempts to "resurrect" the booking by re-acquiring stock. If the inventory was lost to another user in that window, we automatically trigger a Compensating Transaction (Refund) to maintain consistency.
+
+💪 **Deterministic Concurrency** 
+To handle race conditions between the "timeout" timer and late webhooks, we utilize select_for_update() row locks. This forces a serialized, conflict-free transition to either CONFIRMED or CANCELLED, preventing split-brain states.
 
 ---
 
