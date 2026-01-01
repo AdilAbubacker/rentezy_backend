@@ -422,6 +422,28 @@ To handle race conditions between the "timeout" timer and late webhooks, we util
 
 ### 🧠 How It Works
 
+```mermaid
+sequenceDiagram
+    participant Beat as ⏰ Celery Beat
+    participant Rent as 🧾 Rent Service
+    participant Kafka as 📨 Kafka
+    participant User as 👤 Tenant
+
+    Note over Beat, Rent: Daily Cron Job
+    Beat->>Rent: Trigger "Check Due Dates"
+    Rent->>Rent: Generate Invoice
+    Rent->>Kafka: Publish `invoice.created`
+    
+    par Notifications
+        Kafka->>User: 📧 Email: "Rent Due Tomorrow"
+    and Auto-Pay
+        Rent->>Stripe: 💳 Charge Saved Card
+    end
+    
+    Stripe-->>Rent: Payment Success
+    Rent->>Kafka: Publish `rent.paid`
+```
+
 ```text
 1️⃣ Tenant moves in → Booking Service emits LEASE_STARTED event  
 2️⃣ Rent Service creates a RentContract record (stores rent, due day, autopay prefs, etc.)  
