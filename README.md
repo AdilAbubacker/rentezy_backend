@@ -337,7 +337,7 @@ Notifications, search updates, and analytics all respond in near real time becau
 **The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
 **The Solution: Choreography-based Saga pattern** with **Compensating Transactions** and semantic locking.
 
-
+  
 **🔴 Why we need Distributed ACID Semantics**  
   
 We require ACID-like guarantees across this network boundary to prevent the "Dual Write" problem. Naive approaches fail because we cannot "Rollback" a Stripe charge with a SQL command:
@@ -411,7 +411,7 @@ The Celery delayed task acts as a time-to-live (TTL) on the reservation. If the 
 💰 **Zombie Resurrection Protocol**  
 If a successful payment arrives after the timer releases the room, the system attempts to "resurrect" the booking by re-acquiring stock. If the inventory was lost to another user in that window, we automatically trigger a Compensating Transaction (Refund) to maintain consistency.
 
-💪 **Deterministic Concurrency** 
+💪 **Deterministic Concurrency**  
 To handle race conditions between the "timeout" timer and late webhooks, we utilize select_for_update() row locks. This forces a serialized, conflict-free transition to either CONFIRMED or CANCELLED, preventing split-brain states.
 
 ---
