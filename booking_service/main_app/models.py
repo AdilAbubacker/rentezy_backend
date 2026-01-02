@@ -37,11 +37,16 @@ class Booking(models.Model):
 
     stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
     stripe_charge_id = models.CharField(max_length=255, blank=True, null=True)
- 
+    
+    idempotency_key = models.CharField(max_length=255, unique=True)
+    celery_task_id = models.CharField(max_length=255, blank=True, null=True)
+
     security_deposit = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     monthly_rent = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     lease_agreement = models.FileField(upload_to='lease_agreements/', blank=True, null=True)
 
+    stripe_session_url = models.CharField(max_length=255, blank=True, null=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

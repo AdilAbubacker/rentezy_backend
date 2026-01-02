@@ -1,8 +1,8 @@
 from booking_service.celery import app
 from .models import Booking, AvailableRooms
 
-@app.task
-def release_reserved_rooms(booking_id):
+@app.task(bind=True)
+def release_reserved_rooms(self, booking_id):
     """
     Compensation Flow 2: Timeout - webhook never arrived
     
