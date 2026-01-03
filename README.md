@@ -647,9 +647,9 @@ RentEzy bridges the gap between a modern user experience and enterprise-grade di
 
 * **💬 Real-Time Chat System:** Fully integrated WebSocket messaging (Django Channels) backed by Redis, allowing instantaneous negotiation between landlords and tenants without page reloads.
 * **📅 Smart Visit Scheduling:** A dedicated microservice handles appointment slots, preventing scheduling conflicts and managing physical visit logistics separate from the booking flow.
-* **🔔 Multi-Channel Notifications:** Asynchronous notification service that listens for system events to trigger emails and alerts for rent due dates, booking confirmations, and new messages.
- **🗺️ Interactive Map Search:** Location-based property discovery powered by Elasticsearch geospatial queries, allowing users to find homes within specific coordinates.
- **💳 Automated Payments:** Secure Stripe integration that handles not just one-time booking fees, but recurring monthly rent deductions and automated refund processing.
+* **🔔 Multi-Channel Notifications:** Asynchronous notification service that listens for system events to trigger emails and alerts for rent due dates, booking confirmations, and new messages.  
+ **🗺️ Interactive Map Search:** Location-based property discovery powered by Elasticsearch geospatial queries, allowing users to find homes within specific coordinates.  
+ **💳 Automated Payments:** Secure Stripe integration that handles not just one-time booking fees, but recurring monthly rent deductions and automated refund processing.  
 **👥 Role-Based Dashboards:** Distinct, secure interfaces for **Admins** (system oversight), **Landlords** (property/tenant management), and **Tenants** (bookings/payments).
 
 
