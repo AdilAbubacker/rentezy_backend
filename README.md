@@ -420,7 +420,7 @@ To handle race conditions between the "timeout" timer and late webhooks, we util
 **The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.
 **The Solution: Fully automated rent lifecycle engine**, powered by Celery Beat, Redis, Kafka, and Stripe.
 
-### 🧠 How It Works
+**🧠 How It Works**
 
 ```mermaid
 sequenceDiagram
@@ -598,9 +598,8 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 ```yaml
 Production Stack:
 ├── 🚢 AWS EKS Cluster (Kubernetes 1.28)
-│   ├── 19+ Microservice Deployments
-│   ├── Server-less computing with Fargate
-│   └── Ingress Controller (Nginx)
+│   ├── 15+ Container Deployments
+│   └── Server-less computing with Fargate
 │
 ├── 💾 Storage Layer
 │   ├── AWS EFS (Shared file system for Kafka, Elasticsearch)
