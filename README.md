@@ -444,48 +444,17 @@ sequenceDiagram
     Rent->>Kafka: Publish `rent.paid`
 ```
 
-```text
-1️⃣ Tenant moves in → Booking Service emits LEASE_STARTED event  
-2️⃣ Rent Service creates a RentContract record (stores rent, due day, autopay prefs, etc.)  
-3️⃣ Celery Beat runs daily → evaluates every active RentContract  
-4️⃣ If due in 3 days → emit RENT_REMINDER_DUE_SOON → Notification Service sends reminder  
-5️⃣ If due today → generate RentInvoice → emit RENT_INVOICE_CREATED → Notification + Payment triggered  
-6️⃣ Stripe → webhook → Rent Service marks invoice as paid → emits RENT_PAYMENT_SUCCESS  
-7️⃣ If overdue and unpaid → apply late fees → emit RENT_OVERDUE → Notification Service alerts tenant 
-```
 
-All communication is **event-driven via Kafka**, ensuring each microservice operates independently and scales gracefully.
+### **⚡ Key Capabilitiess**
 
-
-### ⚙️ Core Components
-
-| Component | Responsibility |
-|------------|----------------|
-| 🧾 **Rent Service** | Maintains rent contracts, invoices, and due cycles |
-| 🔔 **Notification Service** | Sends rent reminders and payment confirmations |
-| 🕓 **Celery Beat** | Schedules recurring billing, autopay, and late-fee jobs |
-| 📨 **Kafka Topics** | Orchestrates cross-service communication asynchronously |
-| 💳 **Stripe** | Handles all payment processing and autopay transactions |
-| ⚡ **Redis** | Acts as the Celery message broker and result backend for background tasks |
-
-
-### 🪄 **Key Features**
-
-- **Recurring Billing** – Automatically generates rent invoices each month for every active lease.  
-- **Autopay via Stripe** – Secure off-session payments using saved payment methods.  
-- **Proactive Reminder** – 3-day reminders, due-day notices, and overdue warnings.  
-- **Late Fee Enforcement** – Celery automatically applies and updates late fees for unpaid invoices.  
+- **🔄Cron-Driven Orchestration** – Celery Beat evaluates active leases daily to generate invoices, apply late fees, and trigger reminders.
+- **💳Payment via Stripe** – Integrates with Stripe to securely charge saved payment methods off-session. 
+- **⏰ Smart Reminders** – Proactive notifications of 3-day reminders, due-day notices, and overdue warnings.
+- **📈 Dynamic Late Fees** – Celery monitors unpaid invoices and automatically applies late fees based on configurable grace periods.
+- **Event-Driven Ledger** - Invoice creation, payment success, and failure triggers are decoupled via Kafka, allowing the Notification Service to react independently.
 - **Idempotent & Resilient Tasks** – All Celery jobs and Kafka consumers are retry-safe; duplicate messages never cause double billing.  
 - **Audit-Ready Data** – Complete rent history and payment lifecycle stored in RentDB and Kafka topics for compliance and reporting.  
 
-
-### 🧠 **Why It Matters**
-
-- 📅 100% automated recurring rent cycles
-- ⚡ Near real-time notifications
-- 🔁 Fully asynchronous, event-driven flow
-- 💼 Scalable to thousands of leases without blocking
-- 💪 Self-healing tasks and retry-safe execution
 
 **Result**: Landlords get paid automatically, tenants get reminded proactively
 
@@ -636,14 +605,15 @@ RentEzy bridges the gap between a modern user experience and enterprise-grade di
 
 ✅ **Bulletproof Concurrency** – Optimistic locking & DB constraints prevent race conditions    
 ✅ **Event-Driven Architecture** – Kafka decouples 10+ services for async communication  
-✅ **Distributed Sagas** – Choreography patterns handle transactions without global locks  
+✅ **Distributed Sagas** – Choreography Sapatterns handle transactions without global locks  
+✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appoinments  
+✅ **Real-Time Chat** – WebSocket-powered instant messaging between tenants and landlords  
+✅ **Multi-Tenant System** – Distinct, secure interfaces andt RBAC for Landlords, Tenants & Admins
+✅ **Zero-Trust Security** – Centralized JWT gateway isolated from business logic  
 ✅ **CQRS Search Engine** – High-speed Elasticsearch separated from write operations  
 ✅ **Automated Finance** – Self-driving engine for recurring rent, invoices & late fees  
-✅ **Visit Management** – Dedicated scheduling system for seamless property viewing  
 ✅ **Multi-Channel Notifications** – Real-time notifications via WebSockets, Email & Push  
-✅ **Multi-Tenant System** – Distinct, secure interfaces andt RBAC for Landlords, Tenants & Admins
-✅ **Real-Time Chat** – WebSocket-powered instant messaging between users  
-✅ **Zero-Trust Security** – Centralized JWT gateway isolated from business logic  
+✅ **API Gateway Pattern** - Centralized auth, routing, and rate limiting
 ✅ **Cloud-Native** – Kubernetes (EKS) orchestration with auto-scaling & resilience  
 
 ---
