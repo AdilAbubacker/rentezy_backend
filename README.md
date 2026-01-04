@@ -623,10 +623,10 @@ RentEzy bridges the gap between a modern user experience and enterprise-grade di
 
 ✅ **Bulletproof Concurrency** – Optimistic locking & DB constraints prevent race conditions    
 ✅ **Event-Driven Architecture** – Kafka decouples 10+ services for async communication  
-✅ **Distributed Sagas** – Choreography Sapatterns handle transactions without global locks  
-✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appoinments  
+✅ **Distributed Sagas** – Choreography Saga patterns handle transactions without global locks  
+✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appointments  
 ✅ **Real-Time Chat** – WebSocket-powered instant messaging between tenants and landlords  
-✅ **Multi-Tenant System** – Distinct, secure interfaces andt RBAC for Landlords, Tenants & Admins  
+✅ **Multi-Tenant System** – Distinct, secure interfaces and RBAC for Landlords, Tenants & Admins  
 ✅ **Zero-Trust Security** – Centralized JWT gateway isolated from business logic  
 ✅ **CQRS Search Engine** – High-speed Elasticsearch separated from write operations  
 ✅ **Automated Finance** – Self-driving engine for recurring rent, invoices & late fees  
