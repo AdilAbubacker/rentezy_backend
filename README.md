@@ -198,6 +198,24 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 | 🎫 **EFS Role** | Storage orchestration | Persistent volume management |
 | 🐳 **Kafka + Zookeeper** | Message broker + coordination | Event streaming backbone |
 
+| Service | Purpose | Key Features |
+|---------|---------|--------------|
+| `api_gateway` | Entry point for all requests | Auth, routing, rate limiting |
+| `auth_service` | Identity and access management | JWT tokens, role-based access |
+| `property_service` | Property listings and details | CRUD operations, image uploads |
+| `booking_service` | Reservation management | Concurrency control, conflict detection |
+| `rent_service` | Rental agreements and payments | Recurring billing, late fees |
+| `chat_service` | Real-time messaging | WebSocket connections, message persistence |
+| `notification_service` | Event notifications | Email, SMS, push, WebSocket |
+| `search_service` | Property search API | Filters, pagination, relevance ranking |
+| `search_consumer` | Elasticsearch indexing | Event processing, bulk updates |
+| `elastic_search` | Search cluster management | Index configuration, mappings |
+| `schedule_visit` | Property viewing appointments | Calendar integration, reminders |
+| `kafka` | Message broker setup | Topic management, configuration |
+| `redis` | Caching and session store | Distributed locks, pub/sub |
+| `storageclass` | Kubernetes storage | Persistent volume claims |
+| `zookeeper/manifests` | Kafka coordination | Cluster management |
+
 ---
 
 ## 🚀 What Makes This Architecture Special
@@ -417,7 +435,7 @@ To handle race conditions between the "timeout" timer and late webhooks, we util
 ---
 
 ### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
-**The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.
+**The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.  
 **The Solution: Fully automated rent lifecycle engine**, powered by Celery Beat, Redis, Kafka, and Stripe.
 
 **🧠 How It Works**
@@ -608,12 +626,12 @@ RentEzy bridges the gap between a modern user experience and enterprise-grade di
 ✅ **Distributed Sagas** – Choreography Sapatterns handle transactions without global locks  
 ✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appoinments  
 ✅ **Real-Time Chat** – WebSocket-powered instant messaging between tenants and landlords  
-✅ **Multi-Tenant System** – Distinct, secure interfaces andt RBAC for Landlords, Tenants & Admins
+✅ **Multi-Tenant System** – Distinct, secure interfaces andt RBAC for Landlords, Tenants & Admins  
 ✅ **Zero-Trust Security** – Centralized JWT gateway isolated from business logic  
 ✅ **CQRS Search Engine** – High-speed Elasticsearch separated from write operations  
 ✅ **Automated Finance** – Self-driving engine for recurring rent, invoices & late fees  
 ✅ **Multi-Channel Notifications** – Real-time notifications via WebSockets, Email & Push  
-✅ **API Gateway Pattern** - Centralized auth, routing, and rate limiting
+✅ **API Gateway Pattern** - Centralized auth, routing, and rate limiting  
 ✅ **Cloud-Native** – Kubernetes (EKS) orchestration with auto-scaling & resilience  
 
 ---
