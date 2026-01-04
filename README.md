@@ -640,37 +640,14 @@ RentEzy bridges the gap between a modern user experience and enterprise-grade di
 ✅ **CQRS Search Engine** – High-speed Elasticsearch separated from write operations  
 ✅ **Automated Finance** – Self-driving engine for recurring rent, invoices & late fees  
 ✅ **Visit Management** – Dedicated scheduling system for seamless property viewing  
-✅ **Multi-Channel Alerts** – Real-time notifications via WebSockets, Email & Push  
-✅ **Multi-Tenant System** – Robust RBAC for Landlords, Tenants & Admins  
+✅ **Multi-Channel Notifications** – Real-time notifications via WebSockets, Email & Push  
+✅ **Multi-Tenant System** – Distinct, secure interfaces andt RBAC for Landlords, Tenants & Admins
 ✅ **Real-Time Chat** – WebSocket-powered instant messaging between users  
 ✅ **Zero-Trust Security** – Centralized JWT gateway isolated from business logic  
 ✅ **Cloud-Native** – Kubernetes (EKS) orchestration with auto-scaling & resilience  
 
 ---
 
-
-
-### ⚙️ Engineering Excellence (System Capabilities)
-
-* **🛡️ Crash-Proof Bookings:** Uses **Optimistic Concurrency Control** & Database Constraints to prevent race conditions and double-bookings.
-* **💸 Distributed Transactions:** Implements the **Saga Pattern** with compensating transactions to ensure consistency across microservices without 2PC.
-* **🧠 Event-Driven Core:** Decoupled architecture using **Apache Kafka** ensures failure isolation—if Search fails, Bookings keep running.
-* **⚡ CQRS Search Engine:** Separates "Writes" (PostgreSQL) from "Reads" (Elasticsearch) for lightning-fast property discovery.
-* **🤖 Self-Driving Billing:** A **Celery Beat** engine handles recurring rent invoices, late fee calculations, and reminders automatically.
-* **☁️ Cloud-Native Scale:** Fully containerized on **AWS EKS with Fargate**, utilizing serverless Kubernetes for auto-scaling and resilience.
-* **🔐 Zero-Trust Security:** Centralized **JWT Authentication** gateway ensures no individual microservice handles sensitive user secrets.
-
-### 🌟 Feature-Rich Experience (Product Highlights)
-
-* **💬 Real-Time Chat System:** Fully integrated WebSocket messaging (Django Channels) backed by Redis, allowing instantaneous negotiation between landlords and tenants without page reloads.
-* **📅 Smart Visit Scheduling:** A dedicated microservice handles appointment slots, preventing scheduling conflicts and managing physical visit logistics separate from the booking flow.
-* **🔔 Multi-Channel Notifications:** Asynchronous notification service that listens for system events to trigger emails and alerts for rent due dates, booking confirmations, and new messages.  
- **🗺️ Interactive Map Search:** Location-based property discovery powered by Elasticsearch geospatial queries, allowing users to find homes within specific coordinates.  
- **💳 Automated Payments:** Secure Stripe integration that handles not just one-time booking fees, but recurring monthly rent deductions and automated refund processing.  
-**👥 Role-Based Dashboards:** Distinct, secure interfaces for **Admins** (system oversight), **Landlords** (property/tenant management), and **Tenants** (bookings/payments).
-
-
----
 
 ## 🧠 Engineering Takeaway
 
