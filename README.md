@@ -490,7 +490,7 @@ All communication is **event-driven via Kafka**, ensuring each microservice oper
 
 ---
 
-### 5️⃣ Advanced Search Architicture: CQRS in action
+### 5️⃣ Advanced Search Architecture: CQRS in action
 **The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
 **The Solution: CQRS with Event-Driven Indexing and ElasticSearch**
 
