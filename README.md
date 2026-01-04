@@ -657,7 +657,9 @@ RentEzy bridges the gap between a modern user experience and enterprise-grade di
 ## 🧠 Engineering Takeaway
 
 RentEzy is an experiment in **systems thinking** — It embodies what happens when **backend design, distributed computing, and DevOps** meet in one unified project.  
+
 Special thanks to the open-source community for the incredible tools that make projects like this possible.  
+
 **This project is actively evolving**. If you’re interested in contributing, reviewing architecture decisions, or just want to talk, feel free to reach out or open a discussion. 
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/adil-abubacker-a63598232/) 
