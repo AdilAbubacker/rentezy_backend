@@ -14,7 +14,7 @@
 
 <div align="center">
 
-• 🎪 [10+ Independent Microservices](#-10-independent-microservices)  
+• 🎪 [10+ Independent Microservices](#-10-independent-microservices) 
 • 🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention)
 <br/>
 • 🧠 [Event-Driven Architecture & Kafka](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) 
