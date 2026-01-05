@@ -182,6 +182,25 @@ graph TB
 Each service is a self-contained, independently horizontally scalabe unit with its own database, business logic, and scaling policy:
 
 
+| Service / Component | Role | Description & Key Features |
+| --- | --- | --- |
+| **`api_gateway`** | **Entry Point** | Centralized entry for all requests. Handles authentication routing, rate limiting, and security enforcement. |
+| **`auth_service`** | **Identity** | Manages user registration, login, and JWT token issuance. Holds the secret keys for zero-trust security. |
+| **`booking_service`** | **Core Business** | Handles property reservations and availability. Uses optimistic locking to prevent race conditions. |
+| **`chat_service`** | **Communication** | Manages real-time WebSocket connections for messaging between tenants and landlords. |
+| **`efs-role`** | **Infrastructure** | AWS IAM roles and policies required for mounting Elastic File System (EFS) volumes to Kubernetes pods. |
+| **`elastic_search`** | **Search Engine** | Configuration and deployment manifests for the Elasticsearch cluster used for high-speed property querying. |
+| **`kafka`** | **Event Bus** | Apache Kafka configuration. Acts as the central nervous system for async communication between services. |
+| **`notification_service`** | **Alerts** | Listens for events (like "rent due") and sends emails, SMS, or push notifications to users. |
+| **`property_service`** | **Core Business** | Manages property listings, details, image uploads, and landlord inventory. |
+| **`redis`** | **Caching** | Redis deployment for session storage, caching frequently accessed data, and Celery task queues. |
+| **`rent_service`** | **Finance** | automated billing engine. Handles recurring rent generation, late fees, and Stripe payment integration. |
+| **`schedule_visit`** | **Scheduling** | A dedicated service for booking and managing physical property viewing appointments. |
+| **`search_consumer`** | **Worker** | A background worker that listens to Kafka events to update the Elasticsearch index (CQRS implementation). |
+| **`search_service`** | **Query API** | Read-only API that queries Elasticsearch. Separated from write logic for high performance. |
+| **`storageclass`** | **Infrastructure** | Kubernetes StorageClass definitions for provisioning Persistent Volumes (PV) and Claims (PVC). |
+| **`zookeeper`** | **Coordination** | Zookeeper manifests required to manage and coordinate the Apache Kafka cluster. |
+
 | Service / Component | Purpose | Key Features |
 | --- | --- | --- |
 | **`api_gateway`** | Central Entry Point | Authentication, routing, rate limiting, SSL termination |
