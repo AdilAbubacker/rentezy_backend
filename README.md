@@ -185,8 +185,37 @@ Based on your repository structure in the image, here is the updated, complete m
 
 I have filtered out the management folders you requested (`booking_management`, `rent_management`) and organized the rest into **Core Services** (Business Logic) and **Infrastructure Components** (DevOps/Config) to keep the documentation clean.
 
----
+Based on the file structure in your image and the architectural details of RentEzy, here is the updated microservices inventory.
 
+I have excluded `booking_management` as requested and `assets` (which is a static resource folder), focusing on the active services and infrastructure components.
+
+### 🎪 Independent Microservices & Infrastructure
+
+| Service / Component | Purpose | Key Features |
+| --- | --- | --- |
+| **`api_gateway`** | Central Entry Point | Authentication, routing, rate limiting, SSL termination |
+| **`auth_service`** | Identity Management | JWT issuance/validation, user registration, role-based access (RBAC) |
+| **`booking_service`** | Reservation Core | Handle bookings, optimistic concurrency control, conflict detection |
+| **`chat_service`** | Real-time Messaging | WebSocket connections (Django Channels), message persistence |
+| **`efs-role`** | Storage Config | IAM roles and policies for AWS EFS (Elastic File System) access |
+| **`elastic_search`** | Search Engine Cluster | Full-text search engine setup, index configuration, mappings |
+| **`kafka`** | Event Streaming | Message broker configuration, topic management, producer/consumer rules |
+| **`notification_service`** | Alerts & Comms | Multi-channel delivery (Email, Push, SMS) via event triggers |
+| **`property_service`** | Inventory Management | Property CRUD, image handling, landlord listing management |
+| **`redis`** | Caching & Queues | In-memory data store, session management, Celery task broker |
+| **`rent_service`** | Billing Engine | Recurring payments, automated invoicing, late fee calculation |
+| **`schedule_visit`** | Appointment System | Property tour scheduling, calendar slot management |
+| **`search_consumer`** | Indexing Worker | Listens to Kafka events to update Elasticsearch asynchronously |
+| **`search_service`** | Query API | Read-only API for fast property filtering and searching |
+| **`storageclass`** | K8s Storage | Kubernetes Persistent Volume Claim (PVC) definitions |
+| **`zookeeper`** | Cluster Coordination | Manages Kafka cluster state and distributed synchronization |
+
+### 🔍 Quick Note on the Folders
+
+* **`booking_management` (Excluded):** Omitted as requested.
+* **`elastic_search` vs `elasticsearch`:** You have two folders for this in the image. Typically one contains the K8s manifests/deployment configs and the other might contain custom Docker builds or configuration maps. I have grouped them under **Elastic Search** in the table above.
+
+Would you like me to generate a `docker-compose` snippet or Kubernetes manifest for any of these specific services?
 ### 🎪 Core Microservices
 
 Each service is a self-contained unit with its own database, strictly separated by domain boundaries.
