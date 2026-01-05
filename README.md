@@ -181,6 +181,36 @@ graph TB
 
 Each service is a self-contained, independently horizontally scalabe unit with its own database, business logic, and scaling policy:
 
+Based on your repository structure in the image, here is the updated, complete microservices table.
+
+I have filtered out the management folders you requested (`booking_management`, `rent_management`) and organized the rest into **Core Services** (Business Logic) and **Infrastructure Components** (DevOps/Config) to keep the documentation clean.
+
+---
+
+### 🎪 Core Microservices
+
+Each service is a self-contained unit with its own database, strictly separated by domain boundaries.
+
+| Service | 🧠 Responsibility (The "What") | 🏗️ Key Technical Features (The "How") |
+| --- | --- | --- |
+| 🚪 **api_gateway** | Entry point & Security Guard | **Centralized Auth**, Rate Limiting, Request Routing (Reverse Proxy) |
+| 🔐 **auth_service** | Identity Management | **JWT Issuance**, Role-Based Access Control (RBAC), Secret Isolation |
+| 🏢 **property_service** | Catalog Management | Property CRUD, **AWS S3** for Image Storage, Event Publisher |
+| 📅 **booking_service** | Reservations & Concurrency | **Optimistic Locking**, Saga Pattern Coordinator, Race Condition handling |
+| 🗓️ **schedule_visit** | Appointment Management | Slot allocation for property tours, Calendar logic, Visit status tracking |
+| 💰 **rent_service** | Billing & Financials | **Celery Beat** for recurring jobs, Stripe Integration, Late Fee Logic |
+| 💬 **chat_service** | Real-time Communication | **WebSockets (Django Channels)**, Async message persistence, Redis Channel Layers |
+| 🔔 **notification_service** | Alert Dispatching | Decoupled delivery via **Kafka**, Email/SMS/Push support |
+| 🔍 **search_service** | Query & Discovery | **CQRS Query Side**, High-performance Elasticsearch reads, Complex Filters |
+| 📊 **search_consumer** | Data Ingestion | **CQRS Write Side**, Kafka Consumer, Batch Indexing to Elasticsearch |
+| 📨 **kafka** | Event Backbone | Kafka Manifests, Topic Configurations |
+| 🦁 **zookeeper** | Cluster Coordination | Zookeeper Manifests for Kafka state management |
+| ⚡ **redis** | Caching Layer | Distributed Caching, Celery Broker, WebSocket Layer |
+| 🗄️ **elastic_search** | Search Engine Config | Elasticsearch StatefulSet, Index Mappings |
+| 📂 **efs-role** | Shared Storage Access | AWS IAM Roles for **Elastic File System (EFS)** access |
+| 💾 **storageclass** | Kubernetes Storage | StorageClass definitions for Dynamic Volume Provisioning (PVCs) |
+
+
 | Service | Purpose | Key Features |
 |---------|---------|--------------|
 | `api_gateway` | Entry point for all requests | Auth, routing, rate limiting |
