@@ -630,7 +630,7 @@ Special thanks to the open-source community for the incredible tools that make p
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/adil-abubacker-a63598232/) 
 [![GitHub](https://img.shields.io/badge/GitHub-Foll_ow-black?logo=github)](https://github.com/AdilAbubacker)  
 
-<small><i>⭐ Found this interesting? A star helps a lot!</i></small>
+_⭐ Found this interesting? A star helps a lot!_
 ---
 
 <div align="center">
