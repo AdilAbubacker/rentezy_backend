@@ -628,8 +628,8 @@ Special thanks to the open-source community for the incredible tools that make p
 **This project is actively evolving**. If you’re interested in contributing, reviewing architecture decisions, or just want to talk, feel free to reach out or open a discussion. 
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/adil-abubacker-a63598232/) 
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/AdilAbubacker)
-
+[![GitHub](https://img.shields.io/badge/GitHub-Foll_ow-black?logo=github)](https://github.com/AdilAbubacker)
+> ⭐ Found this interesting? A star helps a lot!
 ---
 
 <div align="center">
