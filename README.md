@@ -183,22 +183,22 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 
 | Service / Component | Role | Description & Key Features |
 | --- | --- | --- |
-| **`api_gateway`** | **Entry Point** | Centralized entry point handling authentication, routing, rate limiting, and security enforcement for all services. |
-| **`auth_service`** | **Identity** | Manages user registration, login, and JWT token issuance. Holds the secret keys for zero-trust security. |
-| **`property_service`** | **Core Domain** | Manages property listings, details, image uploads, and landlord inventory management. |
-| **`booking_service`** | **Core Domain** | Handles property reservations and availability using optimistic locking to prevent race conditions. |
-| **`rent_service`** | **Finance** | Automated billing engine. Handles recurring rent generation, late fees, and Stripe payment integration. |
-| **`chat_service`** | **Communication** | Manages real-time WebSocket connections for instant messaging between tenants and landlords. |
-| **`notification_service`** | **Communication** | Listens for system events (like "rent due") and sends emails, SMS, or push notifications to users. |
-| **`search_service`** | **Query API** | Read-only API that queries Elasticsearch. Separated from write logic for high-performance searching. |
-| **`schedule_visit`** | **Scheduling** | A dedicated service for coordinating physical property viewing appointments. |
-| **`search_consumer`** | **Worker** | Background worker that listens to Kafka events to update the Elasticsearch index (CQRS implementation). |
-| **`kafka`** | **Event Bus** | Apache Kafka configuration acting as the central nervous system for async communication. |
-| **`redis`** | **Caching** | Redis deployment for session storage, caching frequently accessed data, and Celery task queues. |
+| **`api_gateway`** | **Entry Point & Security** | Centralized entry point handling authentication, routing, rate limiting, and security enforcement for all services. |
+| **`auth_service`** | **Identity Management** | Manages user registration, login, and JWT token issuance. Holds the secret keys for zero-trust security. |
+| **`property_service`** | **Catalog Management** | Manages property listings, details, image uploads, and landlord inventory management. |
+| **`booking_service`** | **Reservations & Concurrency** | Handles property reservations and availability using optimistic locking to prevent race conditions. |
+| **`rent_service`** | **Billing & Financials** | Automated billing engine. Handles recurring rent generation, late fees, and Stripe payment integration. |
+| **`chat_service`** | **Real-time Communication** | Manages real-time WebSocket connections for instant messaging between tenants and landlords. |
+| **`notification_service`** | **Alert Dispatching** | Listens for system events (like "rent due") and sends emails, SMS, or push notifications to users. |
+| **`search_service`** | **Query & Discovery** | Read-only API that queries Elasticsearch. Separated from write logic for high-performance searching. |
+| **`schedule_visit`** | **Appointment Management** | A dedicated service for coordinating physical property viewing appointments. |
+| **`search_consumer`** | **Data Ingestion** | Background worker that listens to Kafka events to update the Elasticsearch index (CQRS implementation). |
+| **`kafka`** | **Event Backbone** | Apache Kafka configuration acting as the central nervous system for async communication. |
+| **`redis`** | **Caching Layer** | Redis deployment for session storage, caching frequently accessed data, and Celery task queues. |
 | **`elastic_search`** | **Search Engine** | Configuration and deployment manifests for the Elasticsearch cluster used for high-speed querying. |
-| **`zookeeper`** | **Coordination** | Zookeeper manifests required to manage and coordinate the Apache Kafka cluster. |
-| **`efs-role`** | **Infrastructure** | AWS IAM roles and policies required for mounting Elastic File System (EFS) volumes to pods. |
-| **`storageclass`** | **Infrastructure** | Kubernetes StorageClass definitions for provisioning Persistent Volumes (PV) and Claims (PVC). |
+| **`zookeeper`** | **Cluster Coordination** | Zookeeper manifests required to manage and coordinate the Apache Kafka cluster. |
+| **`efs-role`** | **AWS Storage Permissions** | AWS IAM roles and policies required for mounting Elastic File System (EFS) volumes to pods. |
+| **`storageclass`** | **Kubernetes Persistence** | Kubernetes StorageClass definitions for provisioning Persistent Volumes (PV) and Claims (PVC). |
 ---
 
 ## 🚀 What Makes This Architecture Special
