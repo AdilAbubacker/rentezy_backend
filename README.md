@@ -415,6 +415,7 @@ If a successful payment arrives after the timer releases the room, the system at
 💪 **Deterministic Concurrency**  
 To handle race conditions between the "timeout" timer and late webhooks, we utilize select_for_update() row locks. This forces a serialized, conflict-free transition to either CONFIRMED or CANCELLED, preventing split-brain states.
 
+**Result**: Guaranteed distributed data consistency without the performance bottleneck of global locks.
 ---
 
 ### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
