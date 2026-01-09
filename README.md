@@ -454,8 +454,8 @@ sequenceDiagram
 - **💳Payment via Stripe** – Integrates with Stripe to securely charge saved payment methods off-session. 
 - **⏰ Smart Reminders** – Proactive notifications of 3-day reminders, due-day notices, and overdue warnings.
 - **📈 Dynamic Late Fees** – Celery monitors unpaid invoices and automatically applies late fees based on configurable grace periods.
-- **Event-Driven Ledger** - Invoice creation, payment success, and failure triggers are decoupled via Kafka, allowing the Notification Service to react independently.
-- **Idempotent & Resilient Tasks** – All Celery jobs and Kafka consumers are retry-safe; duplicate messages never cause double billing.  
+- **Event-Driven Comms** - Invoice creation, payment success, and failure triggers are decoupled via Kafka, allowing the Notification Service to react independently.
+- **Idempotent & Resilient Tasks** – All Celery jobs are retry-safe; duplicate messages never cause double billing.  
 - **Audit-Ready Data** – Complete rent history and payment lifecycle stored in RentDB and Kafka topics for compliance and reporting.  
 
 
@@ -464,10 +464,10 @@ sequenceDiagram
 ---
 
 ### 5️⃣ Advanced Search Architecture: CQRS in action
-**The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
-**The Solution: CQRS with Event-Driven Indexing and ElasticSearch**
+**The Problem:** PostgreSQL ILIKE queries are slow at scale and fail when users make typos (e.g., searching "bnglr" instead of "Bangalore").
+**The Solution: CQRS with Elasticsearch & Fuzzy Logic**
 
-To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
+To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer). And we utilize Elasticsearch's Fuzzy Query logic (Levenshtein edit distance) to handle user error and natural language
 ![Architecture Diagram](./assets/search_design.png)
 
 - **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
@@ -478,9 +478,10 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **This separation ensures**:
 - ✅ Independent scaling for read-heavy and write-light workloads.
 - ✅ Search uptime independent of data ingestion.
+- ✅ Typo Tolerance: A search for "2bhk in kormangla" successfully finds properties in "Koramangala".
 - ✅ Replayable Kafka streams for reindexing or schema migrations.
 
-**Result:** Search that scales independently, fails gracefully.
+**Result:** Typo-tolerant queries execute instantly without slowing down the primary transactional database.
   
 ---
 
