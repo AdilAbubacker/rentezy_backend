@@ -573,6 +573,7 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 Production Stack:
 ├── 🚢 AWS EKS Cluster (Kubernetes 1.28)
 │   ├── 15+ Container Deployments
+|   ├── Self-managed Kubernetes cluster
 │   └── Server-less computing with Fargate
 │
 ├── 💾 Storage Layer
