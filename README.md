@@ -1,6 +1,6 @@
 # 🏡 RentEzy - Distributed, Event-Driven PropTech Platform
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://www.rentezy.homes)
 [![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
 [![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
 [![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
@@ -271,7 +271,7 @@ except IntegrityError as e:
 ---
 ### 2️⃣. Event-Driven Architecture — The Nervous System of RentEzy
 
-**The Problem:**  Coordinating complex workflows across microservices without becoming a dependency nightmare.
+**The Problem:**  Coordinating complex workflows across microservices without becoming a dependency nightmare.  
 **The Solution: Event-driven architecture with Apache Kafka as its central nervous system.**
 
 Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
@@ -311,10 +311,10 @@ graph LR
 
 **Why this architecture wins:**
 
-🔌 **Zero Coupling**
+🔌 **Zero Coupling**  
 Property Service doesn't know Search exists. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
 
-🛡️ **Fault Isolation** 
+🛡️ **Fault Isolation**  
 Search crashes? Bookings continue. Temporary service failures don't cascade. Kafka retains events, and the service catches up on restart. 
 
 ⚡ **Async Performance**  
@@ -607,14 +607,14 @@ Production Stack:
 
 RentEzy combines enterprise-grade distributed engineering with deliberate attention to business logic and user experience, proving that system complexity doesn’t have to leak into the product.
 
-✅ **Bulletproof Concurrency** – Optimistic locking & DB constraints prevent race conditions    
+✅ **Zero Overselling**– ACID-guaranteed inventory management via Optimistic Concurrency. 
 ✅ **Event-Driven Architecture** – Kafka decouples 10+ services for async communication  
 ✅ **Distributed Sagas** – Choreography Saga patterns handle transactions without global locks  
 ✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appointments  
 ✅ **Real-Time Chat** – WebSocket-powered instant messaging between tenants and landlords  
 ✅ **Multi-Tenant System** – Distinct, secure interfaces and RBAC for Landlords, Tenants & Admins  
 ✅ **Zero-Trust Security** – Centralized JWT gateway isolated from business logic  
-✅ **CQRS Search Engine** – High-speed Elasticsearch separated from write operations  
+✅ **Typo-Tolerant Search** – CQRS & Fuzzy matching handles user errors and millions of records.  
 ✅ **Automated Finance** – Self-driving engine for recurring rent, invoices & late fees  
 ✅ **Multi-Channel Notifications** – Real-time notifications via WebSockets, Email & Push  
 ✅ **API Gateway Pattern** - Centralized auth, routing, and rate limiting  
