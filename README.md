@@ -1,6 +1,6 @@
-# 🏡 RentEzy - Distributed PropTech Platform
+# 🏡 RentEzy - Enterprise-Grade PropTech Platform
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://rentezy-frontend-g63i-git-main-adilabubackers-projects.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://www.rentezy.homes)
 [![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
 [![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
 [![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
@@ -14,16 +14,16 @@
 
 <div align="center">
 
-🎪 [10+ Independent Microservices](#-10-independent-microservices) • 
-🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention)
+• 🎪 [10+ Independent Microservices](#-10-independent-microservices) 
+• 🔒 [Concurrency Control & Race Condition Prevention](#1️⃣-concurrency-control--race-condition-prevention)
 <br/>
-🧠 [Event-Driven Architecture & Kafka](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) •
-🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) •
-🔍 [CQRS in action](#5️⃣-advanced-search-architicture-cqrs-in-action)
+• 🧠 [Event-Driven Architecture & Kafka](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) 
+• 🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) 
+• 🔍 [CQRS & Elasticsearch](#5️⃣-advanced-search-architicture-cqrs-in-action)
 <br/>
-💳 [Automated Recurring Rent Billing Engine](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) •
-🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services) •
-📦 [Kubernetes on AWS EKS](#-deployment-architecture)
+• 💳 [Automated Recurring Rent Billing Engine](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) 
+• 🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services) 
+• 📦 [Kubernetes on AWS EKS](#-deployment-architecture)
 
 </div>
 
@@ -181,23 +181,24 @@ graph TB
 
 Each service is a self-contained, independently horizontally scalabe unit with its own database, business logic, and scaling policy:
 
-| Service | Purpose | Why It Exists |
-|---------|---------|---------------|
-| 🚪 **API Gateway** | Authentication, routing, rate limiting | Single entry point, security enforcement |
-| 🔐 **Auth Service** | User management, JWT tokens | Centralized identity management |
-| 📅 **Booking Service** | Property reservations, availability | Handles complex booking logic with transactional locking |
-| 🏢 **Property Service** | Property listings, details | Core business domain |
-| 💰 **Rent Service** | Recurring payments, late fees | Automated monthly billing with Celery Beat |
-| 💬 **Chat Service** | Real-time messaging | WebSocket-based instant communication |
-| 🔔 **Notification Service** | Event-driven alerts | Decoupled notification delivery |
-| 🔍 **Search Service** | Property search API | High-performance search interface |
-| 📊 **Search Consumer** | Index updates via Kafka | Async Elasticsearch indexing |
-| 🗄️ **Elasticsearch** | Full-text search engine | Lightning-fast property discovery |
-| ⚡ **Redis** | Caching, sessions, queues | Sub-millisecond data access |
-| 📋 **Schedule Visit** | Appointment booking | Separate concern for visit management |
-| 🎫 **EFS Role** | Storage orchestration | Persistent volume management |
-| 🐳 **Kafka + Zookeeper** | Message broker + coordination | Event streaming backbone |
-
+| Service / Component | Role | Description & Key Features |
+| --- | --- | --- |
+| **`api_gateway`** | **Entry Point & Security** | Centralized entry point handling authentication, routing, rate limiting, and security enforcement for all services. |
+| **`auth_service`** | **Identity Management** | Manages user registration, login, and JWT token issuance. Holds the secret keys for zero-trust security. |
+| **`property_service`** | **Catalog Management** | Manages property listings, details, image uploads, and landlord inventory management. |
+| **`booking_service`** | **Reservations & Concurrency** | Handles property reservations and availability using optimistic locking to prevent race conditions. |
+| **`rent_service`** | **Billing & Financials** | Automated billing engine. Handles recurring rent generation, late fees, and Stripe payment integration. |
+| **`chat_service`** | **Real-time Communication** | Manages real-time WebSocket connections for instant messaging between tenants and landlords. |
+| **`notification_service`** | **Alert Dispatching** | Listens for system events (like "rent due") and sends emails, SMS, or push notifications to users. |
+| **`search_service`** | **Query & Discovery** | Read-only API that queries Elasticsearch. Separated from write logic for high-performance searching. |
+| **`schedule_visit`** | **Appointment Management** | A dedicated service for coordinating physical property viewing appointments. |
+| **`search_consumer`** | **Data Ingestion** | Background worker that listens to Kafka events to update the Elasticsearch index (CQRS implementation). |
+| **`kafka`** | **Event Backbone** | Apache Kafka configuration acting as the central nervous system for async communication. |
+| **`redis`** | **Caching Layer** | Redis deployment for session storage, caching frequently accessed data, and Celery task queues. |
+| **`elastic_search`** | **Search Engine** | Configuration and deployment manifests for the Elasticsearch cluster used for high-speed querying. |
+| **`zookeeper`** | **Cluster Coordination** | Zookeeper manifests required to manage and coordinate the Apache Kafka cluster. |
+| **`efs-role`** | **AWS Storage Permissions** | AWS IAM roles and policies required for mounting Elastic File System (EFS) volumes to pods. |
+| **`storageclass`** | **Kubernetes Persistence** | Kubernetes StorageClass definitions for provisioning Persistent Volumes (PV) and Claims (PVC). |
 ---
 
 ## 🚀 What Makes This Architecture Special
@@ -211,14 +212,6 @@ Each service is a self-contained, independently horizontally scalabe unit with i
 #### 🔴 **Why Traditional Locking Fails at Scale**
 Traditional approaches use **pessimistic locking** (SELECT FOR UPDATE) which creates **lock contention** , forcing requests to wait in line, **degrading throughput** under high concurrency.
 
-```python
-# ❌ Pessimistic Locking 
-with transaction.atomic():
-    room = AvailableRooms.objects.select_for_update().get(id=room_id)
-    if room.available_quantity > 0:
-        room.available_quantity -= 1
-        room.save()
-```
 
 #### 💪 **Leveraging ACID Guarantees**
 Instead of explicit locks, RentEzy pushes the logic down to the **Database Layer**, utilizing powerful **ACID guarantees** of PostgreSQL to handle concurrency without application-level bottlenecks.
@@ -278,7 +271,7 @@ except IntegrityError as e:
 ---
 ### 2️⃣. Event-Driven Architecture — The Nervous System of RentEzy
 
-**The Problem:**  Coordinating complex workflows across microservices without becoming a dependency nightmare.
+**The Problem:**  Coordinating complex workflows across microservices without becoming a dependency nightmare.  
 **The Solution: Event-driven architecture with Apache Kafka as its central nervous system.**
 
 Traditional synchronous REST calls between services lead to tight coupling, cascading failures, and deployment nightmares. In RentEzy services publish events to Kafka. Downstream consumers react to these events asynchronously, without the original service even knowing they exist.
@@ -318,10 +311,10 @@ graph LR
 
 **Why this architecture wins:**
 
-🔌 **Zero Coupling**
+🔌 **Zero Coupling**  
 Property Service doesn't know Search exists. A new "Analytics Service" can be added to listen for events with **zero changes** to existing services.
 
-🛡️ **Fault Isolation** 
+🛡️ **Fault Isolation**  
 Search crashes? Bookings continue. Temporary service failures don't cascade. Kafka retains events, and the service catches up on restart. 
 
 ⚡ **Async Performance**  
@@ -345,12 +338,13 @@ Notifications, search updates, and analytics all respond in near real time becau
 **The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
 **The Solution: Choreography-based Saga pattern** with **Compensating Transactions** and semantic locking.
 
-
-**🔴 Why we need Distributed ACID Semantics**
+  
+**🔴 Why we need Distributed ACID Semantics**  
+  
 We require ACID-like guarantees across this network boundary to prevent the "Dual Write" problem. Naive approaches fail because we cannot "Rollback" a Stripe charge with a SQL command:
 
-* **If we Pay then Book:** A database crash immediately after payment results in the user losing money without receiving a booking (Violation of Atomicity).
-* **If we Book then Pay:** If the user abandons the checkout, inventory remains locked indefinitely, preventing other sales (Violation of Liveness/Isolation).
+* **Charge First, Book Later?** Risks charging the user when no rooms are left (high refund rate).
+* **Book First, Charge Later?** Risks "ghost bookings" where users reserve rooms but never pay, blocking inventory.
 
 
 #### 🎯 The Booking Saga Lifecycle
@@ -409,74 +403,71 @@ EDGE CASE FLOW (Late Webhook After Timeout):
 
 **Why this flow is bulletproof:**
 
-🎯 **Semantic Lock (Atomic Hold))**
+🎯 **Atomic Hold (Semantic Lock)**  
  We reserve inventory locally before payment. This creates a PENDING booking and decrements stock immediately, while arming a 15-minute background timer to auto-release the hold if payment fails.
  
-⏱️ **The Deadman's Switch**
+⏱️ **The Deadman's Switch**  
 The Celery delayed task acts as a time-to-live (TTL) on the reservation. If the payment webhook never arrives, the system automatically self-heals by running a **Compensation Transaction** to release the inventory.
 
-💰 **Zombie Resurrection Protocol**
+💰 **Zombie Resurrection Protocol**  
 If a successful payment arrives after the timer releases the room, the system attempts to "resurrect" the booking by re-acquiring stock. If the inventory was lost to another user in that window, we automatically trigger a Compensating Transaction (Refund) to maintain consistency.
+
+💪 **Deterministic Concurrency**  
+To handle race conditions between the "timeout" timer and late webhooks, we utilize select_for_update() row locks. This forces a serialized, conflict-free transition to either CONFIRMED or CANCELLED, preventing split-brain states.
+
+**Result**: Guaranteed distributed data consistency without the performance bottleneck of global locks.
 
 ---
 
 ### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
-**The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.
+**The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.  
 **The Solution: Fully automated rent lifecycle engine**, powered by Celery Beat, Redis, Kafka, and Stripe.
 
-### 🧠 How It Works
+**🧠 How It Works**
 
-```text
-1️⃣ Tenant moves in → Booking Service emits LEASE_STARTED event  
-2️⃣ Rent Service creates a RentContract record (stores rent, due day, autopay prefs, etc.)  
-3️⃣ Celery Beat runs daily → evaluates every active RentContract  
-4️⃣ If due in 3 days → emit RENT_REMINDER_DUE_SOON → Notification Service sends reminder  
-5️⃣ If due today → generate RentInvoice → emit RENT_INVOICE_CREATED → Notification + Payment triggered  
-6️⃣ Stripe → webhook → Rent Service marks invoice as paid → emits RENT_PAYMENT_SUCCESS  
-7️⃣ If overdue and unpaid → apply late fees → emit RENT_OVERDUE → Notification Service alerts tenant 
+```mermaid
+sequenceDiagram
+    participant Beat as ⏰ Celery Beat
+    participant Rent as 🧾 Rent Service
+    participant Kafka as 📨 Kafka
+    participant User as 👤 Tenant
+
+    Note over Beat, Rent: Daily Cron Job
+    Beat->>Rent: Trigger "Check Due Dates"
+    Rent->>Rent: Generate Invoice
+    Rent->>Kafka: Publish `invoice.created`
+    
+    par Notifications
+        Kafka->>User: 📧 Email: "Rent Due Tomorrow"
+    and Auto-Pay
+        Rent->>Stripe: 💳 Charge Saved Card
+    end
+    
+    Stripe-->>Rent: Payment Success
+    Rent->>Kafka: Publish `rent.paid`
 ```
 
-All communication is **event-driven via Kafka**, ensuring each microservice operates independently and scales gracefully.
 
+### **⚡ Key Capabilitiess**
 
-### ⚙️ Core Components
-
-| Component | Responsibility |
-|------------|----------------|
-| 🧾 **Rent Service** | Maintains rent contracts, invoices, and due cycles |
-| 🔔 **Notification Service** | Sends rent reminders and payment confirmations |
-| 🕓 **Celery Beat** | Schedules recurring billing, autopay, and late-fee jobs |
-| 📨 **Kafka Topics** | Orchestrates cross-service communication asynchronously |
-| 💳 **Stripe** | Handles all payment processing and autopay transactions |
-| ⚡ **Redis** | Acts as the Celery message broker and result backend for background tasks |
-
-
-### 🪄 **Key Features**
-
-- **Recurring Billing** – Automatically generates rent invoices each month for every active lease.  
-- **Autopay via Stripe** – Secure off-session payments using saved payment methods.  
-- **Proactive Reminder** – 3-day reminders, due-day notices, and overdue warnings.  
-- **Late Fee Enforcement** – Celery automatically applies and updates late fees for unpaid invoices.  
-- **Idempotent & Resilient Tasks** – All Celery jobs and Kafka consumers are retry-safe; duplicate messages never cause double billing.  
+- **🔄Cron-Driven Orchestration** – Celery Beat evaluates active leases daily to generate invoices, apply late fees, and trigger reminders.
+- **💳Payment via Stripe** – Integrates with Stripe to securely charge saved payment methods off-session. 
+- **⏰ Smart Reminders** – Proactive notifications of 3-day reminders, due-day notices, and overdue warnings.
+- **📈 Dynamic Late Fees** – Celery monitors unpaid invoices and automatically applies late fees based on configurable grace periods.
+- **Event-Driven Comms** - Invoice creation, payment success, and failure triggers are decoupled via Kafka, allowing the Notification Service to react independently.
+- **Idempotent & Resilient Tasks** – All Celery jobs are retry-safe; duplicate messages never cause double billing.  
 - **Audit-Ready Data** – Complete rent history and payment lifecycle stored in RentDB and Kafka topics for compliance and reporting.  
 
 
-### 🧠 **Why It Matters**
-
-- 📅 100% automated recurring rent cycles
-- ⚡ Near real-time notifications
-- 🔁 Fully asynchronous, event-driven flow
-- 💼 Scalable to thousands of leases without blocking
-- 💪 Self-healing tasks and retry-safe execution
-
+**Result**: Landlords get paid automatically, tenants get reminded proactively
 
 ---
 
-### 5️⃣ Advanced Search Architicture: CQRS in action
-**The Problem:** PostgreSQL full-text search crumbles under complex filters and high query volume  
-**The Solution: CQRS with Event-Driven Indexing and ElasticSearch**
+### 5️⃣ Advanced Search Architecture: CQRS in action
+**The Problem:** PostgreSQL ILIKE queries are slow at scale and fail when users make typos (e.g., searching "bnglr" instead of "Bangalore").
+**The Solution: CQRS with Elasticsearch & Fuzzy Logic**
 
-To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer).
+To handle large-scale search queries efficiently, RentEzy separates the **Search Service** (query layer) from the **Search Consumer** (indexing layer). And we utilize Elasticsearch's Fuzzy Query logic (Levenshtein edit distance) to handle user error and natural language
 ![Architecture Diagram](./assets/search_design.png)
 
 - **Property Service (PostgreSQL)** handles CRUD for landlords — structured, low-frequency writes.
@@ -487,9 +478,10 @@ To handle large-scale search queries efficiently, RentEzy separates the **Search
 **This separation ensures**:
 - ✅ Independent scaling for read-heavy and write-light workloads.
 - ✅ Search uptime independent of data ingestion.
+- ✅ Typo Tolerance: A search for "2bhk in kormangla" successfully finds properties in "Koramangala".
 - ✅ Replayable Kafka streams for reindexing or schema migrations.
 
-**Result:** Search that scales independently, fails gracefully.
+**Result:** Typo-tolerant queries execute instantly without slowing down the primary transactional database.
   
 ---
 
@@ -580,9 +572,9 @@ The `Auth Service` scales independently. If auth becomes a bottleneck, we scale 
 ```yaml
 Production Stack:
 ├── 🚢 AWS EKS Cluster (Kubernetes 1.28)
-│   ├── 19+ Microservice Deployments
-│   ├── Server-less computing with Fargate
-│   └── Ingress Controller (Nginx)
+│   ├── 15+ Container Deployments
+|   ├── Self-managed Kubernetes cluster
+│   └── Server-less computing with Fargate
 │
 ├── 💾 Storage Layer
 │   ├── AWS EFS (Shared file system for Kafka, Elasticsearch)
@@ -610,32 +602,38 @@ Production Stack:
 
 ---
 
-## ⚡ TL;DR: Why RentEzy Stands Out?
 
-✅ **Concurrency-Safe Booking System** - Optimistic Concurrency Control with ACID transactions + DB constraints to guarantee zero overbookings  
-✅ **Distributed Saga Pattern** - Orchestrates booking-payment workflows with automatic compensation transactions  
-✅ **Fully Automated Rent Collection** - Celery Beat-powered recurring billing that runs 24/7 without human intervention  
-✅ **Intelligent Late Fee Engine** - Automatic penalty application with configurable grace periods and escalation rules  
-✅ **Proactive Rent Reminders** - Event-driven notifications at T-3 days, T-0 days, and T+overdue intervals  
-✅ **Real-Time Chat** - WebSocket-based messaging between tenants and landlords   
-✅ **Smart Visit Scheduling** - Tenants book property tours with conflict-free calendar management  
-✅ **Event-Driven Notifications** - Kafka-powered alerts across the platform  
-✅ **Live Notifications:** Real-time in-app alerts using Django Channels  
-✅ **Status Updates:** Real-time booking confirmations, payment receipts  
-✅ **High-Performance Search** - Elasticsearch with sub-100ms query times  
+## 💎 TL;DR: Why RentEzy Stands Out?
+
+RentEzy combines enterprise-grade distributed engineering with deliberate attention to business logic and user experience, proving that system complexity doesn’t have to leak into the product.
+
+✅ **Zero Overselling**– ACID-guaranteed inventory management via Optimistic Concurrency. 
+✅ **Event-Driven Architecture** – Kafka decouples 10+ services for async communication  
+✅ **Distributed Sagas** – Choreography Saga patterns handle transactions without global locks  
+✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appointments  
+✅ **Real-Time Chat** – WebSocket-powered instant messaging between tenants and landlords  
+✅ **Multi-Tenant System** – Distinct, secure interfaces and RBAC for Landlords, Tenants & Admins  
+✅ **Zero-Trust Security** – Centralized JWT gateway isolated from business logic  
+✅ **Typo-Tolerant Search** – CQRS & Fuzzy matching handles user errors and millions of records.  
+✅ **Automated Finance** – Self-driving engine for recurring rent, invoices & late fees  
+✅ **Multi-Channel Notifications** – Real-time notifications via WebSockets, Email & Push  
 ✅ **API Gateway Pattern** - Centralized auth, routing, and rate limiting  
-✅ **Kubernetes Deployment** - Production-ready orchestration on AWS EKS  
+✅ **Cloud-Native** – Kubernetes (EKS) orchestration with auto-scaling & resilience  
 
 ---
+
 
 ## 🧠 Engineering Takeaway
 
 RentEzy is an experiment in **systems thinking** — It embodies what happens when **backend design, distributed computing, and DevOps** meet in one unified project.  
 
+Special thanks to the open-source community for the incredible tools that make projects like this possible.  
+
 **This project is actively evolving**. If you’re interested in contributing, reviewing architecture decisions, or just want to talk, feel free to reach out or open a discussion. 
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/adil-abubacker-a63598232/) 
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/AdilAbubacker)
+[![GitHub](https://img.shields.io/badge/GitHub-Foll_ow-black?logo=github)](https://github.com/AdilAbubacker)  
+<sub><em>**⭐ Found this interesting? A star helps a lot!**</em></sub>
 
 ---
 
