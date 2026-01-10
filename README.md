@@ -1,6 +1,6 @@
 # 🏡 RentEzy - Enterprise-Grade PropTech Platform
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://www.rentezy.homes)
+[![Live Demo](https://img.shields.io/badge/Demo-Live-blue)](https://www.rentezy.homes)
 [![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
 [![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
 [![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
