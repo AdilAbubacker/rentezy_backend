@@ -1,4 +1,4 @@
-# 🏡 RentEzy - Distributed, Event-Driven PropTech Platform
+# 🏡 RentEzy - Enterprise-Grade PropTech Platform
 
 [![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://www.rentezy.homes)
 [![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
