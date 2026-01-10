@@ -51,3 +51,6 @@ class Booking(models.Model):
             models.Index(fields=['status', 'expires_at']),
             models.Index(fields=['stripe_session_id']),
         ]
+
+        
+        
