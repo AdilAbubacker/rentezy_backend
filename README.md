@@ -607,7 +607,7 @@ Production Stack:
 
 RentEzy combines enterprise-grade distributed engineering with deliberate attention to business logic and user experience, proving that system complexity doesn’t have to leak into the product.
 
-✅ **Zero Overselling**– ACID-guaranteed inventory management via Optimistic Concurrency. 
+✅ **Zero Overselling**– ACID-guaranteed inventory management via Optimistic Concurrency.  
 ✅ **Event-Driven Architecture** – Kafka decouples 10+ services for async communication  
 ✅ **Distributed Sagas** – Choreography Saga patterns handle transactions without global locks  
 ✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appointments  
