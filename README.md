@@ -1,6 +1,6 @@
 # 🏡 RentEzy - Enterprise-Grade PropTech Platform
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live-green)](https://www.rentezy.homes)
+[![Live Demo](https://img.shields.io/badge/Demo-Live-blue)](https://www.rentezy.homes)
 [![Microservices](https://img.shields.io/badge/Architecture-Microservices-blue.svg)](https://microservices.io/)
 [![Kubernetes](https://img.shields.io/badge/Deployed%20on-Kubernetes-326CE5.svg?logo=kubernetes)](https://kubernetes.io/)
 [![Apache Kafka](https://img.shields.io/badge/Event%20Streaming-Apache%20Kafka-231F20.svg?logo=apache-kafka)](https://kafka.apache.org/)
@@ -607,7 +607,7 @@ Production Stack:
 
 RentEzy combines enterprise-grade distributed engineering with deliberate attention to business logic and user experience, proving that system complexity doesn’t have to leak into the product.
 
-✅ **Zero Overselling**– ACID-guaranteed inventory management via Optimistic Concurrency. 
+✅ **Zero Overselling**– ACID-guaranteed inventory management via Optimistic Concurrency.  
 ✅ **Event-Driven Architecture** – Kafka decouples 10+ services for async communication  
 ✅ **Distributed Sagas** – Choreography Saga patterns handle transactions without global locks  
 ✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appointments  
