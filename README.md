@@ -406,8 +406,11 @@ EDGE CASE FLOW (Late Webhook After Timeout):
 🎯 **Atomic Hold (Semantic Lock)**  
  We reserve inventory locally before payment. This creates a PENDING booking and decrements stock immediately, while arming a 15-minute background timer to auto-release the hold if payment fails.
  
-⏱️ **The Deadman's Switch**  
-The Celery delayed task acts as a time-to-live (TTL) on the reservation. If the payment webhook never arrives, the system automatically self-heals by running a **Compensation Transaction** to release the inventory.
+⏱️ **Multi-Layer Idempotency**  
+We enforce "Exactly-Once" processing semantics through a three-layer defense system:  
+ - Booking Creation: We accept a client-generated UUID to prevent "Rage Click" duplication.  
+ - Webhook Handling: We track stripe_charge_id on the booking model. If Stripe sends a duplicate webhook, we detect the existing charge ID and return 200 OK immediately, preventing double-processing.  
+ - Timer Task: The Celery "Reaper" checks the booking status before acting. If the status has already moved to BOOKED or CANCELLED, the task exits (idempotent no-op).  
 
 💰 **Zombie Resurrection Protocol**  
 If a successful payment arrives after the timer releases the room, the system attempts to "resurrect" the booking by re-acquiring stock. If the inventory was lost to another user in that window, we automatically trigger a Compensating Transaction (Refund) to maintain consistency.
