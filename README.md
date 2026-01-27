@@ -21,7 +21,7 @@
 • 🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) 
 • 🔍 [CQRS & Elasticsearch](#5️⃣-advanced-search-architicture-cqrs-in-action)
 <br/>
-• 💳 [Automated Recurring Rent Billing Engine](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) 
+• 💳 [Automated Recurring Rent Billing with Celery](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) 
 • 🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services) 
 • 📦 [Kubernetes on AWS EKS](#-deployment-architecture)
 
