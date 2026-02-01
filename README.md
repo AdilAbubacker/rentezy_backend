@@ -19,7 +19,7 @@
 <br/>
 • 🧠 [Event-Driven Architecture & Kafka](#2️⃣-event-driven-architecture--the-nervous-system-of-rentezy) 
 • 🔁 [Distributed Transactions & The Saga Pattern](#3️⃣-distributed-transactions--the-saga-pattern) 
-• 🔍 [CQRS & Elasticsearch](#5️⃣-advanced-search-architicture-cqrs-in-action)
+• 🔍 [CQRS & Elasticsearch](#5️⃣-advanced-search-architecture-cqrs-in-action)
 <br/>
 • 💳 [Automated Recurring Rent Billing with Celery](#4️⃣-automated-rent-payment-system--intelligent-billing-that-runs-itself) 
 • 🛡️ [Zero Trust Architecture](#6️⃣-centralized-authentication-across-the-services) 
@@ -179,7 +179,7 @@ graph TB
 
 ### 🎪 10+ Independent Microservices
 
-Each service is a self-contained, independently horizontally scalabe unit with its own database, business logic, and scaling policy:
+Each service is a self-contained, independently horizontally scalable unit with its own database, business logic, and scaling policy:
 
 | Service / Component | Role | Description & Key Features |
 | --- | --- | --- |
@@ -335,13 +335,13 @@ Notifications, search updates, and analytics all respond in near real time becau
  
 ### 3️⃣ Distributed Transactions & The Saga Pattern
 
-**The Problem:** Booking a property spans multiple components. How to do distributed transaction without two-phase commit or distributed locks.  
-**The Solution: Choreography-based Saga pattern** with **Compensating Transactions** and semantic locking.
+**The Problem:** Booking a property spans multiple services and a third-party payment gateway. How do we achieve distributed transaction guarantees without two-phase commit or distributed locks?  
+**The Solution: Choreography-based Saga pattern** with **Compensating Transactions**, semantic locking, and multi-layer idempotency.
 
   
-**🔴 Why we need Distributed ACID Semantics**  
+**🔴 Why We Need Distributed ACID Semantics**  
   
-We require ACID-like guarantees across this network boundary to prevent the "Dual Write" problem. Naive approaches fail because we cannot "Rollback" a Stripe charge with a SQL command:
+We require ACID-like guarantees across network boundaries to prevent the "Dual Write" problem. Naive approaches fail because we cannot "Rollback" a Stripe charge with a SQL command:
 
 * **Charge First, Book Later?** Risks charging the user when no rooms are left (high refund rate).
 * **Book First, Charge Later?** Risks "ghost bookings" where users reserve rooms but never pay, blocking inventory.
@@ -354,25 +354,25 @@ HAPPY PATH (Success Saga):
 ┌─────────────────────────────────────────────────────┐
 │ 1. Reserve Room (Local Transaction)                 │
 │    - Decrement qty (F() expression)                 │
-│    - Create Booking (status='pending')              │
-│    - Schedule timeout (Celery delay 15min)          │
+│    - Create Booking (status='reserved')             │
+│    - Schedule timeout (Celery delay 10min)          │
 └─────────────────┬───────────────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────────────┐
 │ 2. Initiate Stripe Payment                          │
-│    - Create payment intent                          │
-│    - Return to user for 3D Secure flow              │
+│    - Create checkout session with idempotency_key   │
+│    - Return checkout URL to user                    │
 └─────────────────┬───────────────────────────────────┘
                   │
 ┌─────────────────▼───────────────────────────────────┐
-│ 3. Stripe Webhook: payment_intent.succeeded         │
-│    - Update booking status='confirmed'              │
-│    - Cancel pending Celery task (if not executed)   │
+│ 3. Stripe Webhook: checkout.session.completed       │
+│    - Update booking status='booked'                 │
+│    - Revoke pending Celery timeout task             │
 └─────────────────────────────────────────────────────┘
 
-COMPENSATION FLOW 1 (Payment Failed):
+COMPENSATION FLOW 1 (Payment Expired/Failed):
 ┌─────────────────────────────────────────────────────┐
-│ Stripe Webhook: payment_intent.failed               │
+│ Stripe Webhook: checkout.session.expired            │
 │ COMPENSATE:                                         │
 │    - Increment qty back (F() + 1)                   │
 │    - Update booking status='cancelled'              │
@@ -380,11 +380,12 @@ COMPENSATION FLOW 1 (Payment Failed):
 
 COMPENSATION FLOW 2 (Timeout - No Webhook):
 ┌─────────────────────────────────────────────────────┐
-│ Celery Task Fires After 15min                       │
-│ IF booking.status == 'pending':                     │
+│ Celery Task Fires After 10min                       │
+│ IF booking.status == 'reserved':                    │
 │ COMPENSATE:                                         │
 │    - Increment qty back (F() + 1)                   │
 │    - Update booking status='cancelled'              │
+│    - Retry with exponential backoff on failure      │
 └─────────────────────────────────────────────────────┘
 
 EDGE CASE FLOW (Late Webhook After Timeout):
@@ -392,31 +393,42 @@ EDGE CASE FLOW (Late Webhook After Timeout):
 │ Stripe Webhook arrives AFTER timeout cancelled      │
 │ IF booking.status == 'cancelled':                   │
 │   TRY:                                              │
-│     - Check if qty > 0                              │
-│     - Create NEW booking if available               │
+│     - Re-acquire room via atomic F() decrement      │
+│     - Resurrect booking if rooms available          │
 │   ELSE:                                             │
 │     COMPENSATE:                                     │
-│       - Refund via Stripe API                       │
-│       - Notify user of cancellation                 │
+│       - Automatic refund via Stripe API             │
+│       - User notified of cancellation               │
 └─────────────────────────────────────────────────────┘
 ```
 
 **Why this flow is bulletproof:**
 
 🎯 **Atomic Hold (Semantic Lock)**  
- We reserve inventory locally before payment. This creates a PENDING booking and decrements stock immediately, while arming a 15-minute background timer to auto-release the hold if payment fails.
- 
-⏱️ **Multi-Layer Idempotency**  
-We enforce "Exactly-Once" processing semantics through a three-layer defense system:  
- - Booking Creation: We accept a client-generated UUID to prevent "Rage Click" duplication.  
- - Webhook Handling: We track stripe_charge_id on the booking model. If Stripe sends a duplicate webhook, we detect the existing charge ID and return 200 OK immediately, preventing double-processing.  
- - Timer Task: The Celery "Reaper" checks the booking status before acting. If the status has already moved to BOOKED or CANCELLED, the task exits (idempotent no-op).  
+We reserve inventory locally *before* payment. This creates a RESERVED booking and decrements stock immediately using Django's `F()` expressions, while arming a background timer to auto-release the hold if payment fails.
 
-💰 **Zombie Resurrection Protocol**  
-If a successful payment arrives after the timer releases the room, the system attempts to "resurrect" the booking by re-acquiring stock. If the inventory was lost to another user in that window, we automatically trigger a Compensating Transaction (Refund) to maintain consistency.
+💰 **Late Payment Recovery**  
+If a successful payment webhook arrives *after* the timeout cancelled the booking, the system attempts to restore the reservation by re-acquiring stock via atomic `F()` decrement. If inventory was claimed by another user, we trigger an automatic Stripe refund — maintaining consistency without manual intervention.
 
-💪 **Deterministic Concurrency**  
-To handle race conditions between the "timeout" timer and late webhooks, we utilize select_for_update() row locks. This forces a serialized, conflict-free transition to either CONFIRMED or CANCELLED, preventing split-brain states.
+💪 **Deterministic Concurrency Control**  
+To prevent race conditions between timeout tasks and late webhooks, we use `select_for_update()` row locks on the booking record. This serializes concurrent state transitions, ensuring the booking moves to exactly one final state (BOOKED or CANCELLED) — never both.
+
+⏱️ **4-Layer Idempotency Defense**  
+We enforce "Exactly-Once" processing semantics through multiple layers:  
+| Layer | Mechanism | Prevents |
+|-------|-----------|----------|
+| **Client** | UUID-based `idempotency_key` | Rage-click duplication |
+| **Database** | Unique constraint on booking key | Parallel request duplication |
+| **Stripe** | Operation-scoped `idempotency_key` passed to Stripe API | Duplicate payment charges |
+| **Webhook** | `stripe_charge_id` tracking | Double-processing of events |
+| **Timer** | Status check before compensation | Double room release |
+
+🔄 **Resilient Task Execution**  
+Compensation tasks use **exponential backoff retry** (`2^n` seconds) on transient failures. If the database is temporarily unavailable, the task retries automatically rather than silently failing.
+
+⚡ **Performance-Optimized Queries**  
+Strategic database indexes on `(status, expires_at)` and `stripe_session_id` ensure webhook lookups and timeout scans remain fast even with millions of bookings.
+
 
 **Result**: Guaranteed distributed data consistency without the performance bottleneck of global locks.
 
@@ -451,7 +463,7 @@ sequenceDiagram
 ```
 
 
-### **⚡ Key Capabilitiess**
+### **⚡ Key Capabilities**
 
 - **🔄Cron-Driven Orchestration** – Celery Beat evaluates active leases daily to generate invoices, apply late fees, and trigger reminders.
 - **💳Payment via Stripe** – Integrates with Stripe to securely charge saved payment methods off-session. 
@@ -635,7 +647,7 @@ Special thanks to the open-source community for the incredible tools that make p
 **This project is actively evolving**. If you’re interested in contributing, reviewing architecture decisions, or just want to talk, feel free to reach out or open a discussion. 
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?logo=linkedin)](https://linkedin.com/in/adil-abubacker-a63598232/) 
-[![GitHub](https://img.shields.io/badge/GitHub-Foll_ow-black?logo=github)](https://github.com/AdilAbubacker)  
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black?logo=github)](https://github.com/AdilAbubacker)  
 <sub><em>**⭐ Found this interesting? A star helps a lot!**</em></sub>
 
 ---
