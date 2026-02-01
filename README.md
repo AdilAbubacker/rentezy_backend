@@ -421,58 +421,71 @@ We enforce "Exactly-Once" processing semantics through multiple layers:
 4. **Webhook**: `stripe_charge_id` tracking prevents double-processing of events.
 5. **Timer**: Status check before compensation prevents double room release.
 
-🔄 **Resilient Task Execution**  
-Compensation tasks use **exponential backoff retry** (`2^n` seconds) on transient failures. If the database is temporarily unavailable, the task retries automatically rather than silently failing.
-
-⚡ **Performance-Optimized Queries**  
-Strategic database indexes on `(status, expires_at)` and `stripe_session_id` ensure webhook lookups and timeout scans remain fast even with millions of bookings.
-
 
 **Result**: Guaranteed distributed data consistency without the performance bottleneck of global locks.
 
 ---
 
 ### 4️⃣  **Automated Rent Payment System — Intelligent Billing That Runs Itself**
-**The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone.  
-**The Solution: Fully automated rent lifecycle engine**, powered by Celery Beat, Redis, Kafka, and Stripe.
+**The Problem:** Managing rent payments for hundreds of properties manually is inefficient and error-prone. 
+**The Solution: A self-healing, fully automated rent lifecycle engine** powered by Celery Beat, Kafka, and Stripe.
 
-**🧠 How It Works**
+#### 🎯 The Rent Lifecycle Flow
 
 ```mermaid
 sequenceDiagram
     participant Beat as ⏰ Celery Beat
     participant Rent as 🧾 Rent Service
     participant Kafka as 📨 Kafka
+    participant Notif as 🔔 Notification Svc
     participant User as 👤 Tenant
+    participant Stripe as 💳 Stripe
 
-    Note over Beat, Rent: Daily Cron Job
-    Beat->>Rent: Trigger "Check Due Dates"
-    Rent->>Rent: Generate Invoice
-    Rent->>Kafka: Publish `invoice.created`
+    Note over Beat, Rent: Daily at Midnight (Asia/Kolkata)
+    Beat->>Rent: generate_recurring_payments()
+    Rent->>Rent: Self-Healing Loop: Generate ALL missing invoices
     
-    par Notifications
-        Kafka->>User: 📧 Email: "Rent Due Tomorrow"
-    and Auto-Pay
-        Rent->>Stripe: 💳 Charge Saved Card
+    Beat->>Rent: send_rent_reminders()
+    Rent->>Rent: Calculate fines (days_overdue × ₹100)
+    
+    alt 7 Days Before Due
+        Rent->>Kafka: "Rent due in 7 days"
+    else 3 Days Before Due
+        Rent->>Kafka: "Rent due in 3 days"
+    else Due Today
+        Rent->>Kafka: "Last day to pay!"
+    else Overdue
+        Rent->>Kafka: "⚠️ Overdue + daily fine"
     end
     
-    Stripe-->>Rent: Payment Success
-    Rent->>Kafka: Publish `rent.paid`
+    Kafka->>Notif: Consume notification event
+    Notif->>User: 📧 Push Notification / Email
+    User->>Stripe: Pay via Checkout Session
+    Stripe-->>Rent: Webhook: checkout.session.completed
+    Rent->>Rent: Mark invoice as paid (is_paid=True)
 ```
 
+**Why this architecture wins:**
 
-### **⚡ Key Capabilities**
+🔄 **Self-Healing Scheduler**  
+Scheduler down for a month? No problem. The `while` loop generates ALL missed invoices on the next run. Combined with `get_or_create`, duplicates are impossible.
 
-- **🔄Cron-Driven Orchestration** – Celery Beat evaluates active leases daily to generate invoices, apply late fees, and trigger reminders.
-- **💳Payment via Stripe** – Integrates with Stripe to securely charge saved payment methods off-session. 
-- **⏰ Smart Reminders** – Proactive notifications of 3-day reminders, due-day notices, and overdue warnings.
-- **📈 Dynamic Late Fees** – Celery monitors unpaid invoices and automatically applies late fees based on configurable grace periods.
-- **Event-Driven Comms** - Invoice creation, payment success, and failure triggers are decoupled via Kafka, allowing the Notification Service to react independently.
-- **Idempotent & Resilient Tasks** – All Celery jobs are retry-safe; duplicate messages never cause double billing.  
-- **Audit-Ready Data** – Complete rent history and payment lifecycle stored in RentDB and Kafka topics for compliance and reporting.  
+📊 **Idempotent Fine Calculation**  
+Fines are calculated as `days_overdue × fine_amount`, not accumulated. Run the task 100 times — the fine is always correct. No accumulation bugs, no audit nightmares.  
 
+⏰ **Tiered Reminder System**  
+Proactive notifications at 7 days, 3 days, due day, and overdue. Tenants are never surprised by a missed payment.
 
-**Result**: Landlords get paid automatically, tenants get reminded proactively
+💳 **Stripe Checkout Integration**  
+Secure hosted checkout with webhook confirmation. PCI-compliant without storing card data. Payment status updated atomically via `checkout.session.completed`.
+
+📨 **Event-Driven Notifications**  
+Kafka decouples billing from notification delivery. Notification Service can crash and recover without affecting rent generation. Events are replayed on restart.
+
+🔒 **Database-Level Idempotency**  
+`unique_together = ['rental_agreement', 'due_date']` constraint ensures no duplicate invoices, even under concurrent task execution.
+
+**Result:** Landlords get paid automatically, tenants get reminded proactively, and the system self-heals from any scheduler failures.
 
 ---
 
