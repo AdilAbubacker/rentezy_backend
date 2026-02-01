@@ -415,13 +415,11 @@ To prevent race conditions between timeout tasks and late webhooks, we use `sele
 
 ⏱️ **4-Layer Idempotency Defense**  
 We enforce "Exactly-Once" processing semantics through multiple layers:  
-| Layer | Mechanism | Prevents |
-|-------|-----------|----------|
-| **Client** | UUID-based `idempotency_key` | Rage-click duplication |
-| **Database** | Unique constraint on booking key | Parallel request duplication |
-| **Stripe** | Operation-scoped `idempotency_key` passed to Stripe API | Duplicate payment charges |
-| **Webhook** | `stripe_charge_id` tracking | Double-processing of events |
-| **Timer** | Status check before compensation | Double room release |
+1. **Client**: UUID-based `idempotency_key` prevents rage-click duplication.
+2. **Database**: Unique constraint on booking key prevents parallel request duplication.
+3. **Stripe**: Operation-scoped `idempotency_key` passed to Stripe API prevents duplicate payment charges.
+4. **Webhook**: `stripe_charge_id` tracking prevents double-processing of events.
+5. **Timer**: Status check before compensation prevents double room release.
 
 🔄 **Resilient Task Execution**  
 Compensation tasks use **exponential backoff retry** (`2^n` seconds) on transient failures. If the database is temporarily unavailable, the task retries automatically rather than silently failing.
