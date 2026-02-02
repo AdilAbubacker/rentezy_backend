@@ -636,6 +636,8 @@ RentEzy combines enterprise-grade distributed engineering with deliberate attent
 ✅ **Zero Overselling**– ACID-guaranteed inventory management via Optimistic Concurrency.  
 ✅ **Event-Driven Architecture** – Kafka decouples 10+ services for async communication  
 ✅ **Distributed Sagas** – Choreography Saga patterns handle transactions without global locks  
+✅ **Exactly-Once Semantics** – Multi-layer idempotency across APIs, databases, Stripe payments, webhooks, and schedulers  
+✅ **Self-Healing Automation** – Celery-driven billing and schedulers recover automatically after downtime without manual fixes  
 ✅ **Scheduled Visit** – Dedicated scheduling system for seamless property tour appointments  
 ✅ **Real-Time Chat** – WebSocket-powered instant messaging between tenants and landlords  
 ✅ **Multi-Tenant System** – Distinct, secure interfaces and RBAC for Landlords, Tenants & Admins  
