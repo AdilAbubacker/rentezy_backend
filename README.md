@@ -620,11 +620,12 @@ Production Stack:
 
 ### Why Kubernetes + Fargate?
 
-- ⚡ **Serverless:** No EC2 management, pay-per-pod pricing
-- 🛡️ **Self-healing:** Automatic pod restarts on failure
-- 📦 **Resource Isolation:** Each service gets dedicated resources
-- 🚀 **Zero-downtime:** Rolling updates with health checks
-- 💰 **Cost-efficient:** Only pay for running pods
+- **Serverless:** No EC2 management, pay-per-pod pricing
+- **Self-healing:** Automatic pod restarts on failure
+- **Resource Isolation:** Each service gets dedicated resources
+- **Zero-downtime:** Rolling updates with health checks
+- **Cost-efficient:** Only pay for running pods
+- **Ease of Ops:** Managed control plane and automated scaling
 
 ---
 
